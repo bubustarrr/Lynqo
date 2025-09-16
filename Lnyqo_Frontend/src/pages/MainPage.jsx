@@ -4,6 +4,7 @@ import Footer from "../components/footer.jsx";
 import Description from "../components/description.jsx";
 import News from "../components/news.jsx";
 import LoginRegister from "../components/loginregister.jsx";
+import "../App.css";
 
 function MainPage() {
   const [users, setUsers] = useState([]);
@@ -20,7 +21,7 @@ function MainPage() {
       <main style={{ display: "flex", justifyContent: "space-between" }}>
         <Description />
         <div style={{ textAlign: "center" }}>
-          <h2>Az egy változó szöveg</h2>
+          <h2>Ide a változó szöveg.</h2>
           <LoginRegister />
         </div>
         <News />

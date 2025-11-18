@@ -32,6 +32,6 @@ body, .card, .form-label, .form-control {
 .login-button {
   width: 100%;
   font-weight: bold;
-  background: linear-gradient(90deg, #6e6be6, #c37fd8, #3ab7f7);
-  border: none;
+  background: linear-gradient(90deg, #6e6be6, #c37fd8, #3ab7f7) !important;
+  border: none !important;
 }

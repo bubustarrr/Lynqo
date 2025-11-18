@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button, Card, Row, Col } from 'react-bootstrap';
-import './RegisterPage.css'
+import { Form, Button, Card } from 'react-bootstrap';
+import './RegisterPage.css';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -20,11 +20,11 @@ export default function RegisterPage() {
     const { name, value, type, checked } = e.target;
     setForm({
       ...form,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
       alert('Passwords do not match');
@@ -38,7 +38,7 @@ export default function RegisterPage() {
       const res = await fetch('https://localhost:7118/api/Auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Registration failed');
       const data = await res.json();
@@ -50,34 +50,56 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #6e6be6 0%, #c37fd8 50%, #3ab7f7 100%)'
-    }}>
-      <Card style={{ maxWidth: 400, width: '100%', padding: '2rem', boxShadow: '0 8px 32px 0 rgba(31,38,135,0.37)', borderRadius: '16px', backdropFilter: 'blur(8px)'}}>
-        <h2 className="mb-4 text-center" style={{color: '#6e6be6'}}>Create Account</h2>
+    <div className="register-page-container">
+      <Card className="register-card">
+        <h2>Create Account</h2>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="registerUsername">
             <Form.Label>Username</Form.Label>
-            <Form.Control name="username" placeholder="Enter your username" value={form.username} onChange={handleChange} required />
+            <Form.Control
+              name="username"
+              placeholder="Enter your username"
+              value={form.username}
+              onChange={handleChange}
+              required
+            />
           </Form.Group>
           <Form.Group className="mb-3" controlId="registerEmail">
             <Form.Label>Email</Form.Label>
-            <Form.Control type="email" name="email" placeholder="Enter your email" value={form.email} onChange={handleChange} required />
+            <Form.Control
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
             <Form.Text className="text-muted">Please enter a valid email address.</Form.Text>
           </Form.Group>
           <Form.Group className="mb-3" controlId="registerPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" name="password" placeholder="Password (min. 6 characters)" value={form.password} onChange={handleChange} required minLength={6} />
+            <Form.Control
+              type="password"
+              name="password"
+              placeholder="Password (min. 6 characters)"
+              value={form.password}
+              onChange={handleChange}
+              required
+              minLength={6}
+            />
           </Form.Group>
           <Form.Group className="mb-3" controlId="registerConfirmPassword">
             <Form.Label>Confirm Password</Form.Label>
-            <Form.Control type="password" name="confirmPassword" placeholder="Confirm your password" value={form.confirmPassword} onChange={handleChange} required />
+            <Form.Control
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+            />
           </Form.Group>
-          <Form.Check 
+          <Form.Check
             type="checkbox"
             id="agreeEula"
             name="agreeEula"
@@ -87,7 +109,7 @@ export default function RegisterPage() {
             required
             className="mb-2"
           />
-          <Form.Check 
+          <Form.Check
             type="checkbox"
             id="subscribeNews"
             name="subscribeNews"
@@ -96,16 +118,7 @@ export default function RegisterPage() {
             onChange={handleChange}
             className="mb-4"
           />
-          <Button
-            type="submit"
-            variant="primary"
-            style={{
-              width: '100%',
-              fontWeight: 'bold',
-              background: 'linear-gradient(90deg, #6e6be6, #c37fd8, #3ab7f7)',
-              border: 'none'
-            }}
-          >
+          <Button className="register-button" type="submit">
             Register
           </Button>
         </Form>

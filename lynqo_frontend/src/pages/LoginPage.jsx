@@ -1,37 +1,80 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Form, Button, Card } from 'react-bootstrap';
+import './LoginPage.css';  // Import the CSS
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ usernameOrEmail: '', password: '' });
+  const [form, setForm] = useState({ usernameOrEmail: '', password: '', rememberMe: false });
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = e => {
+    const { name, value, type, checked } = e.target;
+    setForm({
+      ...form,
+      [name]: type === 'checkbox' ? checked : value
+    });
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('https://localhost:5001/api/auth/login', {  // Use your backend URL and port
+      const res = await fetch('https://localhost:5001/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Login failed');
       const data = await res.json();
-      login(data); // Save user in context
-      navigate('/dashboard'); // Go to dashboard after login
+      login(data);
+      navigate('/dashboard');
     } catch (err) {
       alert(err.message);
     }
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input name="usernameOrEmail" placeholder="Username or Email" value={form.usernameOrEmail} onChange={handleChange} required />
-      <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-      <button type="submit">Login</button>
-    </form>
+    <div className="login-page-container">
+      <Card className="login-card">
+        <h2>Login</h2>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="loginUsernameOrEmail">
+            <Form.Label>Username or Email</Form.Label>
+            <Form.Control
+              type="text"
+              name="usernameOrEmail"
+              placeholder="Enter your username or email"
+              value={form.usernameOrEmail}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="loginPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Check
+            type="checkbox"
+            id="rememberMe"
+            name="rememberMe"
+            label="Remember me"
+            checked={form.rememberMe}
+            onChange={handleChange}
+            className="mb-4"
+          />
+          <Button className="login-button" type="submit">
+            Login
+          </Button>
+        </Form>
+      </Card>
+    </div>
   );
 }

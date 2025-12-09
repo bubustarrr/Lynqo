@@ -1,0 +1,117 @@
+.navbar-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background: rgba(255, 255, 255, 0.15); /* semi-transparent */
+  backdrop-filter: blur(10px); /* soft blur for text legibility */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-family: 'Arial', sans-serif;
+}
+
+.navbar-logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #fff; /* works on dark gradients */
+}
+
+.navbar-user-section,
+.navbar-right-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-user-btn,
+.navbar-lang-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.navbar-user-btn:hover,
+.navbar-lang-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.arrow-icon {
+  margin-left: 0.3rem;
+}
+
+.navbar-user-section,
+.navbar-language-wrapper {
+  position: relative; /* make parent the reference for dropdown */
+}
+
+.navbar-dropdown {
+  position: absolute;
+  top: calc(100% + 6px); /* small gap below the button */
+  left: 0;
+  background: rgba(255, 255, 255, 0.25); /* glassy effect */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 0.5rem 0;
+  min-width: max-content; /* auto width based on content */
+  z-index: 1000;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.navbar-dropdown.right {
+  right: 0;
+  left: auto;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.4);
+  color: #111;
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.theme-toggle.active {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.toggle-circle {
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  transition: transform 0.2s;
+}
+
+.theme-toggle.active .toggle-circle {
+  transform: translateX(20px);
+}

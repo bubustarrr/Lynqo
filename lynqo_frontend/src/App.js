@@ -13,7 +13,9 @@ import SettingsPage from './pages/SettingsPage';
 export default function App() {
   return (
     <div>
+      <NavBar/>
       <Routes>
+        <Route path="/main" element={<MainPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/shop" element={<ShopPage />} />

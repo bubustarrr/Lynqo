@@ -1,5 +1,6 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom'; // no Router here
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import LoadingSpinner from './components/common/LoadingSpinner';
 import './App.css';
 
 import RegisterPage from './pages/RegisterPage';
@@ -10,22 +11,49 @@ import ShopPage from './pages/ShopPage';
 import NewsPage from './pages/NewsPage';
 import SettingsPage from './pages/SettingsPage';
 
+function AppContent() {
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Show spinner for 1 second on every page change
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Exactly 1 second
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  return (
+    <div className="app-container">
+      <NavBar />
+      
+      {/* Full-screen Loading Overlay */}
+      {isLoading && (
+        <div className="loading-overlay">
+          <LoadingSpinner size="large" message="Loading Lynqo..." />
+        </div>
+      )}
+      
+      <main className="main-content">
+        <Routes>
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/" element={<Navigate to="/main" replace />} />
+          <Route path="*" element={<Navigate to="/main" replace />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
 export default function App() {
   return (
-    <div>
-      <NavBar/>
-      <Routes>
-        <Route path="/main" element={<MainPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/news" element={<NewsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        {/* Redirect root to /main */}
-        <Route path="/" element={<Navigate to="/main" replace />} />
-        {/* Catch-all redirects */}
-        <Route path="*" element={<Navigate to="/main" replace />} />
-      </Routes>
-    </div>
+    <AppContent />
   );
 }

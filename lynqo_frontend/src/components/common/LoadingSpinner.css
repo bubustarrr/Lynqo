@@ -1,0 +1,146 @@
+/* LoadingSpinner.css - Premium Gradient Theme */
+:root {
+    --gradient-purple: #8b5cf6;
+    --gradient-pink: #ec4899;
+    --gradient-blue: #06b6d4;
+    --text-dark: #1e293b;
+    --shadow: 0 8px 32px rgba(139,92,246,0.4);
+    --radius: 20px;
+    --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  
+  .spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+  
+  .spinner {
+    position: relative;
+    width: 64px;
+    height: 64px;
+  }
+  
+  .spinner-medium { width: 64px; height: 64px; }
+  .spinner-large { width: 80px; height: 80px; }
+  .spinner-small { width: 48px; height: 48px; }
+  
+  .spinner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: transparent;
+    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  
+  .spinner-ring:nth-child(1) {
+    border-top-color: var(--gradient-purple);
+    width: 100%;
+    height: 100%;
+    animation-duration: 1s;
+    animation-delay: 0s;
+  }
+  
+  .spinner-ring:nth-child(2) {
+    border-top-color: var(--gradient-pink);
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    animation-duration: 1.2s;
+    animation-delay: -0.3s;
+  }
+  
+  .spinner-ring:nth-child(3) {
+    border-top-color: var(--gradient-blue);
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    animation-duration: 1.4s;
+    animation-delay: -0.6s;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      transform: rotate(360deg);
+      opacity: 1;
+    }
+  }
+  
+  .spinner-message {
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }
+  
+  /* Pulse background effect */
+  .spinner-container::before {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(45deg, 
+      rgba(139,92,246,0.1), 
+      rgba(236,72,153,0.1), 
+      rgba(6,182,212,0.1));
+    border-radius: 50%;
+    animation: pulse 2s infinite ease-in-out;
+    z-index: -1;
+  }
+  
+  .spinner-medium ~ .spinner-container::before {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .spinner-large ~ .spinner-container::before {
+    width: 160px;
+    height: 160px;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+  }
+  
+  /* Hover effect for full page loaders */
+  .spinner-container:hover .spinner-ring {
+    animation-duration: 0.8s;
+  }
+  
+  .spinner-container:hover .spinner-message {
+    transform: scale(1.05);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .spinner-container {
+      padding: 1.5rem;
+    }
+    
+    .spinner-message {
+      font-size: 1rem;
+    }
+  }
+  

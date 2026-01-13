@@ -1,97 +1,74 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import "./NavBar.css";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './NavBar.css';
 
-export default function Navbar({ user }) {
-  const [langOpen, setLangOpen] = useState(false);
-  const [userOpen, setUserOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  
+export default function NavBar() {
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const userName = "John Doe";
 
-  const languages = ["EN", "FR", "DE", "ES", "HU"];
+  const handleLogoClick = () => navigate('/main');
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+  const toggleUserDropdown = () => setUserDropdownOpen(!userDropdownOpen);
+  const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
+
+  const handleLogin = () => { navigate('/login'); setUserDropdownOpen(false); };
+  const handleLogout = () => { setIsLoggedIn(false); navigate('/main'); setUserDropdownOpen(false); };
+  const handleSettings = () => { navigate('/settings'); setUserDropdownOpen(false); };
 
   return (
     <nav className="navbar-container">
-      {/* User Section */}
-      <div className="navbar-user-section">
-        <button
-          onClick={() => setUserOpen(!userOpen)}
-          className="navbar-user-btn"
-        >
-          {user ? user.username : "Not logged in"}
-          <span className="arrow-icon">▾</span>
-        </button>
-
-        {userOpen && (
-          <div className="navbar-dropdown">
-            {user ? (
-              <>
-                <Link
-                  to="/profile"
-                  className="dropdown-item"
-                  onClick={() => setUserOpen(false)}
-                >
-                  Profile
-                </Link>
-                <Link
-                  to="/settings"
-                  className="dropdown-item"
-                  onClick={() => setUserOpen(false)}
-                >
-                  Settings
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="dropdown-item"
-                  onClick={() => setUserOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/settings"
-                  className="dropdown-item"
-                  onClick={() => setUserOpen(false)}
-                >
-                  Settings
-                </Link>
-              </>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Logo */}
-      <div className="navbar-logo">Lynqo</div>
-
-      {/* Right Section */}
-      <div className="navbar-right-section">
-        <div className="navbar-language-wrapper">
-          <button
-            onClick={() => setLangOpen(!langOpen)}
-            className="navbar-lang-btn"
-          >
-            Languages <span className="arrow-icon">▾</span>
+      {/* Left: User/Login Dropdown */}
+      <div className="navbar-left">
+        <div className="navbar-user-wrapper">
+          <button className="navbar-user-btn" onClick={toggleUserDropdown}>
+            {isLoggedIn ? userName : 'Login'}
+            <span className="arrow-icon">▼</span>
           </button>
-
-          {langOpen && (
-            <div className="navbar-dropdown right">
-              {languages.map((code) => (
-                <div key={code} className="dropdown-item">
-                  {code}
-                </div>
-              ))}
+          {userDropdownOpen && (
+            <div className="navbar-dropdown">
+              {isLoggedIn ? (
+                <>
+                  <div className="dropdown-item" onClick={handleSettings}>⚙️ Settings</div>
+                  <hr className="dropdown-divider" />
+                  <div className="dropdown-item" onClick={handleLogout}>🚪 Logout</div>
+                </>
+              ) : (
+                <div className="dropdown-item" onClick={handleLogin}>🔐 Login</div>
+              )}
             </div>
           )}
         </div>
+      </div>
 
-        <div
-          className={`theme-toggle ${darkMode ? "active" : ""}`}
-          onClick={() => setDarkMode(!darkMode)}
-        >
+      {/* Center: Lynqo Logo */}
+      <div className="navbar-center">
+        <div className="navbar-logo" onClick={handleLogoClick}>
+          Lynqo
+        </div>
+      </div>
+
+      {/* Right: Theme Toggle + Language Dropdown */}
+      <div className="navbar-right">
+        <div className={`theme-toggle ${isDarkMode ? 'active' : ''}`} onClick={toggleTheme}>
           <div className="toggle-circle"></div>
+        </div>
+        <div className="navbar-lang-wrapper">
+          <button className="navbar-lang-btn" onClick={toggleLangDropdown}>
+            🌐 EN
+            <span className="arrow-icon">▼</span>
+          </button>
+          {langDropdownOpen && (
+            <div className="navbar-dropdown right">
+              <div className="dropdown-item">🇺🇸 English</div>
+              <div className="dropdown-item">🇪🇸 Español</div>
+              <div className="dropdown-item">🇫🇷 Français</div>
+              <div className="dropdown-item">🇩🇪 Deutsch</div>
+            </div>
+          )}
         </div>
       </div>
     </nav>

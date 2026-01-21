@@ -1,76 +1,76 @@
-import React from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { Navbar, Nav, Container, NavDropdown, Button } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap'; // npm i react-router-bootstrap
-import { useGamification } from '../../hooks/useGamification'; // Optional hearts/coins
-import './NavBar.css'; // Custom styles below
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './NavBar.css';
 
-function NavBar() {
-  const { user, logout, token } = useAuth();
-  const { hearts, coins } = useGamification();
+export default function NavBar() {
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const userName = "John Doe";
+
+  const handleLogoClick = () => navigate('/main');
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+  const toggleUserDropdown = () => setUserDropdownOpen(!userDropdownOpen);
+  const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
+
+  const handleLogin = () => { navigate('/login'); setUserDropdownOpen(false); };
+  const handleLogout = () => { setIsLoggedIn(false); navigate('/main'); setUserDropdownOpen(false); };
+  const handleSettings = () => { navigate('/settings'); setUserDropdownOpen(false); };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="lynqo-navbar">
-      <Container>
-        <LinkContainer to="/">
-          <Navbar.Brand>
-            <strong>Lynqo</strong> 🦉
-          </Navbar.Brand>
-        </LinkContainer>
+    <nav className="navbar-container">
+      {/* Left: User/Login Dropdown */}
+      <div className="navbar-left">
+        <div className="navbar-user-wrapper">
+          <button className="navbar-user-btn" onClick={toggleUserDropdown}>
+            {isLoggedIn ? userName : 'Login'}
+            <span className="arrow-icon">▼</span>
+          </button>
+          {userDropdownOpen && (
+            <div className="navbar-dropdown">
+              {isLoggedIn ? (
+                <>
+                  <div className="dropdown-item" onClick={handleSettings}>⚙️ Settings</div>
+                  <hr className="dropdown-divider" />
+                  <div className="dropdown-item" onClick={handleLogout}>🚪 Logout</div>
+                </>
+              ) : (
+                <div className="dropdown-item" onClick={handleLogin}>🔐 Login</div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
-        <Navbar.Toggle aria-controls="lynqo-nav" />
-        <Navbar.Collapse id="lynqo-nav">
-          <Nav className="me-auto">
-            <LinkContainer to="/main">
-              <Nav.Link>Home</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/news">
-              <Nav.Link>News</Nav.Link>
-            </LinkContainer>
-            {user ? (
-              <>
-                <LinkContainer to="/dashboard">
-                  <Nav.Link>Dashboard</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/leaderboard">
-                  <Nav.Link>Leaderboard</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/shop">
-                  <Nav.Link>Shop</Nav.Link>
-                </LinkContainer>
-              </>
-            ) : null}
-          </Nav>
+      {/* Center: Lynqo Logo */}
+      <div className="navbar-center">
+        <div className="navbar-logo" onClick={handleLogoClick}>
+          Lynqo
+        </div>
+      </div>
 
-          <Nav>
-            {user ? (
-              <>
-                <NavDropdown title={`👤 ${user.DisplayName}`} id="user-dropdown" align="end">
-                  <LinkContainer to="/settings">
-                    <NavDropdown.Item>Settings</NavDropdown.Item>
-                  </LinkContainer>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
-                </NavDropdown>
-                <span className="user-stats mx-2">
-                  ❤️{hearts} 💰{coins}
-                </span>
-              </>
-            ) : (
-              <>
-                <LinkContainer to="/login">
-                  <Nav.Link>Login</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/register">
-                  <Button variant="outline-light" size="sm">Register</Button>
-                </LinkContainer>
-              </>
-            )}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+      {/* Right: Theme Toggle + Language Dropdown */}
+      <div className="navbar-right">
+        <div className={`theme-toggle ${isDarkMode ? 'active' : ''}`} onClick={toggleTheme}>
+          <div className="toggle-circle"></div>
+        </div>
+        <div className="navbar-lang-wrapper">
+          <button className="navbar-lang-btn" onClick={toggleLangDropdown}>
+            🌐 EN
+            <span className="arrow-icon">▼</span>
+          </button>
+          {langDropdownOpen && (
+            <div className="navbar-dropdown right">
+              <div className="dropdown-item">🇺🇸 English</div>
+              <div className="dropdown-item">🇪🇸 Español</div>
+              <div className="dropdown-item">🇫🇷 Français</div>
+              <div className="dropdown-item">🇩🇪 Deutsch</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 }
-
-export default NavBar;

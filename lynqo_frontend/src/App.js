@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import './App.css';
 
+
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
@@ -10,6 +11,8 @@ import NavBar from './components/common/NavBar';
 import ShopPage from './pages/ShopPage';
 import NewsPage from './pages/NewsPage';
 import SettingsPage from './pages/SettingsPage';
+import Footer from "./components/common/Footer";
+
 
 function AppContent() {
   const location = useLocation();
@@ -48,7 +51,9 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/main" replace />} />
         </Routes>
       </main>
-    </div>
+
+<Footer />
+</div>
   );
 }
 

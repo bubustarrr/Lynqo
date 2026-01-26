@@ -20,7 +20,7 @@ export default function LoginPage() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('https://localhost:5001/api/auth/login', {
+      const res = await fetch('https://localhost:7118/api/Auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

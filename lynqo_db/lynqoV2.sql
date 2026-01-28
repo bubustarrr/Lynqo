@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 17, 2025 at 10:43 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Gép: 127.0.0.1
+-- Létrehozás ideje: 2026. Jan 28. 11:42
+-- Kiszolgáló verziója: 10.4.32-MariaDB
+-- PHP verzió: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `lynqo`
+-- Adatbázis: `lynqo`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin_logs`
+-- Tábla szerkezet ehhez a táblához `admin_logs`
 --
 
 CREATE TABLE `admin_logs` (
@@ -39,7 +39,7 @@ CREATE TABLE `admin_logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ai_messages`
+-- Tábla szerkezet ehhez a táblához `ai_messages`
 --
 
 CREATE TABLE `ai_messages` (
@@ -53,7 +53,7 @@ CREATE TABLE `ai_messages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ai_sessions`
+-- Tábla szerkezet ehhez a táblához `ai_sessions`
 --
 
 CREATE TABLE `ai_sessions` (
@@ -69,7 +69,7 @@ CREATE TABLE `ai_sessions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `analytics`
+-- Tábla szerkezet ehhez a táblához `analytics`
 --
 
 CREATE TABLE `analytics` (
@@ -85,7 +85,7 @@ CREATE TABLE `analytics` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `api_tokens`
+-- Tábla szerkezet ehhez a táblához `api_tokens`
 --
 
 CREATE TABLE `api_tokens` (
@@ -100,7 +100,7 @@ CREATE TABLE `api_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `audit_logs`
+-- Tábla szerkezet ehhez a táblához `audit_logs`
 --
 
 CREATE TABLE `audit_logs` (
@@ -114,7 +114,7 @@ CREATE TABLE `audit_logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `badges`
+-- Tábla szerkezet ehhez a táblához `badges`
 --
 
 CREATE TABLE `badges` (
@@ -128,7 +128,7 @@ CREATE TABLE `badges` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `banned_users`
+-- Tábla szerkezet ehhez a táblához `banned_users`
 --
 
 CREATE TABLE `banned_users` (
@@ -143,7 +143,7 @@ CREATE TABLE `banned_users` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chat_messages`
+-- Tábla szerkezet ehhez a táblához `chat_messages`
 --
 
 CREATE TABLE `chat_messages` (
@@ -159,7 +159,7 @@ CREATE TABLE `chat_messages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `courses`
+-- Tábla szerkezet ehhez a táblához `courses`
 --
 
 CREATE TABLE `courses` (
@@ -173,10 +173,17 @@ CREATE TABLE `courses` (
   `is_active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `courses`
+--
+
+INSERT INTO `courses` (`id`, `source_language_id`, `target_language_id`, `title`, `description`, `level_min`, `level_max`, `is_active`) VALUES
+(1, 1, 4, 'English to French - Starter', 'A1 greetings and numbers.', 'A1', 'A2', 1);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `friendships`
+-- Tábla szerkezet ehhez a táblához `friendships`
 --
 
 CREATE TABLE `friendships` (
@@ -190,7 +197,7 @@ CREATE TABLE `friendships` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `languages`
+-- Tábla szerkezet ehhez a táblához `languages`
 --
 
 CREATE TABLE `languages` (
@@ -199,10 +206,35 @@ CREATE TABLE `languages` (
   `code` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `languages`
+--
+
+INSERT INTO `languages` (`id`, `name`, `code`) VALUES
+(1, 'English', 'en'),
+(2, 'Hungarian', 'hu'),
+(3, 'German', 'de'),
+(4, 'French', 'fr'),
+(5, 'Spanish', 'es'),
+(6, 'Italian', 'it'),
+(7, 'Portuguese', 'pt'),
+(8, 'Dutch', 'nl'),
+(9, 'Polish', 'pl'),
+(10, 'Romanian', 'ro'),
+(11, 'Czech', 'cs'),
+(12, 'Slovak', 'sk'),
+(13, 'Ukrainian', 'uk'),
+(14, 'Russian', 'ru'),
+(15, 'Turkish', 'tr'),
+(16, 'Arabic', 'ar'),
+(17, 'Chinese', 'zh'),
+(18, 'Japanese', 'ja'),
+(19, 'Korean', 'ko');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `leaderboards`
+-- Tábla szerkezet ehhez a táblához `leaderboards`
 --
 
 CREATE TABLE `leaderboards` (
@@ -215,7 +247,7 @@ CREATE TABLE `leaderboards` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `leaderboard_entries`
+-- Tábla szerkezet ehhez a táblához `leaderboard_entries`
 --
 
 CREATE TABLE `leaderboard_entries` (
@@ -229,7 +261,7 @@ CREATE TABLE `leaderboard_entries` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lessons`
+-- Tábla szerkezet ehhez a táblához `lessons`
 --
 
 CREATE TABLE `lessons` (
@@ -243,10 +275,18 @@ CREATE TABLE `lessons` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `lessons`
+--
+
+INSERT INTO `lessons` (`id`, `course_id`, `title`, `type`, `order_index`, `xp_reward`, `media_id`, `created_at`) VALUES
+(1, 1, 'Greetings', 'mixed', 1, 30, NULL, '2026-01-28 06:38:38'),
+(2, 1, 'Numbers 1-5', 'mixed', 2, 30, NULL, '2026-01-28 06:38:38');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lesson_contents`
+-- Tábla szerkezet ehhez a táblához `lesson_contents`
 --
 
 CREATE TABLE `lesson_contents` (
@@ -259,10 +299,40 @@ CREATE TABLE `lesson_contents` (
   `media_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `lesson_contents`
+--
+
+INSERT INTO `lesson_contents` (`id`, `lesson_id`, `content_type`, `question`, `answer`, `options`, `media_id`) VALUES
+(1, 1, 'text', 'Hello → French?', 'Bonjour', NULL, NULL),
+(2, 1, 'text', 'Good evening → French?', 'Bonsoir', NULL, NULL),
+(3, 1, 'text', 'Hi / informal hello → French?', 'Salut', NULL, NULL),
+(4, 1, 'text', 'Goodbye → French?', 'Au revoir', NULL, NULL),
+(5, 1, 'text', 'Please → French?', 'S’il vous plaît', NULL, NULL),
+(6, 1, 'text', 'Thank you → French?', 'Merci', NULL, NULL),
+(7, 1, 'multiple_choice', 'Which means “Hello”?', 'Bonjour', '[\n  { \"text\": \"Bonjour\", \"audioUrl\": \"/media/audio/french/bonjour.wav\" },\n  { \"text\": \"Bonsoir\", \"audioUrl\": \"/media/audio/french/bonsoir.wav\" },\n  { \"text\": \"Salut\",   \"audioUrl\": \"/media/audio/french/salut.wav\" },\n  { \"text\": \"Merci\",   \"audioUrl\": \"/media/audio/french/merci.wav\" }\n]', NULL),
+(8, 1, 'multiple_choice', 'Which means “Good evening”?', 'Bonsoir', '[\"Bonjour\",\"Bonsoir\",\"Salut\",\"Au revoir\"]', NULL),
+(9, 1, 'multiple_choice', 'Which means “Thank you”?', 'Merci', '[\"Merci\",\"S’il vous plaît\",\"Au revoir\",\"Bonjour\"]', NULL),
+(10, 1, 'fill_blank', 'Fill: Bon____', 'jour', NULL, NULL),
+(11, 1, 'fill_blank', 'Fill: Bonso___', 'ir', NULL, NULL),
+(12, 1, 'fill_blank', 'Fill: Sa___', 'lut', NULL, NULL),
+(13, 2, 'text', 'One → French?', 'Un', NULL, 1),
+(14, 2, 'text', 'Two → French?', 'Deux', NULL, 2),
+(15, 2, 'text', 'Three → French?', 'Trois', NULL, 3),
+(16, 2, 'text', 'Four → French?', 'Quatre', NULL, 4),
+(17, 2, 'text', 'Five → French?', 'Cinq', NULL, 5),
+(18, 2, 'multiple_choice', 'Which means “One”?', 'Un', '[\"Deux\",\"Un\",\"Trois\",\"Cinq\"]', NULL),
+(19, 2, 'multiple_choice', 'Which means “Two”?', 'Deux', '[\n  { \"text\": \"Deux\",   \"audioUrl\": \"/media/audio/french/deux.wav\" },\n  { \"text\": \"Trois\",  \"audioUrl\": \"/media/audio/french/trois.wav\" },\n  { \"text\": \"Quatre\", \"audioUrl\": \"/media/audio/french/quatre.wav\" },\n  { \"text\": \"Cinq\",   \"audioUrl\": \"/media/audio/french/cinq.wav\" }\n]', NULL),
+(20, 2, 'multiple_choice', 'Which means “Three”?', 'Trois', '[\"Trois\",\"Un\",\"Deux\",\"Quatre\"]', NULL),
+(21, 2, 'multiple_choice', 'Which means “Four”?', 'Quatre', '[\"Cinq\",\"Quatre\",\"Deux\",\"Un\"]', NULL),
+(22, 2, 'multiple_choice', 'Which means “Five”?', 'Cinq', '[\"Trois\",\"Deux\",\"Cinq\",\"Quatre\"]', NULL),
+(23, 2, 'fill_blank', 'Fill: Qua____ (Four)', 'tre', NULL, NULL),
+(24, 2, 'fill_blank', 'Fill: Ci__ (Five)', 'nq', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `media_files`
+-- Tábla szerkezet ehhez a táblához `media_files`
 --
 
 CREATE TABLE `media_files` (
@@ -274,10 +344,23 @@ CREATE TABLE `media_files` (
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `media_files`
+--
+
+INSERT INTO `media_files` (`id`, `file_url`, `file_type`, `uploader_id`, `used_in`, `uploaded_at`) VALUES
+(1, '/media/audio/french/un.wav', 'audio', NULL, 'lesson_content', '2026-01-28 06:34:06'),
+(2, '/media/audio/french/deux.wav', 'audio', NULL, 'lesson_content', '2026-01-28 06:34:06'),
+(3, '/media/audio/french/trois.wav', 'audio', NULL, 'lesson_content', '2026-01-28 06:34:06'),
+(4, '/media/audio/french/quatre.wav', 'audio', NULL, 'lesson_content', '2026-01-28 06:34:06'),
+(5, '/media/audio/french/cinq.wav', 'audio', NULL, 'lesson_content', '2026-01-28 06:34:06'),
+(6, '/media/string/dc8933dc-69ed-4cd5-a2e7-a61e31cfd956_sil_vous_plait.mp3', '', NULL, NULL, '2026-01-28 08:58:05'),
+(7, '/media/french/330ea028-c3d8-4648-8a00-33306c2e249b_au_revoir.mp3', '', NULL, NULL, '2026-01-28 08:59:41');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifications`
+-- Tábla szerkezet ehhez a táblához `notifications`
 --
 
 CREATE TABLE `notifications` (
@@ -292,7 +375,7 @@ CREATE TABLE `notifications` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `practice_sessions`
+-- Tábla szerkezet ehhez a táblához `practice_sessions`
 --
 
 CREATE TABLE `practice_sessions` (
@@ -308,7 +391,7 @@ CREATE TABLE `practice_sessions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `quests`
+-- Tábla szerkezet ehhez a táblához `quests`
 --
 
 CREATE TABLE `quests` (
@@ -323,7 +406,7 @@ CREATE TABLE `quests` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reports`
+-- Tábla szerkezet ehhez a táblához `reports`
 --
 
 CREATE TABLE `reports` (
@@ -339,7 +422,7 @@ CREATE TABLE `reports` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `settings`
+-- Tábla szerkezet ehhez a táblához `settings`
 --
 
 CREATE TABLE `settings` (
@@ -355,7 +438,7 @@ CREATE TABLE `settings` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `store_items`
+-- Tábla szerkezet ehhez a táblához `store_items`
 --
 
 CREATE TABLE `store_items` (
@@ -369,7 +452,7 @@ CREATE TABLE `store_items` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subscriptions`
+-- Tábla szerkezet ehhez a táblához `subscriptions`
 --
 
 CREATE TABLE `subscriptions` (
@@ -387,7 +470,7 @@ CREATE TABLE `subscriptions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Tábla szerkezet ehhez a táblához `users`
 --
 
 CREATE TABLE `users` (
@@ -405,19 +488,22 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- A tábla adatainak kiíratása `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `display_name`, `email`, `password_hash`, `profile_pic_url`, `hearts`, `coins`, `is_premium`, `role`, `created_at`) VALUES
 (1, 'lynqotester', 'Lynqo Tester', 'lynqotester@example.com', 'b6um5O1yTFtU+tGeypiSPiGYzbunjbXnRnLIMhf7M6Y=', NULL, 5, 0, 0, 'user', '2025-10-23 12:10:28'),
 (2, 'lynqotester1', 'lynqotester1', 'lynqotester1@example.com', 'b6um5O1yTFtU+tGeypiSPiGYzbunjbXnRnLIMhf7M6Y=', NULL, 5, 0, 0, 'user', '2025-10-23 12:12:25'),
 (3, 'bubu', 'bubu', 'andren@kkszki.hu', '0XK8fuW779KXzSf3nrWaVRxN3lebIJCuSj+NEQazk9E=', NULL, 5, 0, 0, 'user', '2025-10-23 12:17:57'),
-(5, 'test1', 'test1', 'test1@1', 'G08OmFGXGZjnMgeFRMlrNsPQHO33yqMyNZ1vHYNWcBQ=', NULL, 5, 0, 0, 'user', '2025-11-17 20:22:09');
+(5, 'test1', 'test1', 'test1@1', 'G08OmFGXGZjnMgeFRMlrNsPQHO33yqMyNZ1vHYNWcBQ=', NULL, 5, 0, 0, 'user', '2025-11-17 20:22:09'),
+(6, 'testgamer', 'Test Gamer', 'testgamer@example.com', '75K3eLr+dx6JJFuJ7LwIpEpOFmwGZZkRiB84PURz6U8=', NULL, 5, 0, 0, 'user', '2026-01-23 06:04:30'),
+(7, 'cisco', 'cisco', 'cisco@gmail.com', 'sYvKoPjrgIO/RUL3Di0PHSISfUHW8hkEaExgEPefbGo=', NULL, 5, 0, 0, 'user', '2026-01-26 08:39:55'),
+(8, 'Admin', 'Admin', 'admin@gmail.com', 'YP50QG5/NT7ZefNQ8vu2ouhpCl+n0bDDKYPR2LP5X2c=', NULL, 5, 0, 0, 'user', '2026-01-26 08:58:25');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_badges`
+-- Tábla szerkezet ehhez a táblához `user_badges`
 --
 
 CREATE TABLE `user_badges` (
@@ -430,7 +516,7 @@ CREATE TABLE `user_badges` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_lessons`
+-- Tábla szerkezet ehhez a táblához `user_lessons`
 --
 
 CREATE TABLE `user_lessons` (
@@ -446,7 +532,7 @@ CREATE TABLE `user_lessons` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_purchases`
+-- Tábla szerkezet ehhez a táblához `user_purchases`
 --
 
 CREATE TABLE `user_purchases` (
@@ -460,7 +546,7 @@ CREATE TABLE `user_purchases` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_quests`
+-- Tábla szerkezet ehhez a táblához `user_quests`
 --
 
 CREATE TABLE `user_quests` (
@@ -474,7 +560,7 @@ CREATE TABLE `user_quests` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_xp`
+-- Tábla szerkezet ehhez a táblához `user_xp`
 --
 
 CREATE TABLE `user_xp` (
@@ -486,11 +572,11 @@ CREATE TABLE `user_xp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Indexek a kiírt táblákhoz
 --
 
 --
--- Indexes for table `admin_logs`
+-- A tábla indexei `admin_logs`
 --
 ALTER TABLE `admin_logs`
   ADD PRIMARY KEY (`id`),
@@ -498,14 +584,14 @@ ALTER TABLE `admin_logs`
   ADD KEY `target_user_id` (`target_user_id`);
 
 --
--- Indexes for table `ai_messages`
+-- A tábla indexei `ai_messages`
 --
 ALTER TABLE `ai_messages`
   ADD PRIMARY KEY (`id`),
   ADD KEY `session_id` (`session_id`);
 
 --
--- Indexes for table `ai_sessions`
+-- A tábla indexei `ai_sessions`
 --
 ALTER TABLE `ai_sessions`
   ADD PRIMARY KEY (`id`),
@@ -513,7 +599,7 @@ ALTER TABLE `ai_sessions`
   ADD KEY `lesson_id` (`lesson_id`);
 
 --
--- Indexes for table `analytics`
+-- A tábla indexei `analytics`
 --
 ALTER TABLE `analytics`
   ADD PRIMARY KEY (`id`),
@@ -521,27 +607,27 @@ ALTER TABLE `analytics`
   ADD KEY `lesson_id` (`lesson_id`);
 
 --
--- Indexes for table `api_tokens`
+-- A tábla indexei `api_tokens`
 --
 ALTER TABLE `api_tokens`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `audit_logs`
+-- A tábla indexei `audit_logs`
 --
 ALTER TABLE `audit_logs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `badges`
+-- A tábla indexei `badges`
 --
 ALTER TABLE `badges`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `banned_users`
+-- A tábla indexei `banned_users`
 --
 ALTER TABLE `banned_users`
   ADD PRIMARY KEY (`id`),
@@ -549,7 +635,7 @@ ALTER TABLE `banned_users`
   ADD KEY `issued_by` (`issued_by`);
 
 --
--- Indexes for table `chat_messages`
+-- A tábla indexei `chat_messages`
 --
 ALTER TABLE `chat_messages`
   ADD PRIMARY KEY (`id`),
@@ -557,7 +643,7 @@ ALTER TABLE `chat_messages`
   ADD KEY `receiver_id` (`receiver_id`);
 
 --
--- Indexes for table `courses`
+-- A tábla indexei `courses`
 --
 ALTER TABLE `courses`
   ADD PRIMARY KEY (`id`),
@@ -565,7 +651,7 @@ ALTER TABLE `courses`
   ADD KEY `target_language_id` (`target_language_id`);
 
 --
--- Indexes for table `friendships`
+-- A tábla indexei `friendships`
 --
 ALTER TABLE `friendships`
   ADD PRIMARY KEY (`id`),
@@ -573,20 +659,20 @@ ALTER TABLE `friendships`
   ADD KEY `receiver_id` (`receiver_id`);
 
 --
--- Indexes for table `languages`
+-- A tábla indexei `languages`
 --
 ALTER TABLE `languages`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`);
 
 --
--- Indexes for table `leaderboards`
+-- A tábla indexei `leaderboards`
 --
 ALTER TABLE `leaderboards`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `leaderboard_entries`
+-- A tábla indexei `leaderboard_entries`
 --
 ALTER TABLE `leaderboard_entries`
   ADD PRIMARY KEY (`id`),
@@ -594,48 +680,48 @@ ALTER TABLE `leaderboard_entries`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `lessons`
+-- A tábla indexei `lessons`
 --
 ALTER TABLE `lessons`
   ADD PRIMARY KEY (`id`),
   ADD KEY `course_id` (`course_id`);
 
 --
--- Indexes for table `lesson_contents`
+-- A tábla indexei `lesson_contents`
 --
 ALTER TABLE `lesson_contents`
   ADD PRIMARY KEY (`id`),
   ADD KEY `lesson_id` (`lesson_id`);
 
 --
--- Indexes for table `media_files`
+-- A tábla indexei `media_files`
 --
 ALTER TABLE `media_files`
   ADD PRIMARY KEY (`id`),
   ADD KEY `uploader_id` (`uploader_id`);
 
 --
--- Indexes for table `notifications`
+-- A tábla indexei `notifications`
 --
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `practice_sessions`
+-- A tábla indexei `practice_sessions`
 --
 ALTER TABLE `practice_sessions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `quests`
+-- A tábla indexei `quests`
 --
 ALTER TABLE `quests`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `reports`
+-- A tábla indexei `reports`
 --
 ALTER TABLE `reports`
   ADD PRIMARY KEY (`id`),
@@ -644,27 +730,27 @@ ALTER TABLE `reports`
   ADD KEY `resolved_by` (`resolved_by`);
 
 --
--- Indexes for table `settings`
+-- A tábla indexei `settings`
 --
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `store_items`
+-- A tábla indexei `store_items`
 --
 ALTER TABLE `store_items`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `subscriptions`
+-- A tábla indexei `subscriptions`
 --
 ALTER TABLE `subscriptions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `users`
+-- A tábla indexei `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -672,7 +758,7 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Indexes for table `user_badges`
+-- A tábla indexei `user_badges`
 --
 ALTER TABLE `user_badges`
   ADD PRIMARY KEY (`id`),
@@ -680,7 +766,7 @@ ALTER TABLE `user_badges`
   ADD KEY `badge_id` (`badge_id`);
 
 --
--- Indexes for table `user_lessons`
+-- A tábla indexei `user_lessons`
 --
 ALTER TABLE `user_lessons`
   ADD PRIMARY KEY (`id`),
@@ -688,7 +774,7 @@ ALTER TABLE `user_lessons`
   ADD KEY `lesson_id` (`lesson_id`);
 
 --
--- Indexes for table `user_purchases`
+-- A tábla indexei `user_purchases`
 --
 ALTER TABLE `user_purchases`
   ADD PRIMARY KEY (`id`),
@@ -696,7 +782,7 @@ ALTER TABLE `user_purchases`
   ADD KEY `item_id` (`item_id`);
 
 --
--- Indexes for table `user_quests`
+-- A tábla indexei `user_quests`
 --
 ALTER TABLE `user_quests`
   ADD PRIMARY KEY (`id`),
@@ -704,306 +790,306 @@ ALTER TABLE `user_quests`
   ADD KEY `quest_id` (`quest_id`);
 
 --
--- Indexes for table `user_xp`
+-- A tábla indexei `user_xp`
 --
 ALTER TABLE `user_xp`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- A kiírt táblák AUTO_INCREMENT értéke
 --
 
 --
--- AUTO_INCREMENT for table `admin_logs`
+-- AUTO_INCREMENT a táblához `admin_logs`
 --
 ALTER TABLE `admin_logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `ai_messages`
+-- AUTO_INCREMENT a táblához `ai_messages`
 --
 ALTER TABLE `ai_messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `ai_sessions`
+-- AUTO_INCREMENT a táblához `ai_sessions`
 --
 ALTER TABLE `ai_sessions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `analytics`
+-- AUTO_INCREMENT a táblához `analytics`
 --
 ALTER TABLE `analytics`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `api_tokens`
+-- AUTO_INCREMENT a táblához `api_tokens`
 --
 ALTER TABLE `api_tokens`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `audit_logs`
+-- AUTO_INCREMENT a táblához `audit_logs`
 --
 ALTER TABLE `audit_logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `badges`
+-- AUTO_INCREMENT a táblához `badges`
 --
 ALTER TABLE `badges`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `banned_users`
+-- AUTO_INCREMENT a táblához `banned_users`
 --
 ALTER TABLE `banned_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `chat_messages`
+-- AUTO_INCREMENT a táblához `chat_messages`
 --
 ALTER TABLE `chat_messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `courses`
+-- AUTO_INCREMENT a táblához `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `friendships`
+-- AUTO_INCREMENT a táblához `friendships`
 --
 ALTER TABLE `friendships`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `languages`
+-- AUTO_INCREMENT a táblához `languages`
 --
 ALTER TABLE `languages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- AUTO_INCREMENT for table `leaderboards`
+-- AUTO_INCREMENT a táblához `leaderboards`
 --
 ALTER TABLE `leaderboards`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `leaderboard_entries`
+-- AUTO_INCREMENT a táblához `leaderboard_entries`
 --
 ALTER TABLE `leaderboard_entries`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `lessons`
+-- AUTO_INCREMENT a táblához `lessons`
 --
 ALTER TABLE `lessons`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `lesson_contents`
+-- AUTO_INCREMENT a táblához `lesson_contents`
 --
 ALTER TABLE `lesson_contents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT for table `media_files`
+-- AUTO_INCREMENT a táblához `media_files`
 --
 ALTER TABLE `media_files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `notifications`
+-- AUTO_INCREMENT a táblához `notifications`
 --
 ALTER TABLE `notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `practice_sessions`
+-- AUTO_INCREMENT a táblához `practice_sessions`
 --
 ALTER TABLE `practice_sessions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `quests`
+-- AUTO_INCREMENT a táblához `quests`
 --
 ALTER TABLE `quests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `reports`
+-- AUTO_INCREMENT a táblához `reports`
 --
 ALTER TABLE `reports`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `settings`
+-- AUTO_INCREMENT a táblához `settings`
 --
 ALTER TABLE `settings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `store_items`
+-- AUTO_INCREMENT a táblához `store_items`
 --
 ALTER TABLE `store_items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `subscriptions`
+-- AUTO_INCREMENT a táblához `subscriptions`
 --
 ALTER TABLE `subscriptions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `user_badges`
+-- AUTO_INCREMENT a táblához `user_badges`
 --
 ALTER TABLE `user_badges`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user_lessons`
+-- AUTO_INCREMENT a táblához `user_lessons`
 --
 ALTER TABLE `user_lessons`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user_purchases`
+-- AUTO_INCREMENT a táblához `user_purchases`
 --
 ALTER TABLE `user_purchases`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user_quests`
+-- AUTO_INCREMENT a táblához `user_quests`
 --
 ALTER TABLE `user_quests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user_xp`
+-- AUTO_INCREMENT a táblához `user_xp`
 --
 ALTER TABLE `user_xp`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for dumped tables
+-- Megkötések a kiírt táblákhoz
 --
 
 --
--- Constraints for table `admin_logs`
+-- Megkötések a táblához `admin_logs`
 --
 ALTER TABLE `admin_logs`
   ADD CONSTRAINT `admin_logs_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `admin_logs_ibfk_2` FOREIGN KEY (`target_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `ai_messages`
+-- Megkötések a táblához `ai_messages`
 --
 ALTER TABLE `ai_messages`
   ADD CONSTRAINT `ai_messages_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `ai_sessions` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `ai_sessions`
+-- Megkötések a táblához `ai_sessions`
 --
 ALTER TABLE `ai_sessions`
   ADD CONSTRAINT `ai_sessions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `ai_sessions_ibfk_2` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `analytics`
+-- Megkötések a táblához `analytics`
 --
 ALTER TABLE `analytics`
   ADD CONSTRAINT `analytics_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `analytics_ibfk_2` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `api_tokens`
+-- Megkötések a táblához `api_tokens`
 --
 ALTER TABLE `api_tokens`
   ADD CONSTRAINT `api_tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `audit_logs`
+-- Megkötések a táblához `audit_logs`
 --
 ALTER TABLE `audit_logs`
   ADD CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `banned_users`
+-- Megkötések a táblához `banned_users`
 --
 ALTER TABLE `banned_users`
   ADD CONSTRAINT `banned_users_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `banned_users_ibfk_2` FOREIGN KEY (`issued_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `chat_messages`
+-- Megkötések a táblához `chat_messages`
 --
 ALTER TABLE `chat_messages`
   ADD CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `chat_messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `courses`
+-- Megkötések a táblához `courses`
 --
 ALTER TABLE `courses`
   ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`source_language_id`) REFERENCES `languages` (`id`),
   ADD CONSTRAINT `courses_ibfk_2` FOREIGN KEY (`target_language_id`) REFERENCES `languages` (`id`);
 
 --
--- Constraints for table `friendships`
+-- Megkötések a táblához `friendships`
 --
 ALTER TABLE `friendships`
   ADD CONSTRAINT `friendships_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `friendships_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `leaderboard_entries`
+-- Megkötések a táblához `leaderboard_entries`
 --
 ALTER TABLE `leaderboard_entries`
   ADD CONSTRAINT `leaderboard_entries_ibfk_1` FOREIGN KEY (`leaderboard_id`) REFERENCES `leaderboards` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `leaderboard_entries_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `lessons`
+-- Megkötések a táblához `lessons`
 --
 ALTER TABLE `lessons`
   ADD CONSTRAINT `lessons_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `lesson_contents`
+-- Megkötések a táblához `lesson_contents`
 --
 ALTER TABLE `lesson_contents`
   ADD CONSTRAINT `lesson_contents_ibfk_1` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `media_files`
+-- Megkötések a táblához `media_files`
 --
 ALTER TABLE `media_files`
   ADD CONSTRAINT `media_files_ibfk_1` FOREIGN KEY (`uploader_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `notifications`
+-- Megkötések a táblához `notifications`
 --
 ALTER TABLE `notifications`
   ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `practice_sessions`
+-- Megkötések a táblához `practice_sessions`
 --
 ALTER TABLE `practice_sessions`
   ADD CONSTRAINT `practice_sessions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `reports`
+-- Megkötések a táblához `reports`
 --
 ALTER TABLE `reports`
   ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`reporter_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
@@ -1011,47 +1097,47 @@ ALTER TABLE `reports`
   ADD CONSTRAINT `reports_ibfk_3` FOREIGN KEY (`resolved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `settings`
+-- Megkötések a táblához `settings`
 --
 ALTER TABLE `settings`
   ADD CONSTRAINT `settings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `subscriptions`
+-- Megkötések a táblához `subscriptions`
 --
 ALTER TABLE `subscriptions`
   ADD CONSTRAINT `subscriptions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_badges`
+-- Megkötések a táblához `user_badges`
 --
 ALTER TABLE `user_badges`
   ADD CONSTRAINT `user_badges_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_badges_ibfk_2` FOREIGN KEY (`badge_id`) REFERENCES `badges` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_lessons`
+-- Megkötések a táblához `user_lessons`
 --
 ALTER TABLE `user_lessons`
   ADD CONSTRAINT `user_lessons_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_lessons_ibfk_2` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_purchases`
+-- Megkötések a táblához `user_purchases`
 --
 ALTER TABLE `user_purchases`
   ADD CONSTRAINT `user_purchases_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_purchases_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `store_items` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_quests`
+-- Megkötések a táblához `user_quests`
 --
 ALTER TABLE `user_quests`
   ADD CONSTRAINT `user_quests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_quests_ibfk_2` FOREIGN KEY (`quest_id`) REFERENCES `quests` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_xp`
+-- Megkötések a táblához `user_xp`
 --
 ALTER TABLE `user_xp`
   ADD CONSTRAINT `user_xp_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;

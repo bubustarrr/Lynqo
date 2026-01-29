@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import './App.css';
+import { LanguageProvider } from './context/LanguageContext';
 
 
 import RegisterPage from './pages/RegisterPage';
@@ -12,6 +13,7 @@ import ShopPage from './pages/ShopPage';
 import NewsPage from './pages/NewsPage';
 import SettingsPage from './pages/SettingsPage';
 import Footer from "./components/common/Footer";
+import LanguageCourses from './components/common/LanguageSelector';
 
 
 function AppContent() {
@@ -44,7 +46,7 @@ function AppContent() {
           <Route path="/main" element={<MainPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/shop" element={<LanguageCourses/>} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/" element={<Navigate to="/main" replace />} />

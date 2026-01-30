@@ -5,8 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter } from 'react-router-dom';
 import './assets/styles/global.css';
 import 'bootstrap/dist/css/bootstrap.css';
-
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider } from "./context/LanguageContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

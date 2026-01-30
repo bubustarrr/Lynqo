@@ -1,12 +1,9 @@
+import React, { createContext, useContext, useState } from "react";
+
+const LanguageContext = createContext();
+
 export const translations = {
   en: {
-    // NAVBAR TRANSLATIONS - ADD THESE
-    login: "Login",
-    settings: "Settings", 
-    logout: "Logout",
-    language: "EN",
-    
-    // Your existing translations:
     coursesTitle: "Courses for English Speakers",
     coursesSubtitle: "Learn a new language with our interactive courses",
     iSpeak: "I speak",
@@ -19,12 +16,6 @@ export const translations = {
     footerText2: "More languages coming soon.",
   },
   es: {
-    // NAVBAR TRANSLATIONS - ADD THESE
-    login: "Iniciar sesión",
-    settings: "Configuración",
-    logout: "Cerrar sesión",
-    language: "ES",
-    
     coursesTitle: "Cursos para hablantes de inglés",
     coursesSubtitle: "Aprende un nuevo idioma con nuestros cursos interactivos",
     iSpeak: "Yo hablo",
@@ -37,12 +28,6 @@ export const translations = {
     footerText2: "Más idiomas pronto.",
   },
   de: {
-    // NAVBAR TRANSLATIONS - ADD THESE
-    login: "Anmelden",
-    settings: "Einstellungen",
-    logout: "Abmelden",
-    language: "DE",
-    
     coursesTitle: "Kurse für Englischsprachige",
     coursesSubtitle: "Lerne eine neue Sprache mit unseren interaktiven Kursen",
     iSpeak: "Ich spreche",
@@ -55,12 +40,6 @@ export const translations = {
     footerText2: "Mehr Sprachen bald verfügbar.",
   },
   fr: {
-    // NAVBAR TRANSLATIONS - ADD THESE
-    login: "Connexion",
-    settings: "Paramètres",
-    logout: "Déconnexion",
-    language: "FR",
-    
     coursesTitle: "Cours pour anglophones",
     coursesSubtitle: "Apprenez une nouvelle langue avec nos cours interactifs",
     iSpeak: "Je parle",
@@ -72,4 +51,24 @@ export const translations = {
     footerText1: "Apprenez partout et à tout moment.",
     footerText2: "Plus de langues bientôt.",
   },
+};
+
+export const LanguageProvider = ({ children }) => {
+  const [language, setLanguage] = useState("en");
+
+  const value = {
+    language,
+    setLanguage,
+    translations,
+  };
+
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+export const useLanguage = () => {
+  return useContext(LanguageContext);
 };

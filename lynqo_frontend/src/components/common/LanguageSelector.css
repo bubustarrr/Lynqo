@@ -32,7 +32,7 @@
 }
 
 .main-content {
-  display: flex;
+  
   flex-direction: column;
   gap: 20px;
   
@@ -42,8 +42,6 @@
 .language-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-
-  margin-right: 500px;
   gap: 25px;
   width: 100%;
 }
@@ -320,5 +318,21 @@
   
   .language-name {
     font-size: 1.6rem;
+  }
+}
+@media (max-width: 576px) {
+  .language-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .language-card {
+    min-height: auto;
+    padding: 18px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .subtitle {
+    font-size: 1rem;
   }
 }

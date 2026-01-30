@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './LanguageSelector.css';
-import { useLanguage } from '../../context/LanguageContext';
-import { translations } from '../../i18n';
+import { useLanguage } from '../../context/LanguageContext'; // Import the hook
 
 const LanguageCourses = () => {
   // Initial language data with learner counts and unlock status
@@ -43,14 +42,16 @@ const LanguageCourses = () => {
     { code: 'ko', name: '한국어', nativeName: '한국어' },
   ];
 
-
   // Unlocked interface languages (English, Spanish, German, French)
   const unlockedInterfaceLanguages = ['en', 'es', 'de', 'fr'];
 
+  // State variables
   const [languages, setLanguages] = useState(initialLanguages);
   const [selectedInterfaceLang, setSelectedInterfaceLang] = useState('en');
 
-  
+  // USE THE LANGUAGE CONTEXT HERE - THIS IS THE KEY CHANGE
+  const { t } = useLanguage(); // Get translations from context
+
   // Function to toggle language unlock status - ONLY for already unlocked languages
   const toggleLanguageUnlock = (index) => {
     // Only allow toggling if the language is already unlocked in the initial data
@@ -62,10 +63,6 @@ const LanguageCourses = () => {
     setLanguages(updatedLanguages);
   };
 
-  const getSelectedLanguageEnglishName = () => {
-  const lang = interfaceLanguages.find(l => l.code === selectedInterfaceLang);
-  return lang ? lang.name : 'English';
-};
   // Function to unlock all languages (for demonstration)
   const unlockAllLanguages = () => {
     const updatedLanguages = languages.map(lang => ({ ...lang, unlocked: true }));
@@ -83,11 +80,16 @@ const LanguageCourses = () => {
     return lang ? lang.nativeName : 'English';
   };
 
+  const getSelectedLanguageEnglishName = () => {
+    const lang = interfaceLanguages.find(l => l.code === selectedInterfaceLang);
+    return lang ? lang.name : 'English';
+  };
+
   return (
     <div className="language-courses-container">
       <header className="header">
         <h1>{t.coursesTitle}</h1>
-<div className="subtitle">{t.coursesSubtitle}</div>
+        <div className="subtitle">{t.coursesSubtitle}</div>
       </header>
 
       <main className="main-content">
@@ -105,7 +107,7 @@ const LanguageCourses = () => {
               >
                 <div className="language-name">{language.name}</div>
                 <div className="learners-count">{language.learners} learners</div>
-               <div className="status-indicator">
+                <div className="status-indicator">
                   {language.unlocked ? t.unlocked : t.locked}
                 </div>
                 {!wasInitiallyUnlocked && (
@@ -116,11 +118,9 @@ const LanguageCourses = () => {
           })}
         </div>
 
-        
-
         <div className="interface-language-section">
           <h2>
-           <span className="speak-text">{t.iSpeak}</span>
+            <span className="speak-text">{t.iSpeak}</span>
             <span className="language-name-text">{getSelectedLanguageName()}</span>
           </h2>
           
@@ -142,16 +142,16 @@ const LanguageCourses = () => {
           </div>
           
           <div className="interface-footer">
-           <div className="all-languages-tag">{t.allLanguages}</div>
-           <div className="learners-count-large">21.9M {t.learnersWorldwide}</div>
+            <div className="all-languages-tag">{t.allLanguages}</div>
+            <div className="learners-count-large">21.9M {t.learnersWorldwide}</div>
           </div>
         </div>
       </main>
 
       <footer className="footer">
-  <p>{t.footerText1}</p>
-  <p>{t.footerText2}</p>
-</footer>
+        <p>{t.footerText1}</p>
+        <p>{t.footerText2}</p>
+      </footer>
     </div>
   );
 };

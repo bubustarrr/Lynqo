@@ -4,7 +4,6 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 import './App.css';
 import { LanguageProvider } from './context/LanguageContext';
 
-
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
@@ -14,7 +13,6 @@ import NewsPage from './pages/NewsPage';
 import SettingsPage from './pages/SettingsPage';
 import Footer from "./components/common/Footer";
 import LanguageCourses from './components/common/LanguageSelector';
-
 
 function AppContent() {
   const location = useLocation();
@@ -46,7 +44,7 @@ function AppContent() {
           <Route path="/main" element={<MainPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/shop" element={<LanguageCourses/>} />
+          <Route path="/shop" element={<LanguageCourses />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/" element={<Navigate to="/main" replace />} />
@@ -54,13 +52,15 @@ function AppContent() {
         </Routes>
       </main>
 
-<Footer />
-</div>
+      <Footer />
+    </div>
   );
 }
 
 export default function App() {
   return (
-    <AppContent />
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }

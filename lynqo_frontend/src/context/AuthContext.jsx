@@ -2,28 +2,41 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
+  
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); 
 
+  
   useEffect(() => {
-    // load user from localStorage/session (optional)
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) setUser(JSON.parse(savedUser));
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Hibás user adat a tárolóban", error);
+        localStorage.removeItem('user');
+      }
+    }
+    setLoading(false);
   }, []);
 
+  
   const login = (userData) => {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
+  
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
-}
+};

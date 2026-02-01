@@ -1,0 +1,95 @@
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #131F24;
+  color: #fff;
+  font-family: sans-serif;
+  margin-top: 0; 
+}
+
+
+.sidebar {
+  width: 250px;
+  border-right: 2px solid #2b3b45;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background-color: #131F24;
+}
+
+.logo { color: #58cc02; margin-bottom: 30px; }
+
+.nav-links { list-style: none; padding: 0; }
+.nav-links li {
+  padding: 12px; margin-bottom: 5px; cursor: pointer;
+  display: flex; align-items: center; font-weight: bold;
+  color: #777; border-radius: 12px; text-transform: uppercase;
+  font-size: 0.9rem; letter-spacing: 1px;
+}
+.nav-links li:hover { background-color: #202f36; }
+.nav-links li.active {
+  color: #1cb0f6; background-color: #15262f; border: 2px solid #1cb0f6;
+}
+.nav-links .icon { margin-right: 15px; font-size: 1.2rem; }
+
+
+.learning-path {
+  flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center;
+}
+
+.header-banner {
+  background-color: #ff9600; width: 100%; max-width: 600px;
+  padding: 15px 20px; border-radius: 12px; display: flex;
+  justify-content: space-between; align-items: center; margin-bottom: 40px;
+  border-bottom: 4px solid #cc7a00;
+}
+.guidebook-btn {
+  background: rgba(0,0,0,0.1); border: none; padding: 8px 12px;
+  border-radius: 8px; color: white; cursor: pointer; font-weight: bold;
+}
+
+.path-container {
+  display: flex; flex-direction: column; align-items: center; width: 100%; gap: 30px;
+}
+
+.level-node { position: relative; width: 70px; height: 70px; }
+
+
+.pos-left { transform: translateX(-60px); }
+.pos-right { transform: translateX(60px); }
+.pos-center { transform: translateX(0); }
+
+.node-circle {
+  width: 70px; height: 70px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; cursor: pointer; position: relative; z-index: 2;
+  transition: transform 0.1s;
+}
+.node-circle:active { transform: translateY(4px); box-shadow: none !important; }
+
+
+.completed .node-circle { background-color: #ffc800; box-shadow: 0 6px 0 #cc9d00; }
+.active .node-circle { background-color: #58cc02; box-shadow: 0 6px 0 #46a302; color: white; }
+.locked .node-circle { background-color: #37464f; box-shadow: 0 6px 0 #283238; color: #52656d; }
+
+.start-bubble {
+  position: absolute; top: -35px; background: white; color: #58cc02;
+  padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: bold;
+  animation: float 1.5s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* --- JOBB OLDALSÁV --- */
+.stats-sidebar { width: 350px; padding: 20px; }
+.top-stats { display: flex; justify-content: space-around; margin-bottom: 30px; font-weight: bold; color: #afafaf; }
+.stats-card { border: 2px solid #2b3b45; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.quest-item { display: flex; align-items: center; margin-bottom: 15px; }
+.quest-icon { font-size: 1.5rem; margin-right: 15px; }
+.quest-info { flex: 1; }
+.progress-bar { height: 10px; background: #37464f; border-radius: 5px; margin-top: 5px; overflow: hidden; }
+.progress-bar .fill { height: 100%; background: #ffc800; }

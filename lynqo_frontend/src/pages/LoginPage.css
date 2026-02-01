@@ -2,7 +2,7 @@ body, .card, .form-label, .form-control {
   font-family: 'Quicksand', 'Nunito', 'Poppins', 'Comfortaa', Arial, sans-serif;
 }
 
-/* Background gradient and page centering */
+
 .login-page-container {
   min-height: 100vh;
   display: flex;
@@ -11,7 +11,7 @@ body, .card, .form-label, .form-control {
   background: linear-gradient(135deg, #6e6be6 0%, #c37fd8 50%, #3ab7f7 100%);
 }
 
-/* Frosted glass card */
+
 .login-card {
   max-width: 400px;
   width: 100%;
@@ -21,14 +21,14 @@ body, .card, .form-label, .form-control {
   backdrop-filter: blur(8px);
 }
 
-/* Title styling */
+
 .login-card h2 {
   margin-bottom: 1.5rem;
   text-align: center;
   color: #6e6be6;
 }
 
-/* Button styling */
+
 .login-button {
   width: 100%;
   font-weight: bold;

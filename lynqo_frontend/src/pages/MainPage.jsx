@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import './MainPage.css';
 
 export default function MainPage() {
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="main-page-container">
-      {/* Hero Section */}
+      
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">Learn Languages with Lynqo</h1>
@@ -13,21 +16,34 @@ export default function MainPage() {
             Master new languages through fun, interactive lessons. Join millions of learners worldwide!
           </p>
           <div className="hero-buttons">
-            <Link to="/register" className="cta-button primary">
-              Get Started
-            </Link>
-            <Link to="/login" className="cta-button secondary">
-              I Already Have an Account
-            </Link>
+            
+            
+            {user ? (
+              
+              <Link to="/dashboard" className="cta-button primary large">
+                🚀 Continue Learning (Go to Dashboard)
+              </Link>
+            ) : (
+              
+              <>
+                <Link to="/register" className="cta-button primary">
+                  Get Started
+                </Link>
+                <Link to="/login" className="cta-button secondary">
+                  I Already Have an Account
+                </Link>
+              </>
+            )}
+            
+
           </div>
         </div>
         <div className="hero-image">
-          {/* Placeholder for hero image or illustration */}
           <div className="hero-illustration"></div>
         </div>
       </section>
 
-      {/* Features Section */}
+      
       <section className="features-section">
         <h2 className="section-title">Why Choose Lynqo?</h2>
         <div className="features-grid">
@@ -54,28 +70,15 @@ export default function MainPage() {
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="cta-section">
-        <h2>Ready to Start Your Language Journey?</h2>
-        <p>Join thousands of learners and unlock your potential today.</p>
-        <Link to="/register" className="cta-button primary large">
-          Start Learning Now
-        </Link>
-      </section>
-
-{/* Admin Testing Section */}
-<section className="admin-section">
+      
+      <section className="admin-section">
         <h2 className="section-title">🛠️ Admin Testing (Development)</h2>
         <div className="admin-buttons">
-          <Link to="/main" className="admin-btn">🏠 Main Page</Link>
           <Link to="/register" className="admin-btn">📝 Register</Link>
           <Link to="/login" className="admin-btn">🔐 Login</Link>
-          <Link to="/settings" className="admin-btn">⚙️ Settings</Link>
-          <Link to="/shop" className="admin-btn">🛒 Shop</Link>
-          <Link to="/news" className="admin-btn">📰 News</Link>
+          {user && <Link to="/dashboard" className="admin-btn">💎 Dashboard</Link>}
         </div>
       </section>
-
     </div>
   );
 }

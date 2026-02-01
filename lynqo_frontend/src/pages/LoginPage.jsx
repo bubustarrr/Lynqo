@@ -1,21 +1,21 @@
-import React, { useState, useContext, useEffect } from 'react'; 
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button, Card } from 'react-bootstrap';
+import { Form, Button, Card, Alert } from 'react-bootstrap';
 import './LoginPage.css';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ usernameOrEmail: '', password: '', rememberMe: false });
-  
-  
-  const { login, user } = useContext(AuthContext); 
-  
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  
+  // Ha már be van lépve, ne engedje látni a formot
   useEffect(() => {
     if (user) {
-      navigate('/dashboard', { replace: true }); 
+      navigate('/dashboard', { replace: true });
     }
   }, [user, navigate]);
 
@@ -25,36 +25,48 @@ export default function LoginPage() {
       ...form,
       [name]: type === 'checkbox' ? checked : value
     });
+    setError(null);
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    if (isLoading) return;
+
+    setIsLoading(true);
+    setError(null);
+
     try {
       const res = await fetch('https://localhost:7118/api/Auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      if (!res.ok) throw new Error('Login failed');
+
+      if (!res.ok) {
+        throw new Error('Login failed. Please check your credentials.');
+      }
+
       const data = await res.json();
       
-      
+      // FONTOS: Ez állítja át a Context-et "Bejelentkezett" állapotra!
       login(data);
-      navigate('/dashboard');
+      
+      navigate('/dashboard'); 
+      
     } catch (err) {
-      alert(err.message);
+      setError(err.message);
+      setIsLoading(false);
     }
   };
 
-  
-  if (user) {
-      return null; 
-  }
+  if (user) return null;
 
   return (
     <div className="login-page-container">
       <Card className="login-card">
         <h2>Login</h2>
+        {error && <Alert variant="danger">{error}</Alert>}
+        
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="loginUsernameOrEmail">
             <Form.Label>Username or Email</Form.Label>
@@ -65,6 +77,7 @@ export default function LoginPage() {
               value={form.usernameOrEmail}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="loginPassword">
@@ -76,6 +89,7 @@ export default function LoginPage() {
               value={form.password}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </Form.Group>
           <Form.Check
@@ -86,9 +100,10 @@ export default function LoginPage() {
             checked={form.rememberMe}
             onChange={handleChange}
             className="mb-4"
+            disabled={isLoading}
           />
-          <Button className="login-button" type="submit">
-            Login
+          <Button className="login-button" type="submit" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
           </Button>
         </Form>
       </Card>

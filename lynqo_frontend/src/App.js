@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import './App.css';
+
+
 import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider, AuthContext } from './context/AuthContext'; 
+
 
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -13,17 +17,39 @@ import NewsPage from './pages/NewsPage';
 import SettingsPage from './pages/SettingsPage';
 import Footer from "./components/common/Footer";
 import LanguageCourses from './components/common/LanguageSelector';
+import DashboardPage from './pages/DashboardPage';
+
+
+
+
+const GuestRoute = ({ children }) => {
+  const { user } = useContext(AuthContext);
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
+
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useContext(AuthContext);
+  if (!user) {
+    return <Navigate to="/main" replace />;
+  }
+  return children;
+};
+
+
 
 function AppContent() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Show spinner for 1 second on every page change
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Exactly 1 second
+    }, 1000); 
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -32,7 +58,6 @@ function AppContent() {
     <div className="app-container">
       <NavBar />
       
-      {/* Full-screen Loading Overlay */}
       {isLoading && (
         <div className="loading-overlay">
           <LoadingSpinner size="large" message="Loading Lynqo..." />
@@ -41,12 +66,43 @@ function AppContent() {
       
       <main className="main-content">
         <Routes>
+          
           <Route path="/main" element={<MainPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/shop" element={<LanguageCourses />} />
+          
+          
+          <Route path="/register" element={
+            <GuestRoute>
+              <RegisterPage />
+            </GuestRoute>
+          } />
+          
+          <Route path="/login" element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          } />
+
+          
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          } />
+           
+          <Route path="/shop" element={
+            <ProtectedRoute>
+              <LanguageCourses /> 
+            </ProtectedRoute>
+          } />
+
           <Route path="/news" element={<NewsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+
           <Route path="/" element={<Navigate to="/main" replace />} />
           <Route path="*" element={<Navigate to="/main" replace />} />
         </Routes>
@@ -59,8 +115,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </AuthProvider>
   );
 }

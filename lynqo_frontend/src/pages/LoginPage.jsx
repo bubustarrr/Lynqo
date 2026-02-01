@@ -1,13 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react'; 
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button, Card} from 'react-bootstrap';
-import './LoginPage.css';  // Import the CSS
+import { Form, Button, Card } from 'react-bootstrap';
+import './LoginPage.css';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ usernameOrEmail: '', password: '', rememberMe: false });
-  const { login } = useContext(AuthContext);
+  
+  
+  const { login, user } = useContext(AuthContext); 
+  
   const navigate = useNavigate();
+
+  
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true }); 
+    }
+  }, [user, navigate]);
 
   const handleChange = e => {
     const { name, value, type, checked } = e.target;
@@ -27,12 +37,19 @@ export default function LoginPage() {
       });
       if (!res.ok) throw new Error('Login failed');
       const data = await res.json();
+      
+      
       login(data);
       navigate('/dashboard');
     } catch (err) {
       alert(err.message);
     }
   };
+
+  
+  if (user) {
+      return null; 
+  }
 
   return (
     <div className="login-page-container">

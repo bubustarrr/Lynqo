@@ -18,6 +18,9 @@ import SettingsPage from './pages/SettingsPage';
 import Footer from "./components/common/Footer";
 import LanguageCourses from './components/common/LanguageSelector';
 import DashboardPage from './pages/DashboardPage';
+import ShopLandingPage from './pages/ShopLandingPage';
+import SubscriptionsPage from './pages/ShopPage';
+import MerchPage from './pages/MerchPage';
 
 
 
@@ -98,6 +101,24 @@ function AppContent() {
           <Route path="/shop" element={
             <ProtectedRoute>
               <LanguageCourses /> 
+            </ProtectedRoute>
+          } />
+
+          <Route path="/shoppage" element={
+            <ProtectedRoute>
+              <ShopLandingPage /> 
+            </ProtectedRoute>
+          } />
+
+          <Route path="/shoppage/subscriptions" element={
+            <ProtectedRoute>
+              <ShopPage /> 
+            </ProtectedRoute>
+          } />
+
+          <Route path="/shoppage/merch" element={
+            <ProtectedRoute>
+              <MerchPage /> 
             </ProtectedRoute>
           } />
 

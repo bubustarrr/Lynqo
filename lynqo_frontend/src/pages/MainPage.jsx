@@ -74,8 +74,12 @@ export default function MainPage() {
       <section className="admin-section">
         <h2 className="section-title">🛠️ Admin Testing (Development)</h2>
         <div className="admin-buttons">
+          <Link to="/main" className="admin-btn">🏠 Main Page</Link>
           <Link to="/register" className="admin-btn">📝 Register</Link>
           <Link to="/login" className="admin-btn">🔐 Login</Link>
+          <Link to="/settings" className="admin-btn">⚙️ Settings</Link>
+          <Link to="/shop" className="admin-btn">🛒 Shop</Link>
+          <Link to="/news" className="admin-btn">📰 News</Link>
           {user && <Link to="/dashboard" className="admin-btn">💎 Dashboard</Link>}
         </div>
       </section>

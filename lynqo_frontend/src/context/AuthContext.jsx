@@ -3,13 +3,15 @@ import React, { createContext, useState, useEffect } from 'react';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); 
 
-  
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
@@ -18,24 +20,31 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
       }
     }
+    if (storedToken) {
+      setToken(storedToken);
+    }
     setLoading(false);
   }, []);
 
-  
-  const login = (userData) => {
+
+  const login = (userData, jwtToken) => {
     setUser(userData);
+    setToken(jwtToken);
     localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('token', jwtToken);
   };
 
-  
+
   const logout = () => {
     setUser(null);
+    setToken(null);
     localStorage.removeItem('user');
-    
+    localStorage.removeItem('token');
+
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

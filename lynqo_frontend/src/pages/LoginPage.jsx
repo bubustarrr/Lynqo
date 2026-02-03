@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { login, user } = useContext(AuthContext);
+  const { login, user, token } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Ha már be van lépve, ne engedje látni a formot
@@ -47,11 +47,14 @@ export default function LoginPage() {
       }
 
       const data = await res.json();
-      
+
+      // Extract token and user data from response
+      const { token, ...userData } = data;
+
       // FONTOS: Ez állítja át a Context-et "Bejelentkezett" állapotra!
-      login(data);
-      
-      navigate('/dashboard'); 
+      login(userData, token);
+
+      navigate('/dashboard');
       
     } catch (err) {
       setError(err.message);

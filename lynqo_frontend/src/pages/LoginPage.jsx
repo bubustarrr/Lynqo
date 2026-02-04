@@ -9,10 +9,9 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { login, user, token } = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Ha már be van lépve, ne engedje látni a formot
   useEffect(() => {
     if (user) {
       navigate('/dashboard', { replace: true });
@@ -36,23 +35,32 @@ export default function LoginPage() {
     setError(null);
 
     try {
+      // 1. Call the Backend
       const res = await fetch('https://localhost:7118/api/Auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+            usernameOrEmail: form.usernameOrEmail,
+            password: form.password
+        }),
       });
-
-      if (!res.ok) {
-        throw new Error('Login failed. Please check your credentials.');
-      }
 
       const data = await res.json();
 
-      // Extract token and user data from response
-      const { token, ...userData } = data;
+      if (!res.ok) {
+        // Handle specific ban messages or generic errors
+        throw new Error(data.error || 'Login failed. Please check your credentials.');
+      }
 
-      // FONTOS: Ez állítja át a Context-et "Bejelentkezett" állapotra!
-      login(userData, token);
+      // 2. Destructure the Correct Response Format
+      // Backend returns: { token: "...", refreshToken: "...", user: { ... } }
+      const { token, refreshToken, user: userData } = data;
+
+      // 3. Login in Context
+      // Only save RefreshToken if "Remember Me" is checked (optional logic, or always save it)
+      const tokenToSave = form.rememberMe ? refreshToken : null; 
+      
+      login(userData, token, tokenToSave);
 
       navigate('/dashboard');
       

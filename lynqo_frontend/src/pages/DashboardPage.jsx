@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Button, ProgressBar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './MainPage.css';
 
@@ -10,7 +10,8 @@ export default function DashboardPage() {
   // Data States
   const [stats, setStats] = useState(null);
   const [nextLesson, setNextLesson] = useState(null);
-  const [quests, setQuests] = useState([]); // <--- NEW: Real Quests
+  const [quests, setQuests] = useState([]); 
+  const [courseProgress, setCourseProgress] = useState(0); // <--- NEW: Track %
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,8 +24,12 @@ export default function DashboardPage() {
         
         // 2. Fetch Course Structure (for Next Lesson)
         const structureRes = await fetch('https://localhost:7118/api/Lessons/course/1/structure', { headers });
+                if (structureRes.status === 401) {
+            logout(); // Auto-logout if token is bad
+            return;
+        }
 
-        // 3. Fetch Real Daily Quests (NEW)
+        // 3. Fetch Real Daily Quests
         const questsRes = await fetch('https://localhost:7118/api/Quests/active', { headers });
 
         if (statsRes.ok && structureRes.ok) {
@@ -32,22 +37,37 @@ export default function DashboardPage() {
           const structureData = await structureRes.json();
           setStats(statsData);
 
-          // Find Next Lesson Logic
+          // DEBUG: Check what lessons are actually returned
+          console.log("Structure Data:", structureData);
+
+          // --- CALCULATE PROGRESS & FIND NEXT LESSON ---
+          let totalLessons = 0;
+          let completedLessons = 0;
           let foundLesson = null;
+
           for (const unit of structureData) {
-            for (const lesson of unit.lessons) {
-              if (!lesson.isCompleted) {
+            // Safety check if unit.lessons is null
+            const lessons = unit.lessons || [];
+            totalLessons += lessons.length;
+
+            for (const lesson of lessons) {
+              if (lesson.isCompleted) {
+                completedLessons++;
+              } else if (!foundLesson) {
+                // First uncompleted lesson we find is the "Next Lesson"
                 foundLesson = {
                   id: lesson.id,
                   title: lesson.title,
                   unitTitle: unit.title,
                   unitDesc: unit.description
                 };
-                break;
               }
             }
-            if (foundLesson) break;
           }
+
+          // Set Progress State
+          const percent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+          setCourseProgress(percent);
           setNextLesson(foundLesson);
         }
 
@@ -91,13 +111,18 @@ export default function DashboardPage() {
         <h1 className="hero-title" style={{fontSize: '2.5rem'}}>
             Welcome back, {displayUser?.username || 'Learner'}! 👋
         </h1>
+        {/* NEW: Progress Bar Header */}
+        <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
+             <span className="fw-bold text-muted">Course Progress: {courseProgress}%</span>
+             <ProgressBar now={courseProgress} style={{width: '200px', height: '10px'}} variant="success" />
+        </div>
       </div>
 
       {/* Stats Row */}
       <Row className="mb-5 g-4">
         {[
             { icon: '🔥', val: displayUser?.streak || 0, label: 'Day Streak', color: '#ff9600' },
-            { icon: '⚡', val: displayUser?.totalXp || 0, label: 'Total XP', color: '#eab308' },
+            { icon: '⚡', val: displayUser?.totalXp || 0, label: 'Total XP', color: '#eab308' }, // This relies on your backend returning totalXp (calculated or stored)
             { icon: '❤️', val: `${displayUser?.hearts || 5} / 5`, label: 'Hearts', color: '#ef4444' },
             { icon: '💎', val: displayUser?.coins || 0, label: 'Gems', color: '#0ea5e9' }
         ].map((item, idx) => (
@@ -136,8 +161,14 @@ export default function DashboardPage() {
                 </>
             ) : (
                 <>
-                    <h2>🎉 Course Complete!</h2>
-                    <p>You have finished all available lessons.</p>
+                    <div style={{fontSize: '4rem'}}>🎉</div>
+                    <h2 className="fw-bold">Course Complete!</h2>
+                    <p className="text-muted mb-4">You have finished all available lessons.</p>
+                    <div className="d-grid gap-3 col-md-8 mx-auto">
+                        <Button variant="outline-primary" onClick={() => window.location.reload()}>
+                            Refresh to Check for Updates
+                        </Button>
+                    </div>
                 </>
             )}
           </Card>

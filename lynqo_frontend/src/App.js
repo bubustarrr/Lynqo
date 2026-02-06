@@ -21,7 +21,8 @@ import DashboardPage from './pages/DashboardPage';
 import ShopLandingPage from './pages/ShopLandingPage';
 import SubscriptionsPage from './pages/ShopPage';
 import MerchPage from './pages/MerchPage';
-
+import LessonPage from './pages/LessonPage';
+import LanguageSelectionPage from './pages/LanguageSelectionPage';
 
 
 
@@ -121,6 +122,14 @@ function AppContent() {
               <MerchPage /> 
             </ProtectedRoute>
           } />
+
+          <Route path="/lessons/:id" element={
+            <ProtectedRoute>
+              <LessonPage/> 
+            </ProtectedRoute>
+          } />
+
+          <Route path="/pick-language" element={<ProtectedRoute><LanguageSelectionPage /></ProtectedRoute>} />
 
           <Route path="/news" element={<NewsPage />} />
 

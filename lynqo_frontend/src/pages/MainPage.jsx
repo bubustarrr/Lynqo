@@ -16,33 +16,22 @@ export default function MainPage() {
             Master new languages through fun, interactive lessons. Join millions of learners worldwide!
           </p>
           <div className="hero-buttons">
-            
-            
             {user ? (
-              
               <Link to="/dashboard" className="cta-button primary large">
                 🚀 Continue Learning (Go to Dashboard)
               </Link>
             ) : (
-              
               <>
-                <Link to="/register" className="cta-button primary">
-                  Get Started
-                </Link>
-                <Link to="/login" className="cta-button secondary">
-                  I Already Have an Account
-                </Link>
+                <Link to="/register" className="cta-button primary">Get Started</Link>
+                <Link to="/login" className="cta-button secondary">I Already Have an Account</Link>
               </>
             )}
-            
-
           </div>
         </div>
         <div className="hero-image">
           <div className="hero-illustration"></div>
         </div>
       </section>
-
       
       <section className="features-section">
         <h2 className="section-title">Why Choose Lynqo?</h2>
@@ -69,7 +58,6 @@ export default function MainPage() {
           </div>
         </div>
       </section>
-
       
       <section className="admin-section">
         <h2 className="section-title">🛠️ Admin Testing (Development)</h2>

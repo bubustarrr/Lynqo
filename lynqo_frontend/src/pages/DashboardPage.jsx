@@ -1,231 +1,91 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Row, Col, Card, Spinner, Button, ProgressBar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import './MainPage.css';
+import './DashboardPage.css';
 
 export default function DashboardPage() {
-  const { user, token, logout } = useContext(AuthContext);
-  
-  // Data States
-  const [stats, setStats] = useState(null);
-  const [nextLesson, setNextLesson] = useState(null);
-  const [quests, setQuests] = useState([]); 
-  const [courseProgress, setCourseProgress] = useState(0); // <--- NEW: Track %
-  const [loading, setLoading] = useState(true);
+  const { user, logout } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const headers = { 'Authorization': `Bearer ${token}` };
-
-        // 1. Fetch User Stats
-        const statsRes = await fetch('https://localhost:7118/api/User/me', { headers });
-        
-        // 2. Fetch Course Structure (for Next Lesson)
-        const structureRes = await fetch('https://localhost:7118/api/Lessons/course/1/structure', { headers });
-                if (structureRes.status === 401) {
-            logout(); // Auto-logout if token is bad
-            return;
-        }
-
-        // 3. Fetch Real Daily Quests
-        const questsRes = await fetch('https://localhost:7118/api/Quests/active', { headers });
-
-        if (statsRes.ok && structureRes.ok) {
-          const statsData = await statsRes.json();
-          const structureData = await structureRes.json();
-          setStats(statsData);
-
-          // DEBUG: Check what lessons are actually returned
-          console.log("Structure Data:", structureData);
-
-          // --- CALCULATE PROGRESS & FIND NEXT LESSON ---
-          let totalLessons = 0;
-          let completedLessons = 0;
-          let foundLesson = null;
-
-          for (const unit of structureData) {
-            // Safety check if unit.lessons is null
-            const lessons = unit.lessons || [];
-            totalLessons += lessons.length;
-
-            for (const lesson of lessons) {
-              if (lesson.isCompleted) {
-                completedLessons++;
-              } else if (!foundLesson) {
-                // First uncompleted lesson we find is the "Next Lesson"
-                foundLesson = {
-                  id: lesson.id,
-                  title: lesson.title,
-                  unitTitle: unit.title,
-                  unitDesc: unit.description
-                };
-              }
-            }
-          }
-
-          // Set Progress State
-          const percent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-          setCourseProgress(percent);
-          setNextLesson(foundLesson);
-        }
-
-        // Handle Quests
-        if (questsRes.ok) {
-          const questsData = await questsRes.json();
-          setQuests(questsData);
-        }
-
-      } catch (err) {
-        console.error("Failed to load dashboard data", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (token) fetchData();
-  }, [token]);
-
-  if (loading) return (
-    <div className="d-flex justify-content-center align-items-center" style={{height: '80vh'}}>
-        <Spinner animation="border" variant="primary" />
-    </div>
-  );
-
-  const displayUser = stats || user;
-
-  const cardStyle = {
-    borderRadius: 'var(--border-radius)',
-    border: 'none',
-    boxShadow: 'var(--shadow)',
-    background: 'white',
-    overflow: 'hidden',
-    transition: 'var(--transition)'
+  // Ideiglenes adatok (ezeket később az adatbázisból is lekérheted)
+  const stats = {
+    streak: 0,
+    xp: 0,
+    hearts: 5,
+    gems: 0,
+    progress: 0
   };
 
   return (
-    <Container className="main-page-container mt-5">
-      {/* Header */}
-      <div className="text-center mb-5">
-        <h1 className="hero-title" style={{fontSize: '2.5rem'}}>
-            Welcome back, {displayUser?.username || 'Learner'}! 👋
-        </h1>
-        {/* NEW: Progress Bar Header */}
-        <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
-             <span className="fw-bold text-muted">Course Progress: {courseProgress}%</span>
-             <ProgressBar now={courseProgress} style={{width: '200px', height: '10px'}} variant="success" />
+    <div className="dashboard-container">
+      
+      {/* Üdvözlő fejléc */}
+      <header className="dashboard-header">
+        <h1>Welcome back, {user?.username || "Learner"}! 👋</h1>
+        <div className="progress-container">
+          <span className="progress-label">Course Progress: {stats.progress}%</span>
+          <div className="progress-bar-bg">
+            <div className="progress-bar-fill" style={{ width: `${stats.progress}%` }}></div>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Stats Row */}
-      <Row className="mb-5 g-4">
-        {[
-            { icon: '🔥', val: displayUser?.streak || 0, label: 'Day Streak', color: '#ff9600' },
-            { icon: '⚡', val: displayUser?.totalXp || 0, label: 'Total XP', color: '#eab308' }, // This relies on your backend returning totalXp (calculated or stored)
-            { icon: '❤️', val: `${displayUser?.hearts || 5} / 5`, label: 'Hearts', color: '#ef4444' },
-            { icon: '💎', val: displayUser?.coins || 0, label: 'Gems', color: '#0ea5e9' }
-        ].map((item, idx) => (
-            <Col md={3} xs={6} key={idx}>
-                <Card style={cardStyle} className="h-100 text-center py-4">
-                    <Card.Body>
-                        <div style={{fontSize: '2.5rem', marginBottom: '10px'}}>{item.icon}</div>
-                        <h3 style={{color: item.color, fontWeight: '800'}}>{item.val}</h3>
-                        <span className="text-muted fw-bold">{item.label}</span>
-                    </Card.Body>
-                </Card>
-            </Col>
-        ))}
-      </Row>
+      {/* STATISZTIKA KÁRTYÁK - A 4 doboz */}
+      {/* Most már grid-et használunk, ami kitölti a szélességet */}
+      <section className="stats-grid">
+        <div className="stat-card">
+          <span className="stat-icon">🔥</span>
+          <span className="stat-value">{stats.streak}</span>
+          <span className="stat-label">Day Streak</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-icon">⚡</span>
+          <span className="stat-value">{stats.xp}</span>
+          <span className="stat-label">Total XP</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-icon">❤️</span>
+          <span className="stat-value">{stats.hearts} / 5</span>
+          <span className="stat-label">Hearts</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-icon">💎</span>
+          <span className="stat-value">{stats.gems}</span>
+          <span className="stat-label">Gems</span>
+        </div>
+      </section>
 
-      <Row className="g-4">
-        {/* Next Lesson Card */}
-        <Col lg={8}>
-          <Card style={cardStyle} className="p-5 h-100 text-center d-flex flex-column justify-content-center">
-            {nextLesson ? (
-                <>
-                    <h5 className="text-muted text-uppercase fw-bold mb-3">
-                        {nextLesson.unitTitle}
-                    </h5>
-                    <h2 className="mb-4 fw-bold" style={{color: 'var(--gradient-purple)', fontSize: '2.5rem'}}>
-                        {nextLesson.title}
-                    </h2>
-                    <p className="mb-5 text-muted" style={{fontSize: '1.2rem'}}>
-                        {nextLesson.unitDesc}
-                    </p>
-                    <div className="d-grid gap-3 col-md-8 mx-auto">
-                        <Link to={`/lessons/${nextLesson.id}`} className="cta-button primary text-center">
-                            🚀 Start Lesson
-                        </Link>
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div style={{fontSize: '4rem'}}>🎉</div>
-                    <h2 className="fw-bold">Course Complete!</h2>
-                    <p className="text-muted mb-4">You have finished all available lessons.</p>
-                    <div className="d-grid gap-3 col-md-8 mx-auto">
-                        <Button variant="outline-primary" onClick={() => window.location.reload()}>
-                            Refresh to Check for Updates
-                        </Button>
-                    </div>
-                </>
-            )}
-          </Card>
-        </Col>
+      {/* ALSÓ RÉSZ (Tartalom + Oldalsáv) */}
+      <div className="content-grid">
         
-        {/* Sidebar */}
-        <Col lg={4}>
-            {/* REAL Daily Quests from DB */}
-            <Card style={cardStyle} className="p-4 mb-4">
-                <h4 className="fw-bold mb-3">📜 Daily Quests</h4>
-                
-                {quests.length === 0 ? (
-                    <p className="text-muted">No active quests today.</p>
-                ) : (
-                    <ul className="list-unstyled">
-                        {quests.map((q, i) => (
-                            <li key={i} className="d-flex align-items-center mb-3 p-2 rounded" 
-                                style={{
-                                    background: q.isCompleted ? '#ecfdf5' : '#f8fafc', 
-                                    border: '1px solid #e2e8f0'
-                                }}>
-                                <span className="me-2 fs-5">{q.isCompleted ? '✅' : '⬜'}</span>
-                                <div>
-                                    <div style={{
-                                        textDecoration: q.isCompleted ? 'line-through' : 'none', 
-                                        color: q.isCompleted ? '#10b981' : 'inherit',
-                                        fontWeight: 'bold'
-                                    }}>
-                                        {q.title}
-                                    </div>
-                                    <small className="text-muted">{q.description}</small>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </Card>
+        {/* Fő tartalom (Bal oldal) */}
+        <div className="main-content-area">
+          <div className="course-card">
+            <div className="completion-icon">🎉</div>
+            <h2>Course Complete!</h2>
+            <p>You have finished all available lessons.</p>
+            <button className="refresh-btn">Refresh to Check for Updates</button>
+          </div>
+        </div>
 
-            {/* Quick Links & Logout */}
-            <Card style={cardStyle} className="p-3">
-                <small className="text-muted fw-bold text-uppercase mb-2 d-block">Quick Links</small>
-                <div className="d-flex flex-wrap gap-2 mb-3">
-                    <Link to="/settings" className="btn btn-sm btn-outline-secondary">⚙️ Settings</Link>
-                    <Link to="/shop" className="btn btn-sm btn-outline-secondary">🛒 Shop</Link>
-                    <Link to="/friends" className="btn btn-sm btn-outline-secondary">👥 Friends</Link>
-                </div>
-                <Button 
-                    variant="outline-danger" 
-                    size="sm" 
-                    className="w-100 fw-bold"
-                    onClick={() => logout()}
-                >
-                    🚪 Log Out
-                </Button>
-            </Card>
-        </Col>
-      </Row>
-    </Container>
+        {/* Oldalsáv (Jobb oldal) */}
+        <aside className="sidebar">
+          <div className="sidebar-card">
+            <h3>📜 Daily Quests</h3>
+            <p className="empty-state">No active quests today.</p>
+          </div>
+
+          <div className="sidebar-card">
+            <h3>QUICK LINKS</h3>
+            <div className="quick-links">
+              <Link to="/settings" className="quick-link-btn">⚙️ Settings</Link>
+              <Link to="/shop" className="quick-link-btn">🛒 Shop</Link>
+              <button className="quick-link-btn">👥 Friends</button>
+            </div>
+            <button onClick={logout} className="logout-btn-small">🚪 Log Out</button>
+          </div>
+        </aside>
+
+      </div>
+    </div>
   );
 }

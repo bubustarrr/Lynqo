@@ -1,95 +1,47 @@
+/* --- GLOBÁLIS APP STÍLUSOK --- */
 .app-container {
-    min-height: 100vh;
-    position: relative;
-  }
-
-
-  
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #ffffff; /* Fully white */
-    display: flex;
-    justify-content: center; /* Horizontal center */
-    align-items: center; /* Vertical center */
-    z-index: 9999;
-    animation: fadeIn 0.2s ease-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  .main-content {
-    margin-top: 80px; /* Space for navbar */
-    min-height: calc(100vh - 80px);
-    position: relative;
-    z-index: 1;
-  }
-
-.glass-footer {
-backdrop-filter: blur(10px);
--webkit-backdrop-filter: blur(10px);
-border-top: 1px solid rgba(255, 255, 255, 0.3);
-
-color: #333;
-padding: 1rem;
-text-align: center;
-font-size: 0.9rem;
+  min-height: 100vh; /* Teljes képernyő magasság */
+  display: flex;
+  flex-direction: column;
+  transition: background 0.4s ease, color 0.4s ease;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.lynqo-footer {
-
-bottom: 0;
-left: 0;
-width: 100%;
-backdrop-filter: blur(16px);
-
-background: linear-gradient(
-135deg,
-rgba(255, 105, 180, 0.18),
-rgba(120, 70, 255, 0.18)
-);
-border-top: 1px solid rgba(255, 255, 255, 0.25);
-color: #fff;
-z-index: 1000;
+/* --- LIGHT MODE (Világos) --- */
+.app-container.light-mode {
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  color: #1e293b;
 }
 
-.footer-content {
-max-width: 1200px;
-margin: 0 auto;
-padding: 1rem 2rem; /* smaller horizontal padding */
-display: flex; /* horizontal layout */
-justify-content: space-between; /* spread columns evenly */
-align-items: flex-start; /* align text to top of footer */
-text-align: left; /* left-align text inside each column */
-}
-  .footer-col h4 {
-font-size: 1.1rem;
-margin-bottom: 0.5rem;
-background: linear-gradient(90deg, #9b59b6, #ff69b4, #3498db);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-font-weight: 600;
-}
-.footer-col a {
-text-decoration: none;
-background: linear-gradient(90deg, #9b59b6, #ff69b4, #3498db);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-transition: background 0.3s ease;
+/* --- DARK MODE (Sötét) --- */
+.app-container.dark-mode {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  color: #f8fafc;
 }
 
-
-.footer-col {
-display: flex;
-flex-direction: column;
-gap: 0.5rem;
-min-width: 150px; /* optional: ensure some space for each column */
+.main-content {
+  flex: 1; /* Kitölti a maradék helyet a navbar és footer között */
+  width: 100%;
+  position: relative;
 }
 
+/* Loading overlay igazítása a témához */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
 
+.dark-mode .loading-overlay {
+  background: rgba(15, 23, 42, 0.95);
+  color: white;
+}

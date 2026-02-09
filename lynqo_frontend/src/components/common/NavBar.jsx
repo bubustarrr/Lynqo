@@ -1,26 +1,21 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-import { useTheme } from '../../context/ThemeContext'; // Importáljuk a hook-ot
+import { useTheme } from '../../context/ThemeContext';
 import './NavBar.css';
 
 export default function NavBar() {
   const { user, logout } = useContext(AuthContext);
   const { language, setLanguage, translations } = useLanguage();
-  
-  // Itt szükségünk van a 'theme'-re is, hogy tudjuk, kell-e váltani
-  const { theme, toggleTheme } = useTheme(); 
-  
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  // Ha nincs fordítás, fallback angolra
-  const t = translations[language] || translations['en'] || {}; 
+  const t = translations[language] || translations['en'] || {};
   
   const [activeDropdown, setActiveDropdown] = useState(null);
   const navRef = useRef(null);
 
-  // Klikkelés figyelése a menün kívül
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
@@ -46,9 +41,7 @@ export default function NavBar() {
     setActiveDropdown(null);
   };
 
-  // --- ITT A LÉNYEG: Illesztés a ThemeContext-hez ---
   const handleThemeChange = (selectedMode) => {
-    // Csak akkor hívjuk a toggle-t, ha a kiválasztott mód különbözik a jelenlegitől
     if (theme !== selectedMode) {
       toggleTheme();
     }
@@ -58,7 +51,7 @@ export default function NavBar() {
   return (
     <nav className="navbar" ref={navRef}>
       
-      {/* BAL OLDAL: USER / LOGIN */}
+      {/* BAL OLDAL */}
       <div className="navbar-left">
         {user ? (
           <div className="dropdown-container">
@@ -86,44 +79,31 @@ export default function NavBar() {
         )}
       </div>
 
-      {/* KÖZÉP: LOGO */}
+      {/* KÖZÉP */}
       <div className="navbar-center">
         <Link to="/main" className="navbar-logo">Lynqo</Link>
       </div>
 
-      {/* JOBB OLDAL: TÉMA & NYELV */}
+      {/* JOBB OLDAL */}
       <div className="navbar-right">
-        
-        {/* TÉMA VÁLASZTÓ */}
         <div className="dropdown-container">
           <button 
             className={`nav-btn nav-btn-icon ${activeDropdown === 'theme' ? 'active' : ''}`} 
             onClick={() => toggleDropdown('theme')} 
-            title="Change Theme"
           >
             {theme === 'light' ? '☀️' : '🌙'} <span className="arrow-mini">▼</span>
           </button>
           
           <div className={`dropdown-menu right-aligned ${activeDropdown === 'theme' ? 'show' : ''}`}>
-            <button 
-                className={`dropdown-item ${theme === 'light' ? 'active-item' : ''}`} 
-                onClick={() => handleThemeChange('light')}>
-                ☀️ Light Mode
-            </button>
-            <button 
-                className={`dropdown-item ${theme === 'dark' ? 'active-item' : ''}`} 
-                onClick={() => handleThemeChange('dark')}>
-                🌑 Dark Mode
-            </button>
+            <button className={`dropdown-item ${theme === 'light' ? 'active-item' : ''}`} onClick={() => handleThemeChange('light')}>☀️ Light Mode</button>
+            <button className={`dropdown-item ${theme === 'dark' ? 'active-item' : ''}`} onClick={() => handleThemeChange('dark')}>🌑 Dark Mode</button>
           </div>
         </div>
 
-        {/* NYELV VÁLASZTÓ */}
         <div className="dropdown-container">
           <button 
             className={`nav-btn nav-btn-icon ${activeDropdown === 'lang' ? 'active' : ''}`} 
             onClick={() => toggleDropdown('lang')} 
-            title="Select Language"
           >
             🌐 <span className="arrow-mini">▼</span>
           </button>

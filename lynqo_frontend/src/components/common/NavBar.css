@@ -1,48 +1,81 @@
-/* --- NAVBAR STÍLUSOK --- */
+/* --- NAVBAR ALAPBEÁLLÍTÁSOK --- */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   height: 70px;
-  /* Itt használjuk a változókat, hogy sötét módban is jó legyen */
-  background-color: var(--bg-card); 
-  border-bottom: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
   position: sticky;
   top: 0;
   z-index: 1000;
-  transition: background-color 0.3s, border-color 0.3s;
+  transition: all 0.3s ease-in-out;
+  
+  /* Homályosítás (Frosted Glass) */
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* Árnyék a térbeli kiemeléshez */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Szekciók */
+/* --- LIGHT MODE DESIGN (MÓDOSÍTVA!) --- */
+/* Most már nem fehér, hanem egy élénk, de világos "cukorka" gradiens */
+.navbar {
+  /* Pasztell Lila -> Pasztell Rózsaszín átmenet (90%-os fedéssel) */
+  background: linear-gradient(90deg, rgba(216, 180, 254, 0.95), rgba(249, 168, 212, 0.95));
+  
+  /* Mivel a háttér színes, a sötétkék szöveg nagyon jól olvasható és modern */
+  color: #1e293b; 
+  
+  /* Egy kicsit sötétebb lila keret alul */
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+/* --- DARK MODE DESIGN (EZ MARADT A RÉGI JÓ) --- */
+/* Mély Indigó -> Sötét Magenta */
+.app-container.dark-mode .navbar {
+  background: linear-gradient(135deg, rgba(76, 29, 149, 0.9), rgba(131, 24, 67, 0.9));
+  color: #ffffff; 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); 
+}
+
+/* --- SZEKCIÓK --- */
 .navbar-left, .navbar-right {
   display: flex;
   align-items: center;
   gap: 15px;
   flex: 1;
 }
-.navbar-right {
-  justify-content: flex-end;
-}
-.navbar-center {
-  flex: 1;
-  text-align: center;
-}
+.navbar-right { justify-content: flex-end; }
+.navbar-center { flex: 1; text-align: center; }
 
-/* Logo */
+/* --- LOGO --- */
 .navbar-logo {
   font-size: 1.8rem;
   font-weight: 800;
-  color: #8b5cf6; /* Lila */
   text-decoration: none;
   letter-spacing: 1px;
-}
-.navbar-logo:hover {
-  color: #ec4899; /* Pink hover */
+  transition: transform 0.3s;
 }
 
-/* Gombok és Dropdown Trigger */
+/* Light Mode Logo: Mivel a háttér színes, a logónak sötétnek és kontrasztosnak kell lennie */
+.navbar-logo {
+  color: #4c1d95; /* Mély lila szöveg */
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4); /* Pici fehér kiemelés */
+}
+
+/* Dark Mode Logo: Itt marad a fehér, ragyogó */
+.app-container.dark-mode .navbar-logo {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+/* --- MENÜ GOMBOK --- */
 .nav-btn {
   background: transparent;
   border: 1px solid transparent;
@@ -52,115 +85,137 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-main);
-  transition: background 0.2s;
+  color: inherit; /* Örökli a navbar színét */
   font-size: 0.95rem;
   font-weight: 600;
+  transition: all 0.2s;
 }
 
+/* Light Mode Hover: Fehér háttérrel emeljük ki a gombot a színes sávról */
 .nav-btn:hover, .nav-btn.active {
-  background-color: rgba(0,0,0,0.05);
-  border-color: var(--border-card);
+  background-color: rgba(255, 255, 255, 0.4); /* Féláttetsző fehér */
+  color: #4c1d95; /* Sötét lila */
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* Login link */
+/* Dark Mode Hover: Itt is világosítunk */
+.app-container.dark-mode .nav-btn:hover,
+.app-container.dark-mode .nav-btn.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- LOGIN GOMB --- */
 .login-link {
   text-decoration: none;
-  color: var(--text-main);
+  color: inherit;
   font-weight: bold;
-  padding: 8px 16px;
-  border: 1px solid var(--border-card);
-  border-radius: 20px;
-  transition: 0.2s;
+  padding: 8px 20px;
+  border: 2px solid currentColor; /* A keret színe megegyezik a szöveggel */
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  background-color: rgba(255,255,255,0.1);
 }
+
 .login-link:hover {
-  background-color: #8b5cf6;
-  color: white;
-  border-color: #8b5cf6;
+  background-color: #ffffff;
+  color: #db2777 !important; /* Pink szöveg hoverkor */
+  border-color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.app-container.dark-mode .login-link:hover {
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  color: white !important;
+  border-color: transparent;
 }
 
 /* --- DROPDOWN MENÜ --- */
-.dropdown-container {
-  position: relative;
-}
+.dropdown-container { position: relative; }
 
 .dropdown-menu {
   position: absolute;
-  top: 120%;
+  top: 130%;
   left: 0;
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  min-width: 180px;
-  padding: 8px;
-  display: none; /* Alapból rejtett */
+  min-width: 200px;
+  padding: 10px;
+  display: none;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+  border-radius: 16px;
   z-index: 1001;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  animation: menuPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Jobbra igazított menük (nyelv, téma) */
-.dropdown-menu.right-aligned {
-  left: auto;
-  right: 0;
+/* Light Mode Dropdown: Fehér, hogy jól olvasható legyen, de lila árnyékkal */
+.dropdown-menu {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
 }
 
-/* Megjelenítés */
-.dropdown-menu.show {
-  display: flex;
-  animation: fadeIn 0.2s ease-in-out;
+/* Dark Mode Dropdown: Sötétlila */
+.app-container.dark-mode .dropdown-menu {
+  background: rgba(46, 16, 101, 0.95); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
+
+.dropdown-menu.right-aligned { left: auto; right: 0; }
+.dropdown-menu.show { display: flex; }
 
 /* Dropdown elemek */
 .dropdown-item {
   background: none;
   border: none;
   text-align: left;
-  padding: 10px 12px;
-  width: 100%;
-  border-radius: 8px;
+  padding: 10px 15px;
+  border-radius: 10px;
   cursor: pointer;
-  color: var(--text-main);
-  font-size: 0.9rem;
+  color: #1e293b;
   font-weight: 500;
   text-decoration: none;
-  display: block;
-  transition: background 0.2s;
+  transition: all 0.2s;
+}
+
+.app-container.dark-mode .dropdown-item {
+  color: #e2e8f0;
 }
 
 .dropdown-item:hover {
-  background-color: rgba(139, 92, 246, 0.1); /* Halvány lila hover */
-  color: #8b5cf6;
+  background-color: rgba(139, 92, 246, 0.15);
+  color: #7c3aed;
+  transform: translateX(5px);
 }
 
-.dropdown-item.active-item {
-  background-color: #8b5cf6;
-  color: white;
-}
-
-.dropdown-item.logout {
-  color: #ef4444;
-}
-.dropdown-item.logout:hover {
-  background-color: #fef2f2;
+.app-container.dark-mode .dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
 .dropdown-divider {
   height: 1px;
-  background-color: var(--border-card);
-  margin: 4px 0;
+  background: rgba(0,0,0,0.1);
+  margin: 5px 0;
+}
+.app-container.dark-mode .dropdown-divider { background: rgba(255,255,255,0.1); }
+
+.dropdown-item.logout { color: #ef4444; }
+.dropdown-item.logout:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
 }
 
-/* Animáció */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes menuPop {
+  0% { opacity: 0; transform: scale(0.9) translateY(-10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Mobil nézet korrekciók */
 @media (max-width: 768px) {
-  .username { display: none; } /* Mobilon elrejtjük a nevet */
-  .navbar { padding: 0 10px; }
-  .nav-btn { padding: 8px; }
+  .username { display: none; }
+  .navbar { padding: 0 15px; }
 }

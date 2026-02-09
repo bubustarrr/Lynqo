@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'; // Routert NEM importálunk ide, csak a hookokat
 import LoadingSpinner from './components/common/LoadingSpinner';
-import './App.css'; // Fontos a globális stílusokhoz!
+import './App.css';
 
+// Context importok
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, AuthContext } from './context/AuthContext';
-import { ThemeProvider, useTheme } from './context/ThemeContext'; // useTheme importálása!
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { CartProvider } from './context/CartContext';
 
+// Oldalak importálása
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
@@ -20,9 +23,8 @@ import DashboardPage from './pages/DashboardPage';
 import ShopLandingPage from './pages/ShopLandingPage';
 import MerchPage from './pages/MerchPage';
 import LessonPage from './pages/LessonPage';
-import { CartProvider } from './context/CartContext';
 
-
+// Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
   if (user) return <Navigate to="/dashboard" replace />;
@@ -35,25 +37,27 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Ez a belső tartalom, ami már a Routeren és a Providereken BELÜL van
 function AppContent() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const { theme } = useTheme(); // Itt kérjük le az aktuális témát
+  
+  // Most már biztonságos a ThemeContext használata
+  const { theme } = useTheme(); 
 
   useEffect(() => {
     setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 1000); 
+    const timer = setTimeout(() => setIsLoading(false), 500); // Kicsit gyorsítottam a loadingon
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
   return (
-    // A theme osztályt (light-mode vagy dark-mode) a legkülső div-re tesszük
     <div className={`app-container ${theme}-mode`}>
       <NavBar />
       
       {isLoading && (
         <div className="loading-overlay">
-          <LoadingSpinner size="large" message="Loading Lynqo..." />
+          <LoadingSpinner size="large" message="Loading..." />
         </div>
       )}
       
@@ -62,6 +66,7 @@ function AppContent() {
           <Route path="/main" element={<MainPage />} />
           <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
           <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
+          
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
@@ -71,6 +76,7 @@ function AppContent() {
           <Route path="/lessons/:id" element={<ProtectedRoute><LessonPage/></ProtectedRoute>} />
           <Route path="/pick-language" element={<ProtectedRoute><LanguageSelectionPage /></ProtectedRoute>} />
           <Route path="/news" element={<NewsPage />} />
+          
           <Route path="/" element={<Navigate to="/main" replace />} />
           <Route path="*" element={<Navigate to="/main" replace />} />
         </Routes>
@@ -81,14 +87,15 @@ function AppContent() {
   );
 }
 
+// FONTOS: Itt csak a Providereket fűzzük össze. 
+// A Routert az index.js-be tesszük (lásd a 3. lépést)!
 export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <LanguageProvider>
-          
           <CartProvider>
-            <AppContent />
+             <AppContent />
           </CartProvider>
         </LanguageProvider>
       </AuthProvider>

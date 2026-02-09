@@ -1,254 +1,88 @@
-/* --- ALAP ELRENDEZÉS --- */
-.dashboard-container {
-  max-width: 1200px; /* Ez tartja össze az oldalt, hogy ne folyjon szét */
-  width: 90%;
-  margin: 0 auto;
-  padding: 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+/* --- TÉMA VÁLTOZÓK --- */
+:root {
+  /* Alapértelmezett (Light) */
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-card: #ffffff;
+  --border-card: #e2e8f0;
+  --shadow-card: 0 4px 6px rgba(0,0,0,0.05);
+  --primary-grad: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
 }
 
-/* --- FEJLÉC --- */
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.dashboard-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #8b5cf6; /* Lila */
-}
-
-.light-mode .dashboard-header h1 { color: #8b5cf6; }
-.dark-mode .dashboard-header h1 { color: #a78bfa; }
-
-/* Progress Bar */
-.progress-container {
-  max-width: 400px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.progress-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #64748b;
-}
-
-.progress-bar-bg {
-  width: 100%;
-  height: 12px;
-  background-color: #e2e8f0;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.dark-mode .progress-bar-bg { background-color: #334155; }
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #8b5cf6, #ec4899);
-  border-radius: 10px;
-  transition: width 0.5s ease;
-}
-
-/* --- STATISZTIKA KÁRTYÁK (A JAVÍTOTT RÉSZ) --- */
-.stats-grid {
-  display: grid;
-  /* 4 egyenlő oszlop - EZ NYÚJTJA KI ŐKET TELJES SZÉLESSÉGBE */
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 1.5rem;
-  width: 100%;
-}
-
-.stat-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-  transition: transform 0.2s, border-color 0.2s;
-}
-
-/* Light/Dark Mode a kártyáknak */
-.light-mode .stat-card {
-  background: white;
-  color: #1e293b;
-  border-color: #f1f5f9;
-}
-
-.dark-mode .stat-card {
-  background: #1e293b; /* Sötétkék háttér */
-  color: #f8fafc;
-  border-color: #334155;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  border-color: #8b5cf6; /* Lila keret hoverkor */
-}
-
-.stat-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.stat-value {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #f59e0b; /* Arany/Sárga számok */
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: #64748b;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.dark-mode .stat-label { color: #94a3b8; }
-
-
-/* --- ALSÓ RÉSZ (Content + Sidebar) --- */
-.content-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr; /* Bal oldal szélesebb (2/3), jobb oldal keskenyebb (1/3) */
-  gap: 2rem;
-  width: 100%;
-}
-
-/* Fő kártya (Course Complete) */
-.course-card {
-  background: white;
-  padding: 3rem;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  height: 100%; /* Hogy kitöltse a magasságot */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.dark-mode .course-card {
-  background: #1e293b;
-  color: white;
-}
-
-.completion-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-}
-
-.refresh-btn {
-  margin-top: 1.5rem;
-  padding: 0.8rem 1.5rem;
-  background: transparent;
-  border: 2px solid #8b5cf6;
-  color: #8b5cf6;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.refresh-btn:hover {
-  background: #8b5cf6;
-  color: white;
-}
-
-/* --- SIDEBAR --- */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.sidebar-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.dark-mode .sidebar-card {
-  background: #1e293b;
-  color: white;
-}
-
-.sidebar-card h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.quick-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.quick-link-btn {
-  flex: 1 1 40%; /* 2 oszlopos elrendezés a gomboknak */
-  padding: 0.6rem;
-  border: 1px solid #e2e8f0;
-  background: transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #475569;
-  text-decoration: none;
-  transition: 0.2s;
-}
-
-.dark-mode .quick-link-btn {
-  border-color: #475569;
-  color: #cbd5e1;
-}
-
-.quick-link-btn:hover {
-  border-color: #8b5cf6;
-  color: #8b5cf6;
-  background: rgba(139, 92, 246, 0.05);
-}
-
-.logout-btn-small {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #ef4444;
-  color: #ef4444;
-  background: transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.logout-btn-small:hover {
-  background: #ef4444;
-  color: white;
-}
-
-/* MOBIL NÉZET */
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr); /* Mobilon 2x2 legyen */
-  }
+/* --- DARK MODE (Az App.js-ben lévő .dark-mode osztályra reagál) --- */
+.app-container.dark-mode {
+  background-color: #0f172a;       /* Sötét háttér az egész appnak */
+  color: #f1f5f9;                  /* Világos szöveg */
   
-  .content-grid {
-    grid-template-columns: 1fr; /* Mobilon egymás alá kerüljenek */
-  }
+  /* Változók felülírása sötét módra */
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --bg-card: #1e293b;              /* Sötét kártya */
+  --border-card: #334155;          /* Sötét keret */
+  --shadow-card: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+/* --- KONTÉNER --- */
+.dashboard-container {
+  /* A háttérszínt már az app-container kezeli, de a biztonság kedvéért: */
+  background-color: transparent; 
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+/* --- KÁRTYÁK (Bootstrap Override) --- */
+.dashboard-card {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-card) !important;
+  color: var(--text-main) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  border-color: #8b5cf6 !important;
+}
+
+/* Statisztikák */
+.stat-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.stat-value { font-size: 1.8rem; font-weight: 800; }
+.stat-label { 
+  font-size: 0.85rem; 
+  text-transform: uppercase; 
+  font-weight: bold; 
+  color: var(--text-muted); 
+}
+
+/* Gombok */
+.cta-button {
+  background: var(--primary-grad);
+  border: none;
+  color: white !important;
+  padding: 12px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 50px;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+  transition: transform 0.2s;
+}
+.cta-button:hover { transform: translateY(-2px); color: white; }
+
+/* Küldetések */
+.quest-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-card);
+}
+.quest-item:last-child { border-bottom: none; }
+
+/* Linkek */
+.quick-link-btn {
+    text-decoration: none;
+    color: var(--text-main);
 }

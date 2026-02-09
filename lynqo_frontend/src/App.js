@@ -15,12 +15,13 @@ import ShopPage from './pages/ShopPage';
 import NewsPage from './pages/NewsPage';
 import SettingsPage from './pages/SettingsPage';
 import Footer from "./components/common/Footer";
-import LanguageCourses from './components/common/LanguageSelector';
+import LanguageSelectionPage from "./pages/LanguageSelectionPage";
 import DashboardPage from './pages/DashboardPage';
 import ShopLandingPage from './pages/ShopLandingPage';
 import MerchPage from './pages/MerchPage';
 import LessonPage from './pages/LessonPage';
-import LanguageSelectionPage from './pages/LanguageSelectionPage';
+import { CartProvider } from './context/CartContext';
+
 
 const GuestRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
@@ -63,7 +64,7 @@ function AppContent() {
           <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-          <Route path="/shop" element={<ProtectedRoute><LanguageCourses /></ProtectedRoute>} />
+          <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
           <Route path="/shoppage" element={<ProtectedRoute><ShopLandingPage /></ProtectedRoute>} />
           <Route path="/shoppage/subscriptions" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
           <Route path="/shoppage/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />
@@ -85,7 +86,10 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <LanguageProvider>
-          <AppContent />
+          
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
         </LanguageProvider>
       </AuthProvider>
     </ThemeProvider>

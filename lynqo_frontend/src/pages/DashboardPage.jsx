@@ -1,217 +1,349 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
-// Bootstrap komponensek
-import { Container, Row, Col, Card, Spinner, ProgressBar, Button } from 'react-bootstrap';
-// CSS importálása
-import './DashboardPage.css';
+import { Container, Card, Button, ProgressBar, Spinner } from 'react-bootstrap';
+import './MainPage.css';
 
-export default function DashboardPage() {
-  const { user, token, logout } = useContext(AuthContext);
+export default function LessonPage() {
+  // 1. UPDATED: Get both IDs directly from the URL
+  // Matches route: /course/:courseId/lesson/:lessonId
+  const { courseId, lessonId } = useParams();
+  
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  
+  // Audio Ref for sound effects
+  const correctSound = useRef(new Audio('/media/sounds/correct.mp3'));
+  const wrongSound = useRef(new Audio('/media/sounds/wrong.mp3'));
 
-  // --- ADATOK TÁROLÁSA ---
-  const [stats, setStats] = useState({ streak: 0, xp: 0, hearts: 5, gems: 0 });
-  const [nextLesson, setNextLesson] = useState(null);
-  const [quests, setQuests] = useState([]);
+  // Data State
+  const [lesson, setLesson] = useState(null);
+  const [queue, setQueue] = useState([]); // The active list of questions
+  const [initialCount, setInitialCount] = useState(0); // For progress bar
+  const [mistakes, setMistakes] = useState(new Set()); // Track ID of questions user got wrong
   const [loading, setLoading] = useState(true);
 
-  // --- ADATLEKÉRÉS API-BÓL ---
+  // UI State
+  const [selectedOption, setSelectedOption] = useState('');
+  const [feedback, setFeedback] = useState(null); // 'correct' | 'wrong' | null
+  const [hearts, setHearts] = useState(5);
+  const [isFinished, setIsFinished] = useState(false);
+
+  // 2. Fetch & Initialize using lessonId
   useEffect(() => {
-    const fetchData = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+    const fetchLesson = async () => {
       try {
-        const headers = { 'Authorization': `Bearer ${token}` };
-
-        // Párhuzamos lekérés a gyors betöltésért
-        const [statsRes, structureRes, questsRes] = await Promise.all([
-            fetch('https://localhost:7118/api/User/me', { headers }),
-            fetch('https://localhost:7118/api/Lessons/course/1/structure', { headers }),
-            fetch('https://localhost:7118/api/Quests/active', { headers })
-        ]);
-
-        // 1. Statisztikák (SQL: users tábla)
-        if (statsRes.ok) {
-            const d = await statsRes.json();
-            setStats({
-                streak: d.streak || 0,
-                xp: d.totalXp || 0,
-                hearts: d.hearts || 5,
-                gems: d.coins || 0
-            });
+        // Use lessonId from URL params
+        const res = await fetch(`https://localhost:7118/api/Lessons/${lessonId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setLesson(data.lesson);
+          
+          // Initialize Queue
+          setQueue(data.contents);
+          setInitialCount(data.contents.length);
         }
-
-        // 2. Következő lecke keresése (SQL: user_lessons tábla alapján)
-        if (structureRes.ok) {
-            const structure = await structureRes.json();
-            let found = null;
-            for (const unit of structure) {
-                for (const lesson of unit.lessons) {
-                    if (!lesson.isCompleted) {
-                        found = { ...lesson, unitTitle: unit.title, unitDesc: unit.description };
-                        break;
-                    }
-                }
-                if (found) break;
-            }
-            setNextLesson(found);
-        }
-
-        // 3. Küldetések (SQL: quests tábla)
-        if (questsRes.ok) {
-            const qData = await questsRes.json();
-            setQuests(qData);
-        }
-
       } catch (err) {
-        console.error("Hiba az adatok betöltésekor:", err);
+        console.error("Error loading lesson", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [token]);
+    if (token && lessonId) fetchLesson();
+  }, [token, lessonId]);
 
-  if (loading) return (
-    <div className="d-flex justify-content-center align-items-center vh-100 dashboard-container">
-        <Spinner animation="border" variant="primary" />
-    </div>
-  );
+  // 3. Core Logic: Check Answer
+  const checkAnswer = () => {
+    if (!queue.length) return;
+    
+    const currentQ = queue[0];
+    const userAnswer = selectedOption.trim().toLowerCase();
+    const correctAnswer = currentQ.answer.trim().toLowerCase();
+
+    if (userAnswer === correctAnswer) {
+      setFeedback('correct');
+      // correctSound.current.play().catch(() => {});
+    } else {
+      setFeedback('wrong');
+      // wrongSound.current.play().catch(() => {});
+      
+      setHearts(h => Math.max(0, h - 1));
+      setMistakes(prev => new Set(prev).add(currentQ.id));
+    }
+  };
+
+  // 4. Core Logic: Continue / Retry
+  const handleContinue = () => {
+    const currentQ = queue[0];
+
+    if (feedback === 'correct') {
+      // Success: Remove from queue
+      const newQueue = queue.slice(1);
+      setQueue(newQueue);
+      
+      if (newQueue.length === 0) {
+        finishLesson();
+        return;
+      }
+    } else {
+      // Failure: Move current question to the END of the queue
+      const newQueue = [...queue.slice(1), currentQ];
+      setQueue(newQueue);
+    }
+
+    // Reset UI for next card
+    setFeedback(null);
+    setSelectedOption('');
+  };
+
+  // 5. Finish & Submit
+  const finishLesson = async () => {
+    setIsFinished(true);
+    
+    const accuracyRaw = ((initialCount - mistakes.size) / initialCount) * 100;
+    const accuracy = Math.max(0, Math.round(accuracyRaw));
+    
+    const baseXp = lesson.xpReward || 10;
+    const bonusXp = hearts * 2;
+    const totalXp = baseXp + bonusXp;
+
+    try {
+      // Use lessonId from URL params
+      await fetch(`https://localhost:7118/api/Lessons/${lessonId}/complete`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({
+            score: accuracy,
+            stars: accuracy === 100 ? 3 : (accuracy >= 80 ? 2 : 1),
+            xpEarned: totalXp,
+            heartsRemaining: hearts,
+            timeSpentSeconds: 60
+        })
+      });
+    } catch (err) {
+      console.error("Failed to save", err);
+    }
+  };
+
+  // --- RENDER ---
+
+  if (loading) return <div className="p-5 text-center"><Spinner animation="border" /></div>;
+  if (!lesson) return <div className="p-5 text-center">Lesson not found.</div>;
+
+  // A. Finished Screen
+  if (isFinished) {
+    const accuracy = Math.round(((initialCount - mistakes.size) / initialCount) * 100);
+    return (
+      <Container className="main-page-container mt-5 text-center">
+        <Card className="p-5 shadow-lg border-0" style={{borderRadius: '24px'}}>
+            <div style={{fontSize: '5rem'}}>🎉</div>
+            <h1 className="fw-bold mb-3" style={{color: 'var(--gradient-purple)'}}>Lesson Complete!</h1>
+            
+            <div className="row justify-content-center my-4">
+                <div className="col-4">
+                    <h3 className="fw-bold text-warning">{accuracy}%</h3>
+                    <small className="text-muted fw-bold">ACCURACY</small>
+                </div>
+                <div className="col-4">
+                    <h3 className="fw-bold text-danger">{hearts}</h3>
+                    <small className="text-muted fw-bold">HEARTS</small>
+                </div>
+            </div>
+
+            {/* UPDATED: Route back using courseId from URL */}
+            <Button 
+                size="lg" 
+                className="cta-button primary w-50 mx-auto" 
+                onClick={() => navigate(`/dashboard/${courseId}`)}
+            >
+                Continue
+            </Button>
+        </Card>
+      </Container>
+    );
+  }
+
+  const currentQ = queue[0];
+  const progress = ((initialCount - queue.length) / initialCount) * 100;
 
   return (
-    <div className="dashboard-container">
-      <Container>
+    <Container className="main-page-container mt-4" style={{maxWidth: '700px'}}>
+      
+      {/* Top Bar */}
+      <div className="d-flex align-items-center mb-4 gap-3">
+        {/* UPDATED: Close button routes back using courseId from URL */}
+        <Button 
+            variant="link" 
+            className="text-muted text-decoration-none fs-4" 
+            onClick={() => navigate(`/dashboard/${courseId}`)}
+        >
+            ✕
+        </Button>
         
-        {/* ÜDVÖZLÉS */}
-        <div className="text-center mb-5">
-            <h1 className="fw-bold">Welcome back, {user?.username || "Learner"}! 👋</h1>
+        <ProgressBar now={progress} className="flex-grow-1" style={{height: '16px', borderRadius: '8px'}} variant="success" />
+        <div className="d-flex align-items-center text-danger fw-bold fs-5">
+            ❤️ {hearts}
         </div>
+      </div>
 
-        {/* 1. SOR: 4 STATISZTIKA KÁRTYA */}
-        <Row className="g-4 mb-5">
-            <Col md={3} xs={6}>
-                <Card className="dashboard-card text-center p-3">
-                    <Card.Body>
-                        <div className="stat-icon">🔥</div>
-                        <div className="stat-value" style={{color: '#f59e0b'}}>{stats.streak}</div>
-                        <div className="stat-label">Day Streak</div>
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col md={3} xs={6}>
-                <Card className="dashboard-card text-center p-3">
-                    <Card.Body>
-                        <div className="stat-icon">⚡</div>
-                        <div className="stat-value" style={{color: '#eab308'}}>{stats.xp}</div>
-                        <div className="stat-label">Total XP</div>
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col md={3} xs={6}>
-                <Card className="dashboard-card text-center p-3">
-                    <Card.Body>
-                        <div className="stat-icon">❤️</div>
-                        <div className="stat-value" style={{color: '#ef4444'}}>{stats.hearts}</div>
-                        <div className="stat-label">Hearts</div>
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col md={3} xs={6}>
-                <Card className="dashboard-card text-center p-3">
-                    <Card.Body>
-                        <div className="stat-icon">💎</div>
-                        <div className="stat-value" style={{color: '#0ea5e9'}}>{stats.gems}</div>
-                        <div className="stat-label">Gems</div>
-                    </Card.Body>
-                </Card>
-            </Col>
-        </Row>
+      {/* Question Card */}
+      <Card className="p-4 border-0 shadow-sm mb-4" style={{minHeight: '400px', borderRadius: '20px'}}>
+        <h3 className="fw-bold mb-5 text-center text-dark">{currentQ.question}</h3>
 
-        {/* 2. SOR: FŐ TARTALOM + OLDALSÁV */}
-        <Row className="g-4">
+        <div className="flex-grow-1 d-flex flex-column justify-content-center">
             
-            {/* BAL OLDAL (Széles): Következő lecke */}
-            <Col lg={8}>
-                <Card className="dashboard-card p-5 text-center d-flex flex-column justify-content-center" style={{minHeight: '400px'}}>
-                    {nextLesson ? (
-                        <>
-                            <div style={{fontSize: '4rem', marginBottom: '1rem'}}>🚀</div>
-                            <h5 className="fw-bold text-uppercase" style={{color: 'var(--text-muted)', fontSize:'0.9rem'}}>
-                                {nextLesson.unitTitle}
-                            </h5>
-                            <h2 className="mb-4 fw-bold">{nextLesson.title}</h2>
-                            <p className="mb-5" style={{color: 'var(--text-muted)', fontSize: '1.2rem'}}>
-                                {nextLesson.unitDesc}
-                            </p>
-                            
-                            <div>
-                                <Link to={`/lessons/${nextLesson.id}`} className="cta-button">
-                                    START LESSON
-                                </Link>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div style={{fontSize: '4rem', marginBottom: '1rem'}}>🎉</div>
-                            <h2>Course Complete!</h2>
-                            <p>You have finished all available lessons.</p>
-                        </>
-                    )}
-                </Card>
-            </Col>
+            {/* INPUT: Multiple Choice */}
+            {currentQ.contentType === 'multiple_choice' && Array.isArray(currentQ.options) && (
+                <div className="d-grid gap-3">
+                    {currentQ.options.map((opt, idx) => {
+                        const text = typeof opt === 'string' ? opt : opt.text;
+                        const audioUrl = typeof opt === 'object' ? opt.audioUrl : null;
+                        
+                        const isSelected = selectedOption === text;
+                        
+                        let borderColor = '#e5e7eb';
+                        let bgColor = 'white';
+                        
+                        if (feedback && text === currentQ.answer) {
+                             borderColor = '#22c55e';
+                             bgColor = '#dcfce7';
+                        } else if (isSelected && feedback === 'wrong') {
+                             borderColor = '#ef4444';
+                             bgColor = '#fee2e2';
+                        } else if (isSelected) {
+                             borderColor = 'var(--gradient-blue)';
+                             bgColor = '#e0f2fe';
+                        }
 
-            {/* JOBB OLDAL (Keskeny): Sidebar */}
-            <Col lg={4}>
-                <div className="d-flex flex-column gap-4">
-                    
-                    {/* Küldetések */}
-                    <Card className="dashboard-card p-4">
-                        <h4 className="fw-bold mb-3 text-uppercase" style={{fontSize: '1rem', color: 'var(--text-muted)'}}>
-                            📜 Daily Quests
-                        </h4>
-                        {quests.length === 0 ? (
-                            <p className="text-muted fst-italic">No active quests.</p>
-                        ) : (
-                            <div>
-                                {quests.map((q, i) => (
-                                    <div key={i} className="quest-item" style={{opacity: q.isCompleted ? 0.5 : 1}}>
-                                        <span className="me-3 fs-5">{q.isCompleted ? '✅' : '⬜'}</span>
-                                        <div className="w-100">
-                                            <div className="d-flex justify-content-between">
-                                                <span className="fw-bold" style={{textDecoration: q.isCompleted ? 'line-through' : 'none'}}>
-                                                    {q.title}
-                                                </span>
-                                            </div>
-                                            <small className="text-muted d-block mb-1">{q.description}</small>
-                                            <ProgressBar now={q.isCompleted ? 100 : 0} variant={q.isCompleted ? "success" : "warning"} style={{height: '6px'}} />
+                        return (
+                            <div 
+                                key={idx}
+                                onClick={() => {
+                                    if (!feedback) {
+                                        setSelectedOption(text);
+                                        const playAudio = (url) => {
+                                            if (!url) return;
+                                            const fullUrl = url.startsWith('http') 
+                                                ? url 
+                                                : `https://localhost:7118${url}`;
+                                            new Audio(fullUrl).play().catch(err => console.error("Audio Error:", err));
+                                        };
+                                        playAudio(audioUrl);
+                                    }
+                                }}
+                                className="p-3 rounded d-flex align-items-center justify-content-between"
+                                style={{
+                                    border: `2px solid ${borderColor}`,
+                                    backgroundColor: bgColor,
+                                    cursor: feedback ? 'default' : 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                <div className="d-flex align-items-center gap-3">
+                                    {audioUrl && (
+                                        <div className="p-2 rounded-circle bg-white shadow-sm border" style={{width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                            🔊
                                         </div>
-                                    </div>
-                                ))}
+                                    )}
+                                    <span className="fw-bold fs-5">{text}</span>
+                                </div>
+                                
+                                {isSelected && !feedback && <span className="text-primary fs-4">●</span>}
                             </div>
-                        )}
-                    </Card>
-
-                    {/* Gyors Linkek */}
-                    <Card className="dashboard-card p-4">
-                        <h4 className="fw-bold mb-3 text-uppercase" style={{fontSize: '1rem', color: 'var(--text-muted)'}}>
-                            Quick Links
-                        </h4>
-                        <div className="d-grid gap-2">
-                            <Link to="/settings" className="quick-link-btn">⚙️ Settings</Link>
-                            <Link to="/shop" className="quick-link-btn">🛒 Shop</Link>
-                            <Button variant="outline-danger" className="fw-bold mt-2" onClick={() => { logout(); navigate('/main'); }}>
-                                🚪 Log Out
-                            </Button>
-                        </div>
-                    </Card>
-
+                        );
+                    })}
                 </div>
-            </Col>
-        </Row>
-      </Container>
-    </div>
+            )}
+
+            {/* INPUT: Text / Fill Blank */}
+            {(currentQ.contentType === 'fill_blank' || currentQ.contentType === 'text') && (
+                <div className="text-center">
+                    <input 
+                        type="text" 
+                        className="form-control form-control-lg text-center mx-auto"
+                        style={{maxWidth: '300px', fontSize: '1.5rem'}}
+                        placeholder="Type answer..."
+                        value={selectedOption}
+                        onChange={(e) => setSelectedOption(e.target.value)}
+                        disabled={!!feedback}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !feedback && selectedOption) checkAnswer();
+                            else if (e.key === 'Enter' && feedback) handleContinue();
+                        }}
+                    />
+                </div>
+            )}
+
+            {/* Audio Player */}
+            {currentQ.mediaId && (
+                 <div className="text-center mt-4">
+                      <Button variant="light" className="rounded-circle p-3 shadow-sm" onClick={() => {
+                          new Audio(`https://localhost:7118/api/media/${currentQ.mediaId}`).play();
+                      }}>
+                        🔊
+                      </Button>
+                 </div>
+             )}
+
+        </div>
+      </Card>
+
+      {/* Footer Action Area */}
+      <div className={`fixed-bottom p-4 border-top bg-white ${feedback ? (feedback === 'correct' ? 'bg-success-subtle' : 'bg-danger-subtle') : ''}`}>
+        <Container style={{maxWidth: '700px'}}>
+            <div className="d-flex justify-content-between align-items-center">
+                
+                {/* Feedback Message */}
+                <div style={{minWidth: '200px'}}>
+                    {feedback === 'correct' && (
+                        <div className="d-flex align-items-center text-success gap-2">
+                            <div className="fs-2 bg-white rounded-circle p-2 shadow-sm">✅</div>
+                            <div>
+                                <h4 className="fw-bold m-0">Excellent!</h4>
+                            </div>
+                        </div>
+                    )}
+                    {feedback === 'wrong' && (
+                        <div className="d-flex align-items-center text-danger gap-2">
+                            <div className="fs-2 bg-white rounded-circle p-2 shadow-sm">❌</div>
+                            <div>
+                                <h4 className="fw-bold m-0">Correct Answer:</h4>
+                                <div className="fs-5">{currentQ.answer}</div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Button */}
+                {!feedback ? (
+                    <Button 
+                        size="lg" 
+                        className="cta-button primary px-5 py-3 fw-bold"
+                        disabled={!selectedOption}
+                        onClick={checkAnswer}
+                    >
+                        CHECK
+                    </Button>
+                ) : (
+                    <Button 
+                        size="lg" 
+                        variant={feedback === 'correct' ? 'success' : 'danger'}
+                        className="px-5 py-3 fw-bold shadow"
+                        onClick={handleContinue}
+                    >
+                        CONTINUE
+                    </Button>
+                )}
+            </div>
+        </Container>
+      </div>
+      
+      <div style={{height: '140px'}}></div> 
+    </Container>
   );
 }

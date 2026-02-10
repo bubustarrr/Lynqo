@@ -14,7 +14,6 @@ export default function LanguageSelectionPage() {
   const [loading, setLoading] = useState(false);
 
   // 1. HARDCODED UI LIST 
-  // IMPORTANT: The 'id' here must match the ID in your SQL 'languages' table!
   const sourceLanguages = [
     { id: 1, name: 'English', flag: '🇺🇸' },
     { id: 2, name: 'Hungarian', flag: '🇭🇺' },
@@ -43,7 +42,6 @@ export default function LanguageSelectionPage() {
     setSourceLangId(id);
     
     try {
-      // Calls our new controller with filtering
       const res = await fetch(`https://localhost:7118/api/Courses?sourceId=${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -61,27 +59,10 @@ export default function LanguageSelectionPage() {
   };
 
   // 3. Select Course & Navigate
-  const selectCourse = async (courseId) => {
-    setLoading(true);
-    try {
-        // Here we assume you might want to save this choice to the user profile
-        // If you don't have this endpoint yet, you can just navigate for now
-        // await fetch(`https://localhost:7118/api/Users/current-course`, {
-        //     method: 'PUT',
-        //     headers: { 
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${token}` 
-        //     },
-        //     body: JSON.stringify({ courseId })
-        // });
-
-        // For now, just go to dashboard. You can implement the save logic later.
-        navigate('/dashboard'); 
-    } catch (err) {
-        console.error("Error selecting course", err);
-    } finally {
-        setLoading(false);
-    }
+  const selectCourse = (courseId) => {
+    // Simply navigate to the specific dashboard URL
+    // This relies on your App.js having: <Route path="/dashboard/:courseId" ... />
+    navigate(`/dashboard/${courseId}`);
   };
 
   return (
@@ -99,17 +80,17 @@ export default function LanguageSelectionPage() {
       {step === 1 && (
         <Row className="justify-content-center g-4">
           {sourceLanguages.map((lang) => (
-            <Col key={lang.id} xs={6} md={3}>
+            <Col key={lang.id} xs={6} md={3} lg={2}>
               <Card 
                 className="h-100 shadow-sm border-0 language-card" 
-                style={{cursor: 'pointer', transition: 'all 0.2s', borderRadius: '20px'}}
+                style={{cursor: 'pointer', transition: 'all 0.2s', borderRadius: '16px'}}
                 onClick={() => fetchCourses(lang.id)}
                 onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
                 onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
               >
-                <Card.Body className="d-flex flex-column align-items-center justify-content-center p-4">
-                  <div style={{fontSize: '4rem', marginBottom: '1rem'}}>{lang.flag}</div>
-                  <h4 className="fw-bold m-0">{lang.name}</h4>
+                <Card.Body className="d-flex flex-column align-items-center justify-content-center p-3">
+                  <div style={{fontSize: '3rem', marginBottom: '0.5rem'}}>{lang.flag}</div>
+                  <h6 className="fw-bold m-0">{lang.name}</h6>
                 </Card.Body>
               </Card>
             </Col>
@@ -145,10 +126,11 @@ export default function LanguageSelectionPage() {
                         <div className="d-flex align-items-center mb-4">
                             <div className="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" 
                                 style={{width: '64px', height: '64px', background: 'white', border: '1px solid #eee', fontSize: '2rem'}}>
-                                {/* Fallback emoji since flag_emoji might be null */}
-                                {course.title.includes("French") ? '🇫🇷' : 
-                                 course.title.includes("Spanish") ? '🇪🇸' : 
-                                 course.title.includes("German") ? '🇩🇪' : '🌍'}
+                                {/* Dynamic Flag Logic based on Target Language ID */}
+                                {course.targetLanguageId === 4 ? '🇫🇷' : 
+                                 course.targetLanguageId === 5 ? '🇪🇸' : 
+                                 course.targetLanguageId === 3 ? '🇩🇪' : 
+                                 course.targetLanguageId === 1 ? '🇺🇸' : '🌍'}
                             </div>
                             <div>
                                 <h4 className="fw-bold m-0 text-dark">{course.title}</h4>

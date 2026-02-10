@@ -5,80 +5,87 @@ import { Container, Card, Button, ProgressBar, Spinner } from 'react-bootstrap';
 import './MainPage.css';
 
 export default function LessonPage() {
-  const { id } = useParams();
+  // 1. Get IDs from URL
+  const { courseId, lessonId } = useParams();
+  
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
   
-  // Audio Ref for sound effects
-  const correctSound = useRef(new Audio('/media/sounds/correct.mp3')); // Optional: Add files or remove
+  // Audio Refs
+  const correctSound = useRef(new Audio('/media/sounds/correct.mp3'));
   const wrongSound = useRef(new Audio('/media/sounds/wrong.mp3'));
 
   // Data State
   const [lesson, setLesson] = useState(null);
-  const [queue, setQueue] = useState([]); // The active list of questions
-  const [initialCount, setInitialCount] = useState(0); // For progress bar
-  const [mistakes, setMistakes] = useState(new Set()); // Track ID of questions user got wrong (for accuracy calc)
+  const [queue, setQueue] = useState([]); 
+  const [initialCount, setInitialCount] = useState(0); 
+  const [mistakes, setMistakes] = useState(new Set()); 
   const [loading, setLoading] = useState(true);
 
   // UI State
   const [selectedOption, setSelectedOption] = useState('');
-  const [feedback, setFeedback] = useState(null); // 'correct' | 'wrong' | null
+  const [feedback, setFeedback] = useState(null);
   const [hearts, setHearts] = useState(5);
   const [isFinished, setIsFinished] = useState(false);
 
-  // 1. Fetch & Initialize
+  // 2. Fetch & Initialize (FIXED)
   useEffect(() => {
+    // If we don't have a token or lessonId yet, stop loading and wait (or show error)
+    if (!token || !lessonId) {
+        console.log("Waiting for token or lessonId...", { token, lessonId });
+        setLoading(false); // <--- STOP SPINNING so we see the "Lesson not found" screen instead of infinite loop
+        return;
+    }
+
     const fetchLesson = async () => {
+      setLoading(true); // Start loading explicitly
       try {
-        const res = await fetch(`https://localhost:7118/api/Lessons/${id}`, {
+        const res = await fetch(`https://localhost:7118/api/Lessons/${lessonId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
           const data = await res.json();
           setLesson(data.lesson);
-          
-          // Initialize Queue
           setQueue(data.contents);
           setInitialCount(data.contents.length);
+        } else {
+            console.error("Lesson fetch failed:", res.status);
         }
       } catch (err) {
         console.error("Error loading lesson", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // This runs when fetch finishes
       }
     };
-    if (token && id) fetchLesson();
-  }, [token, id]);
 
-  // 2. Core Logic: Check Answer
+    fetchLesson();
+  }, [token, lessonId]);
+
+  // 3. Check Answer
   const checkAnswer = () => {
     if (!queue.length) return;
     
     const currentQ = queue[0];
-    // Normalize strings for comparison (trim, lowercase)
     const userAnswer = selectedOption.trim().toLowerCase();
     const correctAnswer = currentQ.answer.trim().toLowerCase();
 
     if (userAnswer === correctAnswer) {
       setFeedback('correct');
-      // correctSound.current.play().catch(() => {}); // Uncomment if you have sounds
+      // correctSound.current.play().catch(() => {});
     } else {
       setFeedback('wrong');
       // wrongSound.current.play().catch(() => {});
       
       setHearts(h => Math.max(0, h - 1));
-      
-      // Track this question ID as a mistake (for final score)
       setMistakes(prev => new Set(prev).add(currentQ.id));
     }
   };
 
-  // 3. Core Logic: Continue / Retry
+  // 4. Continue / Retry
   const handleContinue = () => {
     const currentQ = queue[0];
 
     if (feedback === 'correct') {
-      // Success: Remove from queue
       const newQueue = queue.slice(1);
       setQueue(newQueue);
       
@@ -87,31 +94,27 @@ export default function LessonPage() {
         return;
       }
     } else {
-      // Failure: Move current question to the END of the queue
       const newQueue = [...queue.slice(1), currentQ];
       setQueue(newQueue);
     }
 
-    // Reset UI for next card
     setFeedback(null);
     setSelectedOption('');
   };
 
-  // 4. Finish & Submit
+  // 5. Finish
   const finishLesson = async () => {
     setIsFinished(true);
     
-    // Calculate Accuracy: (Total - UniqueMistakes) / Total
     const accuracyRaw = ((initialCount - mistakes.size) / initialCount) * 100;
     const accuracy = Math.max(0, Math.round(accuracyRaw));
     
-    // Calculate XP: Base + Bonus for hearts
-    const baseXp = lesson.xpReward || 10;
+    const baseXp = lesson?.xpReward || 10;
     const bonusXp = hearts * 2;
     const totalXp = baseXp + bonusXp;
 
     try {
-      await fetch(`https://localhost:7118/api/Lessons/${id}/complete`, {
+      await fetch(`https://localhost:7118/api/Lessons/${lessonId}/complete`, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
@@ -133,7 +136,15 @@ export default function LessonPage() {
   // --- RENDER ---
 
   if (loading) return <div className="p-5 text-center"><Spinner animation="border" /></div>;
-  if (!lesson) return <div className="p-5 text-center">Lesson not found.</div>;
+  
+  // If fetch failed or ID missing, this will now show instead of infinite spinner
+  if (!lesson) return (
+    <div className="p-5 text-center">
+        <h3>Lesson not found.</h3>
+        <p>Debug: Course {courseId}, Lesson {lessonId}</p>
+        <Button onClick={() => navigate(`/dashboard/${courseId || 1}`)}>Go Back</Button>
+    </div>
+  );
 
   // A. Finished Screen
   if (isFinished) {
@@ -155,7 +166,11 @@ export default function LessonPage() {
                 </div>
             </div>
 
-            <Button size="lg" className="cta-button primary w-50 mx-auto" onClick={() => navigate('/dashboard')}>
+            <Button 
+                size="lg" 
+                className="cta-button primary w-50 mx-auto" 
+                onClick={() => navigate(`/dashboard/${courseId}`)}
+            >
                 Continue
             </Button>
         </Card>
@@ -164,12 +179,6 @@ export default function LessonPage() {
   }
 
   const currentQ = queue[0];
-  // Progress: 100% - (Remaining items that haven't been pushed back / Total) * 100
-  // Simplified: Just show progress based on (Initial - CurrentQueueLength). 
-  // Note: Queue length stays high if we keep pushing back, which is correct behavior (bar doesn't move).
-  const completedCount = initialCount - queue.length; // This logic breaks if queue grows, but here queue stays same size on error.
-  // Actually simpler: 
-  // We want the bar to fill up as we *permanently remove* items.
   const progress = ((initialCount - queue.length) / initialCount) * 100;
 
   return (
@@ -177,7 +186,14 @@ export default function LessonPage() {
       
       {/* Top Bar */}
       <div className="d-flex align-items-center mb-4 gap-3">
-        <Button variant="link" className="text-muted text-decoration-none fs-4" onClick={() => navigate('/dashboard')}>✕</Button>
+        <Button 
+            variant="link" 
+            className="text-muted text-decoration-none fs-4" 
+            onClick={() => navigate(`/dashboard/${courseId}`)}
+        >
+            ✕
+        </Button>
+        
         <ProgressBar now={progress} className="flex-grow-1" style={{height: '16px', borderRadius: '8px'}} variant="success" />
         <div className="d-flex align-items-center text-danger fw-bold fs-5">
             ❤️ {hearts}
@@ -190,29 +206,25 @@ export default function LessonPage() {
 
         <div className="flex-grow-1 d-flex flex-column justify-content-center">
             
-                        {/* INPUT: Multiple Choice */}
+            {/* Multiple Choice */}
             {currentQ.contentType === 'multiple_choice' && Array.isArray(currentQ.options) && (
                 <div className="d-grid gap-3">
                     {currentQ.options.map((opt, idx) => {
-                        // 1. Normalize the option data
-                        // Handle if it's just a string ["A", "B"] OR an object [{text: "A", audioUrl: "..."}, ...]
                         const text = typeof opt === 'string' ? opt : opt.text;
                         const audioUrl = typeof opt === 'object' ? opt.audioUrl : null;
-                        
                         const isSelected = selectedOption === text;
                         
-                        // 2. Determine Styling (Feedback colors)
                         let borderColor = '#e5e7eb';
                         let bgColor = 'white';
                         
                         if (feedback && text === currentQ.answer) {
-                             borderColor = '#22c55e'; // Correct = Green
+                             borderColor = '#22c55e';
                              bgColor = '#dcfce7';
                         } else if (isSelected && feedback === 'wrong') {
-                             borderColor = '#ef4444'; // Wrong Selection = Red
+                             borderColor = '#ef4444';
                              bgColor = '#fee2e2';
                         } else if (isSelected) {
-                             borderColor = 'var(--gradient-blue)'; // Selected = Blue
+                             borderColor = 'var(--gradient-blue)';
                              bgColor = '#e0f2fe';
                         }
 
@@ -222,17 +234,10 @@ export default function LessonPage() {
                                 onClick={() => {
                                     if (!feedback) {
                                         setSelectedOption(text);
-                                        // Optional: Play audio immediately on select
-                                        const playAudio = (url) => {
-                                            if (!url) return;
-                                            // Check if it's already a full URL
-                                            const fullUrl = url.startsWith('http') 
-                                                ? url 
-                                                : `https://localhost:7118${url}`; // Adjust port if needed
-                                                
-                                            new Audio(fullUrl).play().catch(err => console.error("Audio Error:", err));
-                                        };
-                                        playAudio(audioUrl);
+                                        if(audioUrl) {
+                                             const fullUrl = audioUrl.startsWith('http') ? audioUrl : `https://localhost:7118${audioUrl}`;
+                                             new Audio(fullUrl).play().catch(e => console.error(e));
+                                        }
                                     }
                                 }}
                                 className="p-3 rounded d-flex align-items-center justify-content-between"
@@ -244,15 +249,9 @@ export default function LessonPage() {
                                 }}
                             >
                                 <div className="d-flex align-items-center gap-3">
-                                    {/* Audio Icon (if available) */}
-                                    {audioUrl && (
-                                        <div className="p-2 rounded-circle bg-white shadow-sm border" style={{width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                            🔊
-                                        </div>
-                                    )}
+                                    {audioUrl && <span>🔊</span>}
                                     <span className="fw-bold fs-5">{text}</span>
                                 </div>
-                                
                                 {isSelected && !feedback && <span className="text-primary fs-4">●</span>}
                             </div>
                         );
@@ -260,8 +259,7 @@ export default function LessonPage() {
                 </div>
             )}
 
-
-            {/* INPUT: Text / Fill Blank */}
+            {/* Text Input */}
             {(currentQ.contentType === 'fill_blank' || currentQ.contentType === 'text') && (
                 <div className="text-center">
                     <input 
@@ -280,70 +278,43 @@ export default function LessonPage() {
                 </div>
             )}
 
-            {/* Audio Player (if exists) */}
+            {/* Audio Question */}
             {currentQ.mediaId && (
                  <div className="text-center mt-4">
-                     <Button variant="light" className="rounded-circle p-3 shadow-sm" onClick={() => {
-                         new Audio(`https://localhost:7118/api/media/${currentQ.mediaId}`).play();
-                     }}>
-                        🔊
-                     </Button>
+                      <Button variant="light" className="rounded-circle p-3 shadow-sm" onClick={() => {
+                          new Audio(`https://localhost:7118/api/media/${currentQ.mediaId}`).play();
+                      }}>🔊</Button>
                  </div>
              )}
-
         </div>
       </Card>
 
-      {/* Footer Action Area */}
+      {/* Footer */}
       <div className={`fixed-bottom p-4 border-top bg-white ${feedback ? (feedback === 'correct' ? 'bg-success-subtle' : 'bg-danger-subtle') : ''}`}>
         <Container style={{maxWidth: '700px'}}>
             <div className="d-flex justify-content-between align-items-center">
-                
-                {/* Feedback Message */}
                 <div style={{minWidth: '200px'}}>
-                    {feedback === 'correct' && (
-                        <div className="d-flex align-items-center text-success gap-2">
-                            <div className="fs-2 bg-white rounded-circle p-2 shadow-sm">✅</div>
-                            <div>
-                                <h4 className="fw-bold m-0">Excellent!</h4>
-                            </div>
-                        </div>
-                    )}
+                    {feedback === 'correct' && <h4 className="fw-bold text-success">Excellent!</h4>}
                     {feedback === 'wrong' && (
-                        <div className="d-flex align-items-center text-danger gap-2">
-                            <div className="fs-2 bg-white rounded-circle p-2 shadow-sm">❌</div>
-                            <div>
-                                <h4 className="fw-bold m-0">Correct Answer:</h4>
-                                <div className="fs-5">{currentQ.answer}</div>
-                            </div>
+                        <div className="text-danger">
+                            <h4 className="fw-bold m-0">Correct Answer:</h4>
+                            <div className="fs-5">{currentQ.answer}</div>
                         </div>
                     )}
                 </div>
 
-                {/* Button */}
                 {!feedback ? (
-                    <Button 
-                        size="lg" 
-                        className="cta-button primary px-5 py-3 fw-bold"
-                        disabled={!selectedOption}
-                        onClick={checkAnswer}
-                    >
+                    <Button size="lg" className="cta-button primary px-5 py-3 fw-bold" disabled={!selectedOption} onClick={checkAnswer}>
                         CHECK
                     </Button>
                 ) : (
-                    <Button 
-                        size="lg" 
-                        variant={feedback === 'correct' ? 'success' : 'danger'}
-                        className="px-5 py-3 fw-bold shadow"
-                        onClick={handleContinue}
-                    >
+                    <Button size="lg" variant={feedback === 'correct' ? 'success' : 'danger'} className="px-5 py-3 fw-bold shadow" onClick={handleContinue}>
                         CONTINUE
                     </Button>
                 )}
             </div>
         </Container>
       </div>
-      
       <div style={{height: '140px'}}></div> 
     </Container>
   );

@@ -17,7 +17,7 @@ export default function MainPage() {
           </p>
           <div className="hero-buttons">
             {user ? (
-              <Link to="/dashboard" className="cta-button primary large">
+              <Link to="/pick-language" className="cta-button primary large">
                 🚀 Continue Learning (Go to Dashboard)
               </Link>
             ) : (

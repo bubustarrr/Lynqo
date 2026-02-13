@@ -18,7 +18,7 @@ export default function ShopLandingPage() {
             <Button 
               size="lg" 
               className="landing-btn subscription-btn me-md-3 mb-3 mb-md-0 px-5 py-3"
-              onClick={() => navigate('/shoppage/subscriptions')}
+              onClick={() => navigate('/shop/subscriptions')}
             >
               <FaCrown className="fs-3 me-2 mb-1" />
               Subscriptions
@@ -27,7 +27,7 @@ export default function ShopLandingPage() {
             <Button 
               size="lg" 
               className="landing-btn shop-btn px-5 py-3"
-              onClick={() => navigate('/shoppage/merch')}
+              onClick={() => navigate('/shop/merch')}
             >
               <FaShoppingBag className="fs-3 me-2 mb-1" />
               Online Shop

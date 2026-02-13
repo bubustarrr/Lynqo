@@ -20,7 +20,6 @@ import SettingsPage from './pages/SettingsPage';
 import Footer from "./components/common/Footer";
 import LanguageSelectionPage from "./pages/LanguageSelectionPage";
 import DashboardPage from './pages/DashboardPage';
-import ShopLandingPage from './pages/ShopLandingPage';
 import MerchPage from './pages/MerchPage';
 import LessonPage from './pages/LessonPage';
 
@@ -70,9 +69,8 @@ function AppContent() {
           <Route path="/dashboard/:courseId" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
-          <Route path="/shoppage" element={<ProtectedRoute><ShopLandingPage /></ProtectedRoute>} />
-          <Route path="/shoppage/subscriptions" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
-          <Route path="/shoppage/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />
+          <Route path="/shopp/subscriptions" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
+          <Route path="/shop/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />
           <Route 
        path="/course/:courseId/lesson/:lessonId" 
        element={<ProtectedRoute><LessonPage /></ProtectedRoute>} 

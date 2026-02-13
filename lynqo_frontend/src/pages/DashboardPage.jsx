@@ -1,349 +1,186 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Card, Button, ProgressBar, Spinner } from 'react-bootstrap';
-import './MainPage.css';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Container, Row, Col, Card, Spinner, ProgressBar, Button } from 'react-bootstrap';
+import './DashboardPage.css';
 
-export default function LessonPage() {
-  // 1. UPDATED: Get both IDs directly from the URL
-  // Matches route: /course/:courseId/lesson/:lessonId
-  const { courseId, lessonId } = useParams();
-  
-  const { token } = useContext(AuthContext);
+export default function DashboardPage() {
+  const { user, token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { courseId } = useParams();
   
-  // Audio Ref for sound effects
-  const correctSound = useRef(new Audio('/media/sounds/correct.mp3'));
-  const wrongSound = useRef(new Audio('/media/sounds/wrong.mp3'));
+  // Default to course 1 (or handle redirect if undefined)
+  const activeCourseId = courseId || 1;
 
-  // Data State
-  const [lesson, setLesson] = useState(null);
-  const [queue, setQueue] = useState([]); // The active list of questions
-  const [initialCount, setInitialCount] = useState(0); // For progress bar
-  const [mistakes, setMistakes] = useState(new Set()); // Track ID of questions user got wrong
+  // --- DATA STATE ---
+  const [stats, setStats] = useState({ streak: 0, xp: 0, hearts: 5, gems: 0 });
+  const [nextLesson, setNextLesson] = useState(null);
+  const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // UI State
-  const [selectedOption, setSelectedOption] = useState('');
-  const [feedback, setFeedback] = useState(null); // 'correct' | 'wrong' | null
-  const [hearts, setHearts] = useState(5);
-  const [isFinished, setIsFinished] = useState(false);
-
-  // 2. Fetch & Initialize using lessonId
+  // --- FETCH DATA FROM API ---
   useEffect(() => {
-    const fetchLesson = async () => {
+    const fetchData = async () => {
+      if (!token) return;
+
       try {
-        // Use lessonId from URL params
-        const res = await fetch(`https://localhost:7118/api/Lessons/${lessonId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setLesson(data.lesson);
-          
-          // Initialize Queue
-          setQueue(data.contents);
-          setInitialCount(data.contents.length);
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+        // Parallel Fetch
+        const [userRes, structureRes, questsRes] = await Promise.all([
+            // 🔥 FIXED: Singular 'User' based on your screenshot
+            fetch('https://localhost:7118/api/User/me', { headers }),
+            fetch(`https://localhost:7118/api/Lessons/course/${activeCourseId}/structure`, { headers }),
+            fetch('https://localhost:7118/api/Quests/active', { headers }) // Assuming this exists or returns []
+        ]);
+
+        // 1. User Stats
+        if (userRes.ok) {
+            const userData = await userRes.json();
+            // Handle both PascalCase (C#) and camelCase (JSON default)
+            setStats({
+                streak: userData.streak || userData.Streak || 0,
+                xp: userData.totalXp || userData.TotalXp || 0,
+                hearts: (userData.hearts !== undefined) ? userData.hearts : (userData.Hearts || 5),
+                gems: userData.coins || userData.Coins || 0 
+            });
+        } else {
+            console.error("Failed to fetch User stats:", userRes.status);
         }
+
+        // 2. Course Structure -> Next Lesson
+        if (structureRes.ok) {
+            const structure = await structureRes.json();
+            let found = null;
+            // Find first incomplete lesson
+            for (const unit of structure) {
+                if (unit.lessons) {
+                    for (const lesson of unit.lessons) {
+                        if (!lesson.isCompleted) {
+                            found = { 
+                                ...lesson, 
+                                unitTitle: unit.title, 
+                                unitDesc: unit.description 
+                            };
+                            break; 
+                        }
+                    }
+                }
+                if (found) break;
+            }
+            setNextLesson(found);
+        }
+
+        // 3. Quests
+        if (questsRes.ok) {
+            const qData = await questsRes.json();
+            setQuests(qData);
+        }
+
       } catch (err) {
-        console.error("Error loading lesson", err);
+        console.error("Error loading dashboard data:", err);
       } finally {
         setLoading(false);
       }
     };
-    if (token && lessonId) fetchLesson();
-  }, [token, lessonId]);
 
-  // 3. Core Logic: Check Answer
-  const checkAnswer = () => {
-    if (!queue.length) return;
-    
-    const currentQ = queue[0];
-    const userAnswer = selectedOption.trim().toLowerCase();
-    const correctAnswer = currentQ.answer.trim().toLowerCase();
+    fetchData();
+  }, [token, activeCourseId]);
 
-    if (userAnswer === correctAnswer) {
-      setFeedback('correct');
-      // correctSound.current.play().catch(() => {});
-    } else {
-      setFeedback('wrong');
-      // wrongSound.current.play().catch(() => {});
-      
-      setHearts(h => Math.max(0, h - 1));
-      setMistakes(prev => new Set(prev).add(currentQ.id));
-    }
-  };
-
-  // 4. Core Logic: Continue / Retry
-  const handleContinue = () => {
-    const currentQ = queue[0];
-
-    if (feedback === 'correct') {
-      // Success: Remove from queue
-      const newQueue = queue.slice(1);
-      setQueue(newQueue);
-      
-      if (newQueue.length === 0) {
-        finishLesson();
-        return;
-      }
-    } else {
-      // Failure: Move current question to the END of the queue
-      const newQueue = [...queue.slice(1), currentQ];
-      setQueue(newQueue);
-    }
-
-    // Reset UI for next card
-    setFeedback(null);
-    setSelectedOption('');
-  };
-
-  // 5. Finish & Submit
-  const finishLesson = async () => {
-    setIsFinished(true);
-    
-    const accuracyRaw = ((initialCount - mistakes.size) / initialCount) * 100;
-    const accuracy = Math.max(0, Math.round(accuracyRaw));
-    
-    const baseXp = lesson.xpReward || 10;
-    const bonusXp = hearts * 2;
-    const totalXp = baseXp + bonusXp;
-
-    try {
-      // Use lessonId from URL params
-      await fetch(`https://localhost:7118/api/Lessons/${lessonId}/complete`, {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
-        },
-        body: JSON.stringify({
-            score: accuracy,
-            stars: accuracy === 100 ? 3 : (accuracy >= 80 ? 2 : 1),
-            xpEarned: totalXp,
-            heartsRemaining: hearts,
-            timeSpentSeconds: 60
-        })
-      });
-    } catch (err) {
-      console.error("Failed to save", err);
-    }
-  };
-
-  // --- RENDER ---
-
-  if (loading) return <div className="p-5 text-center"><Spinner animation="border" /></div>;
-  if (!lesson) return <div className="p-5 text-center">Lesson not found.</div>;
-
-  // A. Finished Screen
-  if (isFinished) {
-    const accuracy = Math.round(((initialCount - mistakes.size) / initialCount) * 100);
-    return (
-      <Container className="main-page-container mt-5 text-center">
-        <Card className="p-5 shadow-lg border-0" style={{borderRadius: '24px'}}>
-            <div style={{fontSize: '5rem'}}>🎉</div>
-            <h1 className="fw-bold mb-3" style={{color: 'var(--gradient-purple)'}}>Lesson Complete!</h1>
-            
-            <div className="row justify-content-center my-4">
-                <div className="col-4">
-                    <h3 className="fw-bold text-warning">{accuracy}%</h3>
-                    <small className="text-muted fw-bold">ACCURACY</small>
-                </div>
-                <div className="col-4">
-                    <h3 className="fw-bold text-danger">{hearts}</h3>
-                    <small className="text-muted fw-bold">HEARTS</small>
-                </div>
-            </div>
-
-            {/* UPDATED: Route back using courseId from URL */}
-            <Button 
-                size="lg" 
-                className="cta-button primary w-50 mx-auto" 
-                onClick={() => navigate(`/dashboard/${courseId}`)}
-            >
-                Continue
-            </Button>
-        </Card>
-      </Container>
-    );
-  }
-
-  const currentQ = queue[0];
-  const progress = ((initialCount - queue.length) / initialCount) * 100;
+  if (loading) return (
+    <div className="d-flex justify-content-center align-items-center vh-100 dashboard-container">
+        <Spinner animation="border" variant="primary" />
+    </div>
+  );
 
   return (
-    <Container className="main-page-container mt-4" style={{maxWidth: '700px'}}>
-      
-      {/* Top Bar */}
-      <div className="d-flex align-items-center mb-4 gap-3">
-        {/* UPDATED: Close button routes back using courseId from URL */}
-        <Button 
-            variant="link" 
-            className="text-muted text-decoration-none fs-4" 
-            onClick={() => navigate(`/dashboard/${courseId}`)}
-        >
-            ✕
-        </Button>
-        
-        <ProgressBar now={progress} className="flex-grow-1" style={{height: '16px', borderRadius: '8px'}} variant="success" />
-        <div className="d-flex align-items-center text-danger fw-bold fs-5">
-            ❤️ {hearts}
+    <div className="dashboard-container">
+      <Container>
+        <div className="text-center mb-5">
+            <h1 className="fw-bold">Welcome back, {user?.username || "Learner"}! 👋</h1>
         </div>
-      </div>
 
-      {/* Question Card */}
-      <Card className="p-4 border-0 shadow-sm mb-4" style={{minHeight: '400px', borderRadius: '20px'}}>
-        <h3 className="fw-bold mb-5 text-center text-dark">{currentQ.question}</h3>
+        {/* Stats Row */}
+        <Row className="g-4 mb-5">
+            <Col md={3} xs={6}>
+                <Card className="dashboard-card text-center p-3">
+                    <Card.Body>
+                        <div className="stat-icon">🔥</div>
+                        <div className="stat-value" style={{color: '#f59e0b'}}>{stats.streak}</div>
+                        <div className="stat-label">Day Streak</div>
+                    </Card.Body>
+                </Card>
+            </Col>
+            <Col md={3} xs={6}>
+                <Card className="dashboard-card text-center p-3">
+                    <Card.Body>
+                        <div className="stat-icon">⚡</div>
+                        <div className="stat-value" style={{color: '#eab308'}}>{stats.xp}</div>
+                        <div className="stat-label">Total XP</div>
+                    </Card.Body>
+                </Card>
+            </Col>
+            <Col md={3} xs={6}>
+                <Card className="dashboard-card text-center p-3">
+                    <Card.Body>
+                        <div className="stat-icon">❤️</div>
+                        <div className="stat-value" style={{color: '#ef4444'}}>{stats.hearts}</div>
+                        <div className="stat-label">Hearts</div>
+                    </Card.Body>
+                </Card>
+            </Col>
+            <Col md={3} xs={6}>
+                <Card className="dashboard-card text-center p-3">
+                    <Card.Body>
+                        <div className="stat-icon">💎</div>
+                        <div className="stat-value" style={{color: '#0ea5e9'}}>{stats.gems}</div>
+                        <div className="stat-label">Gems</div>
+                    </Card.Body>
+                </Card>
+            </Col>
+        </Row>
 
-        <div className="flex-grow-1 d-flex flex-column justify-content-center">
-            
-            {/* INPUT: Multiple Choice */}
-            {currentQ.contentType === 'multiple_choice' && Array.isArray(currentQ.options) && (
-                <div className="d-grid gap-3">
-                    {currentQ.options.map((opt, idx) => {
-                        const text = typeof opt === 'string' ? opt : opt.text;
-                        const audioUrl = typeof opt === 'object' ? opt.audioUrl : null;
-                        
-                        const isSelected = selectedOption === text;
-                        
-                        let borderColor = '#e5e7eb';
-                        let bgColor = 'white';
-                        
-                        if (feedback && text === currentQ.answer) {
-                             borderColor = '#22c55e';
-                             bgColor = '#dcfce7';
-                        } else if (isSelected && feedback === 'wrong') {
-                             borderColor = '#ef4444';
-                             bgColor = '#fee2e2';
-                        } else if (isSelected) {
-                             borderColor = 'var(--gradient-blue)';
-                             bgColor = '#e0f2fe';
-                        }
-
-                        return (
-                            <div 
-                                key={idx}
-                                onClick={() => {
-                                    if (!feedback) {
-                                        setSelectedOption(text);
-                                        const playAudio = (url) => {
-                                            if (!url) return;
-                                            const fullUrl = url.startsWith('http') 
-                                                ? url 
-                                                : `https://localhost:7118${url}`;
-                                            new Audio(fullUrl).play().catch(err => console.error("Audio Error:", err));
-                                        };
-                                        playAudio(audioUrl);
-                                    }
-                                }}
-                                className="p-3 rounded d-flex align-items-center justify-content-between"
-                                style={{
-                                    border: `2px solid ${borderColor}`,
-                                    backgroundColor: bgColor,
-                                    cursor: feedback ? 'default' : 'pointer',
-                                    transition: 'all 0.2s'
-                                }}
+        {/* Main Content */}
+        <Row className="g-4">
+            <Col lg={8}>
+                <Card className="dashboard-card p-5 text-center d-flex flex-column justify-content-center" style={{minHeight: '400px'}}>
+                    {nextLesson ? (
+                        <>
+                            <div style={{fontSize: '4rem', marginBottom: '1rem'}}>🚀</div>
+                            <h5 className="fw-bold text-uppercase text-muted" style={{fontSize:'0.9rem'}}>{nextLesson.unitTitle}</h5>
+                            <h2 className="mb-4 fw-bold">{nextLesson.title}</h2>
+                            <p className="mb-5 text-muted" style={{fontSize: '1.2rem'}}>{nextLesson.unitDesc}</p>
+                            
+                            <Link 
+                                to={`/course/${activeCourseId}/lesson/${nextLesson.id}`} 
+                                className="cta-button"
                             >
-                                <div className="d-flex align-items-center gap-3">
-                                    {audioUrl && (
-                                        <div className="p-2 rounded-circle bg-white shadow-sm border" style={{width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                            🔊
-                                        </div>
-                                    )}
-                                    <span className="fw-bold fs-5">{text}</span>
-                                </div>
-                                
-                                {isSelected && !feedback && <span className="text-primary fs-4">●</span>}
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-
-            {/* INPUT: Text / Fill Blank */}
-            {(currentQ.contentType === 'fill_blank' || currentQ.contentType === 'text') && (
-                <div className="text-center">
-                    <input 
-                        type="text" 
-                        className="form-control form-control-lg text-center mx-auto"
-                        style={{maxWidth: '300px', fontSize: '1.5rem'}}
-                        placeholder="Type answer..."
-                        value={selectedOption}
-                        onChange={(e) => setSelectedOption(e.target.value)}
-                        disabled={!!feedback}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !feedback && selectedOption) checkAnswer();
-                            else if (e.key === 'Enter' && feedback) handleContinue();
-                        }}
-                    />
-                </div>
-            )}
-
-            {/* Audio Player */}
-            {currentQ.mediaId && (
-                 <div className="text-center mt-4">
-                      <Button variant="light" className="rounded-circle p-3 shadow-sm" onClick={() => {
-                          new Audio(`https://localhost:7118/api/media/${currentQ.mediaId}`).play();
-                      }}>
-                        🔊
-                      </Button>
-                 </div>
-             )}
-
-        </div>
-      </Card>
-
-      {/* Footer Action Area */}
-      <div className={`fixed-bottom p-4 border-top bg-white ${feedback ? (feedback === 'correct' ? 'bg-success-subtle' : 'bg-danger-subtle') : ''}`}>
-        <Container style={{maxWidth: '700px'}}>
-            <div className="d-flex justify-content-between align-items-center">
-                
-                {/* Feedback Message */}
-                <div style={{minWidth: '200px'}}>
-                    {feedback === 'correct' && (
-                        <div className="d-flex align-items-center text-success gap-2">
-                            <div className="fs-2 bg-white rounded-circle p-2 shadow-sm">✅</div>
-                            <div>
-                                <h4 className="fw-bold m-0">Excellent!</h4>
-                            </div>
-                        </div>
+                                START LESSON
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <div style={{fontSize: '4rem', marginBottom: '1rem'}}>🎉</div>
+                            <h2>Course Complete!</h2>
+                            <p>You have finished all available lessons.</p>
+                            <Link to="/pick-language" className="btn btn-primary mt-3">Start New Course</Link>
+                        </>
                     )}
-                    {feedback === 'wrong' && (
-                        <div className="d-flex align-items-center text-danger gap-2">
-                            <div className="fs-2 bg-white rounded-circle p-2 shadow-sm">❌</div>
-                            <div>
-                                <h4 className="fw-bold m-0">Correct Answer:</h4>
-                                <div className="fs-5">{currentQ.answer}</div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                </Card>
+            </Col>
 
-                {/* Button */}
-                {!feedback ? (
-                    <Button 
-                        size="lg" 
-                        className="cta-button primary px-5 py-3 fw-bold"
-                        disabled={!selectedOption}
-                        onClick={checkAnswer}
-                    >
-                        CHECK
-                    </Button>
-                ) : (
-                    <Button 
-                        size="lg" 
-                        variant={feedback === 'correct' ? 'success' : 'danger'}
-                        className="px-5 py-3 fw-bold shadow"
-                        onClick={handleContinue}
-                    >
-                        CONTINUE
-                    </Button>
-                )}
-            </div>
-        </Container>
-      </div>
-      
-      <div style={{height: '140px'}}></div> 
-    </Container>
+            <Col lg={4}>
+                <Card className="dashboard-card p-4">
+                    <h4 className="fw-bold mb-3 text-uppercase text-muted" style={{fontSize: '1rem'}}>Quick Links</h4>
+                    <div className="d-grid gap-2">
+                        <Link to="/pick-language" className="quick-link-btn">🌍 Change Course</Link>
+                        <Link to="/shop" className="quick-link-btn">🛒 Shop</Link>
+                        <Button variant="outline-danger" onClick={() => { logout(); navigate('/main'); }}>Log Out</Button>
+                    </div>
+                </Card>
+            </Col>
+        </Row>
+      </Container>
+    </div>
   );
 }

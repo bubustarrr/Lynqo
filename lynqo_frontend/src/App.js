@@ -27,7 +27,8 @@ import LessonPage from './pages/LessonPage';
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
-  if (user) return <Navigate to="/dashboard" replace />;
+  // 👇 FIX: Add a default ID (e.g., 1) so the route matches "/dashboard/:courseId"
+  if (user) return <Navigate to="/dashboard/1" replace />; 
   return children;
 };
 

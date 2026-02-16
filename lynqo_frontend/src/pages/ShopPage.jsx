@@ -1,6 +1,7 @@
 import { Button } from "react-bootstrap";
 import { FaCrown, FaShoppingBag } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import './ShopPage.css';
 
 export default function ShopLandingPage() {
   const navigate = useNavigate();

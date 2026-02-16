@@ -1,0 +1,328 @@
+/* --- CONTAINER & HEADER --- */
+.profile-page-container {
+  max-width: 1200px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 40px 0 80px 0;
+  min-height: 80vh;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.profile-hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+/* --- TOP STATUS BAR --- */
+.status-bar-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 25px;
+  border-radius: 50px;
+  min-width: 180px;
+  transition: transform 0.2s ease;
+}
+
+.status-card:hover {
+  transform: translateY(-5px);
+}
+
+.status-icon { font-size: 1.8rem; }
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.status-value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.status-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* Light/Dark Mode for Status Bar */
+.light-mode .status-card {
+  background: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.05);
+  color: #334155;
+}
+
+.dark-mode .status-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+/* Specifikus színek a statoknak (Opcionális) */
+.streak-stat .status-value { color: #f97316; } /* Orange */
+.xp-stat .status-value { color: #eab308; } /* Yellow */
+.life-stat .status-value { color: #ef4444; } /* Red */
+.coin-stat .status-value { color: #3b82f6; } /* Blue */
+
+/* --- LAYOUT GRID --- */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.column-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-left: 15px;
+  border-left: 4px solid #8b5cf6;
+}
+
+/* --- IDENTITY CARD (Simplified) --- */
+.profile-main-card {
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  position: relative;
+}
+
+.profile-img-wrapper {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #8b5cf6;
+}
+
+.identity-text-content {
+  flex-grow: 1;
+}
+
+.identity-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.display-name {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.premium-badge-mini {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+  color: white;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.profile-email-display {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 5px;
+}
+
+.member-since {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.settings-btn {
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: 2px solid rgba(139, 92, 246, 0.5);
+  background: transparent;
+  color: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.settings-btn:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: #8b5cf6;
+}
+
+/* --- BADGES GRID --- */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.badge-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 15px;
+  transition: transform 0.2s;
+}
+
+.badge-card:hover {
+  transform: translateY(-3px);
+}
+
+.badge-icon-circle {
+  width: 50px;
+  height: 50px;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.badge-details h4 {
+  font-size: 1rem;
+  margin: 0 0 3px 0;
+  font-weight: 700;
+}
+
+.badge-details p {
+  font-size: 0.8rem;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* Locked Badge Style */
+.badge-card.locked {
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+
+/* --- SIDEBAR & REQUESTS --- */
+.sidebar-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.update-card {
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.request-body {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.request-avatar {
+  width: 40px;
+  height: 40px;
+  background: #cbd5e1;
+  border-radius: 50%;
+}
+
+.request-buttons {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.accept-mini, .decline-mini {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.accept-mini { background: #22c55e; color: white; }
+.decline-mini { background: rgba(0,0,0,0.1); color: inherit; }
+
+.friend-item-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px !important;
+}
+
+.friend-status-dot {
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #22c55e;
+}
+
+.friend-name {
+  font-weight: 600;
+  margin: 0;
+}
+
+/* --- LIGHT/DARK MODE CARD STYLES --- */
+.light-mode .profile-main-card,
+.light-mode .badge-card,
+.light-mode .update-card {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.dark-mode .profile-main-card,
+.dark-mode .badge-card,
+.dark-mode .update-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.light-mode .profile-hero-title {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark-mode .profile-hero-title {
+  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+  .profile-layout { grid-template-columns: 1fr; }
+  .profile-main-card { flex-direction: column; text-align: center; }
+  .identity-header { justify-content: center; }
+  .status-bar-container { gap: 10px; }
+  .status-card { flex: 1 1 40%; min-width: 140px; }
+}

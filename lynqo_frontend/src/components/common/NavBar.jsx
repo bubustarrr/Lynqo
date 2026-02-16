@@ -64,15 +64,19 @@ export default function NavBar() {
               <span className="arrow">▼</span>
             </button>
             
+            {/* Inside the dropdown-menu for 'user' */}
             <div className={`dropdown-menu ${activeDropdown === 'user' ? 'show' : ''}`}>
-              <Link to="/settings" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
-                ⚙️ {t.settings || "Settings"}
-              </Link>
-              <div className="dropdown-divider"></div>
-              <button className="dropdown-item logout" onClick={handleLogout}>
-                🚪 {t.logout || "Log Out"}
-              </button>
-            </div>
+              <Link to="/profile" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
+              👤 {t.profile || "Profile"}
+             </Link>
+             <Link to="/settings" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
+              ⚙️ {t.settings || "Settings"}
+             </Link>
+                 <div className="dropdown-divider"></div>
+                    <button className="dropdown-item logout" onClick={handleLogout}>
+                        🚪 {t.logout || "Log Out"}
+                    </button>
+                  </div>
           </div>
         ) : (
           <Link to="/login" className="login-link">🔐 {t.login || "Login"}</Link>

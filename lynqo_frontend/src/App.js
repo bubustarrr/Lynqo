@@ -23,6 +23,7 @@ import DashboardPage from './pages/DashboardPage';
 import MerchPage from './pages/MerchPage';
 import LessonPage from './pages/LessonPage';
 import LeaderboardPage from './pages/LeaderboardPage';
+import ProfilePage from './pages/ProfilePage';
 
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
@@ -63,6 +64,7 @@ function AppContent() {
       
       <main className="main-content">
         <Routes>
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
           <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />

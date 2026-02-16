@@ -27,8 +27,7 @@ import LeaderboardPage from './pages/LeaderboardPage';
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
-  // 👇 FIX: Add a default ID (e.g., 1) so the route matches "/dashboard/:courseId"
-  if (user) return <Navigate to="/dashboard/1" replace />; 
+  if (user) return <Navigate to="/pick-language" replace />; 
   return children;
 };
 

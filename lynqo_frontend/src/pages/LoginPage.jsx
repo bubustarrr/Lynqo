@@ -1,122 +1,103 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
-import './LoginPage.css';
+import { useNavigate, Link } from 'react-router-dom';
+import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
+import './LoginPage.css'; // Ensure this exists
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ usernameOrEmail: '', password: '', rememberMe: false });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const { login, user } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [user, navigate]);
+  // State Variables
+  const [formData, setFormData] = useState({
+    usernameOrEmail: '',
+    password: ''
+  });
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = e => {
-    const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
-      [name]: type === 'checkbox' ? checked : value
+  // Handle Input Change
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
     });
-    setError(null);
   };
 
-  const handleSubmit = async e => {
+  // Handle Submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLoading) return;
-
     setIsLoading(true);
     setError(null);
 
     try {
-      // 1. Call the Backend
       const res = await fetch('https://localhost:7118/api/Auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            usernameOrEmail: form.usernameOrEmail,
-            password: form.password
-        }),
+        body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        // Handle specific ban messages or generic errors
-        throw new Error(data.error || 'Login failed. Please check your credentials.');
+        const errData = await res.text();
+        throw new Error(errData || 'Login failed');
       }
 
-      // 2. Destructure the Correct Response Format
-      // Backend returns: { token: "...", refreshToken: "...", user: { ... } }
-      const { token, refreshToken, user: userData } = data;
-
-      // 3. Login in Context
-      // Only save RefreshToken if "Remember Me" is checked (optional logic, or always save it)
-      const tokenToSave = form.rememberMe ? refreshToken : null; 
+      const data = await res.json();
       
-      login(userData, token, tokenToSave);
+      // Save Token & User
+      login(data);
 
-      navigate('/dashboard');
-      
+      // Redirect to Pick Language (NOT Dashboard/1)
+      navigate('/pick-language');
+
     } catch (err) {
       setError(err.message);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  if (user) return null;
-
   return (
     <div className="login-page-container">
       <Card className="login-card">
-        <h2>Login</h2>
-        {error && <Alert variant="danger">{error}</Alert>}
+        <h2>Welcome Back!</h2>
         
+        {error && <Alert variant="danger" className="mb-3">{error}</Alert>}
+
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="loginUsernameOrEmail">
+          <Form.Group className="mb-3" controlId="loginUsername">
             <Form.Label>Username or Email</Form.Label>
             <Form.Control
               type="text"
               name="usernameOrEmail"
               placeholder="Enter your username or email"
-              value={form.usernameOrEmail}
+              value={formData.usernameOrEmail}
               onChange={handleChange}
               required
-              disabled={isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="loginPassword">
+
+          <Form.Group className="mb-4" controlId="loginPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
               name="password"
-              placeholder="Password"
-              value={form.password}
+              placeholder="Enter your password"
+              value={formData.password}
               onChange={handleChange}
               required
-              disabled={isLoading}
             />
           </Form.Group>
-          <Form.Check
-            type="checkbox"
-            id="rememberMe"
-            name="rememberMe"
-            label="Remember me"
-            checked={form.rememberMe}
-            onChange={handleChange}
-            className="mb-4"
-            disabled={isLoading}
-          />
+
           <Button className="login-button" type="submit" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? <Spinner animation="border" size="sm" /> : "Log In"}
           </Button>
         </Form>
+
+        <div className="text-center mt-3">
+          <span className="text-muted">Don't have an account? </span>
+          <Link to="/register" className="text-primary fw-bold text-decoration-none">Sign up</Link>
+        </div>
       </Card>
     </div>
   );

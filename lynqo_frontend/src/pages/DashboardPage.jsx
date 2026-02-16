@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Container, Row, Col, Card, Spinner, ProgressBar, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 import './DashboardPage.css';
 
 export default function DashboardPage() {
@@ -9,7 +9,7 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const { courseId } = useParams();
   
-  // Default to course 1 (or handle redirect if undefined)
+  // Default to course 1
   const activeCourseId = courseId || 1;
 
   // --- DATA STATE ---
@@ -20,39 +20,45 @@ export default function DashboardPage() {
 
   // --- FETCH DATA FROM API ---
   useEffect(() => {
-    const fetchData = async () => {
-      if (!token) return;
+    // 1. prevent fetch if no token
+    if (!token) {
+        console.warn("No token available yet. Waiting...");
+        return; 
+    }
 
+    const fetchData = async () => {
       try {
         const headers = { 'Authorization': `Bearer ${token}` };
 
         // Parallel Fetch
         const [userRes, structureRes, questsRes] = await Promise.all([
-            // 🔥 FIXED: Singular 'User' based on your screenshot
             fetch('https://localhost:7118/api/User/me', { headers }),
             fetch(`https://localhost:7118/api/Lessons/course/${activeCourseId}/structure`, { headers }),
-            fetch('https://localhost:7118/api/Quests/active', { headers }) // Assuming this exists or returns []
+            fetch('https://localhost:7118/api/Quests/active', { headers }) 
         ]);
 
-        // 1. User Stats
+        // 2. Handle User Stats (401 Check)
+        if (userRes.status === 401) {
+            console.error("Session expired (401). Logging out...");
+            logout(); // Force logout if token is invalid
+            navigate('/login');
+            return;
+        }
+
         if (userRes.ok) {
             const userData = await userRes.json();
-            // Handle both PascalCase (C#) and camelCase (JSON default)
             setStats({
                 streak: userData.streak || userData.Streak || 0,
                 xp: userData.totalXp || userData.TotalXp || 0,
                 hearts: (userData.hearts !== undefined) ? userData.hearts : (userData.Hearts || 5),
                 gems: userData.coins || userData.Coins || 0 
             });
-        } else {
-            console.error("Failed to fetch User stats:", userRes.status);
         }
 
-        // 2. Course Structure -> Next Lesson
+        // 3. Course Structure
         if (structureRes.ok) {
             const structure = await structureRes.json();
             let found = null;
-            // Find first incomplete lesson
             for (const unit of structure) {
                 if (unit.lessons) {
                     for (const lesson of unit.lessons) {
@@ -71,7 +77,7 @@ export default function DashboardPage() {
             setNextLesson(found);
         }
 
-        // 3. Quests
+        // 4. Quests
         if (questsRes.ok) {
             const qData = await questsRes.json();
             setQuests(qData);
@@ -85,7 +91,7 @@ export default function DashboardPage() {
     };
 
     fetchData();
-  }, [token, activeCourseId]);
+  }, [token, activeCourseId, logout, navigate]);
 
   if (loading) return (
     <div className="d-flex justify-content-center align-items-center vh-100 dashboard-container">

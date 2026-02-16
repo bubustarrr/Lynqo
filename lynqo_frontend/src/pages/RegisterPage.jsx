@@ -1,10 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button, Card } from 'react-bootstrap';
-import './RegisterPage.css';
+import { useNavigate, Link } from 'react-router-dom';
+import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
+import './RegisterPage.css'; // Make sure this file exists
 
 export default function RegisterPage() {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // 1. State Variables
   const [form, setForm] = useState({
     username: '',
     email: '',
@@ -13,10 +17,11 @@ export default function RegisterPage() {
     agreeEula: false,
     subscribeNews: false,
   });
-  const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = e => {
+  // 2. Handle Change
+  const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm({
       ...form,
@@ -24,28 +29,70 @@ export default function RegisterPage() {
     });
   };
 
-  const handleSubmit = async e => {
+  // 3. Handle Submit (Fixed Logic)
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    // Validation
     if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match');
+      setError("Passwords do not match!");
+      setIsLoading(false);
       return;
     }
     if (!form.agreeEula) {
-      alert('You must agree to the EULA to register');
+      setError("You must agree to the Terms of Use.");
+      setIsLoading(false);
       return;
     }
+
     try {
-      const res = await fetch('https://localhost:7118/api/Auth/register', {
+      // A. REGISTER
+      const regRes = await fetch('https://localhost:7118/api/Auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          username: form.username,
+          email: form.email,
+          password: form.password
+        }),
       });
-      if (!res.ok) throw new Error('Registration failed');
-      const data = await res.json();
-      login(data);
-      navigate('/dashboard');
+
+      if (!regRes.ok) {
+        const errData = await regRes.text();
+        throw new Error(errData || 'Registration failed');
+      }
+
+      // B. AUTO-LOGIN
+      const loginRes = await fetch('https://localhost:7118/api/Auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          usernameOrEmail: form.username,
+          password: form.password
+        }),
+      });
+
+      if (loginRes.ok) {
+        const loginData = await loginRes.json();
+        
+        // Save Token
+        login(loginData);
+
+        // Wait a tiny bit for Context to update
+        setTimeout(() => {
+          navigate('/pick-language'); 
+        }, 100);
+      } else {
+        // Fallback
+        navigate('/login'); 
+      }
+
     } catch (err) {
-      alert(err.message);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,6 +100,10 @@ export default function RegisterPage() {
     <div className="register-page-container">
       <Card className="register-card">
         <h2>Create Account</h2>
+        
+        {/* Error Alert */}
+        {error && <Alert variant="danger" className="mb-3">{error}</Alert>}
+
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="registerUsername">
             <Form.Label>Username</Form.Label>
@@ -64,6 +115,7 @@ export default function RegisterPage() {
               required
             />
           </Form.Group>
+
           <Form.Group className="mb-3" controlId="registerEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -76,6 +128,7 @@ export default function RegisterPage() {
             />
             <Form.Text className="text-muted">Please enter a valid email address.</Form.Text>
           </Form.Group>
+
           <Form.Group className="mb-3" controlId="registerPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -88,6 +141,7 @@ export default function RegisterPage() {
               minLength={6}
             />
           </Form.Group>
+
           <Form.Group className="mb-3" controlId="registerConfirmPassword">
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control
@@ -99,6 +153,7 @@ export default function RegisterPage() {
               required
             />
           </Form.Group>
+
           <Form.Check
             type="checkbox"
             id="agreeEula"
@@ -109,6 +164,7 @@ export default function RegisterPage() {
             required
             className="mb-2"
           />
+
           <Form.Check
             type="checkbox"
             id="subscribeNews"
@@ -118,9 +174,15 @@ export default function RegisterPage() {
             onChange={handleChange}
             className="mb-4"
           />
-          <Button className="register-button" type="submit">
-            Register
+
+          <Button className="register-button" type="submit" disabled={isLoading}>
+            {isLoading ? <Spinner animation="border" size="sm" /> : "Register"}
           </Button>
+
+          <div className="text-center mt-3">
+             <span className="text-muted">Already have an account? </span>
+             <Link to="/login" className="text-primary fw-bold text-decoration-none">Log in</Link>
+          </div>
         </Form>
       </Card>
     </div>

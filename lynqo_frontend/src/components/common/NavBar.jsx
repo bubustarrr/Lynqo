@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // 1. IMPORT THIS
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -7,10 +8,14 @@ import './NavBar.css';
 
 export default function NavBar() {
   const { user, logout } = useContext(AuthContext);
-  const { language, setLanguage, translations } = useLanguage();
+  const { language, setLanguage, translations } = useLanguage(); // Keeps your old logic
+  const { i18n } = useTranslation(); // 2. GET THE TRANSLATOR INSTANCE
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
+  // If you want to use the new translations in the Navbar too, 
+  // you can use const { t } = useTranslation();
+  // For now, we keep your old 't' to not break the navbar layout.
   const t = translations[language] || translations['en'] || {};
   
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -36,8 +41,10 @@ export default function NavBar() {
     navigate('/main');
   };
 
+  // 3. UPDATED LANGUAGE HANDLER
   const handleLanguageChange = (langCode) => {
-    setLanguage(langCode);
+    setLanguage(langCode);         // Updates your custom Context
+    i18n.changeLanguage(langCode); // Updates react-i18next (Fixes ProfilePage)
     setActiveDropdown(null);
   };
 
@@ -51,7 +58,7 @@ export default function NavBar() {
   return (
     <nav className="navbar" ref={navRef}>
       
-      {/* BAL OLDAL */}
+      {/* LEFT SIDE */}
       <div className="navbar-left">
         {user ? (
           <div className="dropdown-container">
@@ -64,18 +71,17 @@ export default function NavBar() {
               <span className="arrow">▼</span>
             </button>
             
-            {/* Inside the dropdown-menu for 'user' */}
             <div className={`dropdown-menu ${activeDropdown === 'user' ? 'show' : ''}`}>
               <Link to="/profile" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
-              👤 {t.profile || "Profile"}
-             </Link>
-             <Link to="/settings" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
-              ⚙️ {t.settings || "Settings"}
-             </Link>
-                 <div className="dropdown-divider"></div>
-                    <button className="dropdown-item logout" onClick={handleLogout}>
-                        🚪 {t.logout || "Log Out"}
-                    </button>
+               👤 {t.profile || "Profile"}
+              </Link>
+              <Link to="/settings" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
+               ⚙️ {t.settings || "Settings"}
+              </Link>
+                  <div className="dropdown-divider"></div>
+                     <button className="dropdown-item logout" onClick={handleLogout}>
+                         🚪 {t.logout || "Log Out"}
+                     </button>
                   </div>
           </div>
         ) : (
@@ -83,12 +89,12 @@ export default function NavBar() {
         )}
       </div>
 
-      {/* KÖZÉP */}
+      {/* CENTER */}
       <div className="navbar-center">
         <Link to="/main" className="navbar-logo">Lynqo</Link>
       </div>
 
-      {/* JOBB OLDAL */}
+      {/* RIGHT SIDE */}
       <div className="navbar-right">
         <div className="dropdown-container">
           <button 

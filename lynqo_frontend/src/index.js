@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './assets/styles/global.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { LanguageProvider } from "./context/LanguageContext";
+import './i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

@@ -1,100 +1,171 @@
+/* --- ALAP ELRENDEZÉS ÉS VÁLTOZÓK --- */
 :root {
   --gradient-purple: #8b5cf6;
   --gradient-pink: #ec4899;
-  --gradient-blue: #06b6d4;
-  --text-dark: #1e293b;
-  --text-light: #64748b;
-  --white: #ffffff;
-  --shadow: 0 8px 32px rgba(139,92,246,0.3);
   --radius: 20px;
   --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-.settings-container {
-  max-width: 800px; margin: 40px auto; padding: 0 20px;
+.settings-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
+  animation: fadeIn 0.4s ease-out;
 }
 
+/* --- HEADER --- */
 .settings-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
 }
 
 .settings-title {
-  font-size: 2.5rem; font-weight: 800;
+  font-size: 2.5rem;
+  font-weight: 800;
   background: linear-gradient(135deg, var(--gradient-purple), var(--gradient-pink));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 5px;
 }
 
+.settings-subtitle {
+  color: #64748b;
+  font-size: 1.05rem;
+}
+
+/* MENTÉS GOMB */
 .save-button {
-  padding: 12px 28px; font-weight: 700; border: none; border-radius: var(--radius);
+  padding: 12px 28px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: var(--radius);
   background: linear-gradient(135deg, var(--gradient-purple), var(--gradient-pink));
-  color: white; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow);
+  color: white;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
 }
 
-.save-button:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(139,92,246,0.4); }
-
-.section-title {
-  font-size: 1.5rem; font-weight: 700; color: var(--text-dark);
-  margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;
+.save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(139, 92, 246, 0.5);
 }
 
-.setting-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.setting-group { margin-bottom: 16px; }
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* --- KÁRTYÁK (CARDS) --- */
+.settings-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius);
+  padding: 25px 30px;
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+
+.settings-card:hover {
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+/* --- BELSŐ ELRENDEZÉS --- */
+.setting-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.setting-row.single-col {
+  grid-template-columns: 1fr;
+}
+
 .setting-group label { 
-  display: block; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; font-size: 0.95rem;
+  display: block; 
+  font-weight: 600; 
+  color: #1e293b; 
+  margin-bottom: 8px; 
+  font-size: 0.95rem;
 }
 
 .setting-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 20px; background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-  border-radius: var(--radius); border: 2px solid transparent; transition: var(--transition);
-  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.setting-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-.setting-item:hover {
-  transform: translateX(4px); box-shadow: var(--shadow); border-color: rgba(139,92,246,0.2);
+.setting-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.setting-label { font-weight: 600; color: var(--text-dark); font-size: 1.1rem; }
+.setting-label { 
+  font-weight: 600; 
+  color: #1e293b; 
+  font-size: 1.1rem; 
+}
+.setting-desc {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 4px;
+}
 
-/* Premium Select Fields */
+/* --- SELECT MEZŐK --- */
 .select-field {
-  width: 100%; padding: 20px 50px 20px 20px; min-height: 60px;
-  border: 3px solid #e2e8f0; border-radius: var(--radius); font-size: 1.1rem;
-  font-weight: 600; color: var(--text-dark); background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(10px); cursor: pointer; transition: var(--transition);
+  width: 100%; 
+  padding: 15px 40px 15px 15px; 
+  border: 2px solid #e2e8f0; 
+  border-radius: 12px; 
+  font-size: 1rem;
+  font-weight: 600; 
+  color: #1e293b; 
+  background: rgba(255,255,255,0.9);
+  cursor: pointer; 
+  transition: var(--transition);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
-  background-repeat: no-repeat; background-position: right 20px center; background-size: 20px;
+  background-repeat: no-repeat; 
+  background-position: right 15px center; 
+  background-size: 20px;
+  appearance: none;
 }
 
 .select-field:hover {
-  border-color: var(--gradient-purple); background: rgba(255,255,255,0.95);
-  transform: translateY(-2px); box-shadow: var(--shadow);
+  border-color: var(--gradient-purple);
 }
 
 .select-field:focus {
-  outline: none; border-color: var(--gradient-purple);
-  box-shadow: 0 0 0 4px rgba(139,92,246,0.2), var(--shadow);
+  outline: none; 
+  border-color: var(--gradient-purple);
+  box-shadow: 0 0 0 4px rgba(139,92,246,0.2);
 }
 
-/* Styled Dropdown Items */
-.select-field option {
-  padding: 16px 20px; margin: 4px 8px; border-radius: 12px;
-  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-  color: var(--text-dark); font-weight: 500; font-size: 1rem;
-}
-
-.select-field option:hover,
-.select-field option:focus {
-  background: linear-gradient(135deg, var(--gradient-purple), var(--gradient-pink)) !important;
-  color: white !important; transform: scale(1.02);
-}
-
-/* Toggle Switch */
-.toggle-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+/* --- TOGGLE KAPCSOLÓ --- */
+.toggle-switch { position: relative; display: inline-block; width: 60px; height: 34px; flex-shrink: 0;}
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
 .toggle-slider {
   position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
@@ -109,8 +180,58 @@ input:checked + .toggle-slider {
 }
 input:checked + .toggle-slider:before { transform: translateX(26px); }
 
+/* =========================================
+   DARK MODE TÁMOGATÁS
+   ========================================= */
+
+.app-container.dark-mode .settings-header { border-bottom-color: rgba(255, 255, 255, 0.1); }
+.app-container.dark-mode .settings-subtitle { color: #94a3b8; }
+
+.app-container.dark-mode .settings-card {
+  background: rgba(30, 10, 60, 0.6); 
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.app-container.dark-mode .card-title {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.app-container.dark-mode .setting-group label,
+.app-container.dark-mode .setting-label {
+  color: #e2e8f0;
+}
+
+.app-container.dark-mode .setting-item {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.app-container.dark-mode .setting-desc { color: #94a3b8; }
+
+.app-container.dark-mode .select-field {
+  background-color: rgba(15, 23, 42, 0.8);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%23e2e8f0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.app-container.dark-mode .select-field option {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+.app-container.dark-mode .toggle-slider {
+  background: #334155;
+}
+
+/* --- ANIMÁCIÓ ÉS MOBIL --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 768px) {
   .settings-header { flex-direction: column; gap: 20px; text-align: center; }
   .setting-row { grid-template-columns: 1fr; }
-  .settings-title { font-size: 2rem; }
 }

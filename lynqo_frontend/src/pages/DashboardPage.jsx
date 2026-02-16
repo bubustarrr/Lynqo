@@ -175,6 +175,7 @@ export default function DashboardPage() {
                     <div className="d-grid gap-2">
                         <Link to="/pick-language" className="quick-link-btn">🌍 Change Course</Link>
                         <Link to="/shop" className="quick-link-btn">🛒 Shop</Link>
+                        <Link to="/leaderboard" className="quick-link-btn">🏆 Leaderboard</Link>
                         <Button variant="outline-danger" onClick={() => { logout(); navigate('/main'); }}>Log Out</Button>
                     </div>
                 </Card>

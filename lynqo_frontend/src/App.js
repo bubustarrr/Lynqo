@@ -22,6 +22,7 @@ import LanguageSelectionPage from "./pages/LanguageSelectionPage";
 import DashboardPage from './pages/DashboardPage';
 import MerchPage from './pages/MerchPage';
 import LessonPage from './pages/LessonPage';
+import LeaderboardPage from './pages/LeaderboardPage';
 
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
@@ -71,6 +72,7 @@ function AppContent() {
           <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
           <Route path="/shopp/subscriptions" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
           <Route path="/shop/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />
+          <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
           <Route 
        path="/course/:courseId/lesson/:lessonId" 
        element={<ProtectedRoute><LessonPage /></ProtectedRoute>} 

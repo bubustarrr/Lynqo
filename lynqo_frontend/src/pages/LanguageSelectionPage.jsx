@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import './MainPage.css'; // Reusing your existing styles
+import './MainPage.css'; // Ebben lesznek az új stílusok
 
 export default function LanguageSelectionPage() {
-  const { token, user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
   
-  const [step, setStep] = useState(1); // 1 = Source Lang, 2 = Target Lang
-  const [sourceLangId, setSourceLangId] = useState(null);
+  const [step, setStep] = useState(1);
   const [availableCourses, setAvailableCourses] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -36,10 +35,10 @@ export default function LanguageSelectionPage() {
     { id: 19, name: 'Korean', flag: '🇰🇷' }
   ];
 
-  // 2. Fetch courses based on Source Language ID
+  // 2. Fetch courses
   const fetchCourses = async (id) => {
     setLoading(true);
-    setSourceLangId(id);
+    // setSourceLangId(id); // Ha nem használod, kivehető
     
     try {
       const res = await fetch(`https://localhost:7118/api/Courses?sourceId=${id}`, {
@@ -58,10 +57,7 @@ export default function LanguageSelectionPage() {
     }
   };
 
-  // 3. Select Course & Navigate
   const selectCourse = (courseId) => {
-    // Simply navigate to the specific dashboard URL
-    // This relies on your App.js having: <Route path="/dashboard/:courseId" ... />
     navigate(`/dashboard/${courseId}`);
   };
 
@@ -72,7 +68,7 @@ export default function LanguageSelectionPage() {
       <h1 className="hero-title mb-2" style={{fontSize: '2.5rem'}}>
         {step === 1 ? "I speak..." : "I want to learn..."}
       </h1>
-      <p className="text-muted mb-5 fs-5">
+      <p className="subtitle-text mb-5 fs-5">
         {step === 1 ? "Select your native language" : "Select a course"}
       </p>
 
@@ -82,7 +78,7 @@ export default function LanguageSelectionPage() {
           {sourceLanguages.map((lang) => (
             <Col key={lang.id} xs={6} md={3} lg={2}>
               <Card 
-                className="h-100 shadow-sm border-0 language-card" 
+                className="h-100 shadow-sm border-0 custom-card" 
                 style={{cursor: 'pointer', transition: 'all 0.2s', borderRadius: '16px'}}
                 onClick={() => fetchCourses(lang.id)}
                 onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
@@ -116,7 +112,7 @@ export default function LanguageSelectionPage() {
             {availableCourses.map((course) => (
                 <Col key={course.id} xs={12} md={5}>
                 <Card 
-                    className="h-100 shadow border-0"
+                    className="h-100 shadow border-0 custom-card"
                     style={{cursor: 'pointer', borderRadius: '24px', transition: 'all 0.2s'}}
                     onClick={() => selectCourse(course.id)}
                     onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
@@ -124,21 +120,22 @@ export default function LanguageSelectionPage() {
                 >
                     <Card.Body className="p-4 text-start">
                         <div className="d-flex align-items-center mb-4">
-                            <div className="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" 
-                                style={{width: '64px', height: '64px', background: 'white', border: '1px solid #eee', fontSize: '2rem'}}>
-                                {/* Dynamic Flag Logic based on Target Language ID */}
+                            {/* FLAG CIRCLE - Most már CSS osztályt használ */}
+                            <div className="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm flag-circle" 
+                                style={{width: '64px', height: '64px', fontSize: '2rem'}}>
                                 {course.targetLanguageId === 4 ? '🇫🇷' : 
                                  course.targetLanguageId === 5 ? '🇪🇸' : 
                                  course.targetLanguageId === 3 ? '🇩🇪' : 
                                  course.targetLanguageId === 1 ? '🇺🇸' : '🌍'}
                             </div>
                             <div>
-                                <h4 className="fw-bold m-0 text-dark">{course.title}</h4>
+                                {/* JAVÍTVA: text-dark törölve */}
+                                <h4 className="fw-bold m-0">{course.title}</h4>
                                 <small className="text-muted fw-bold text-uppercase" style={{fontSize: '0.75rem', letterSpacing: '1px'}}>Official Course</small>
                             </div>
                         </div>
                         
-                        <p className="text-muted mb-4">{course.description}</p>
+                        <p className="card-desc mb-4">{course.description}</p>
                         
                         <Button className="w-100 cta-button primary py-2 fw-bold" size="lg">
                             Start Learning ➜

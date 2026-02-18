@@ -1,36 +1,31 @@
-/* --- TÉMA VÁLTOZÓK --- */
+/* --- TÉMA VÁLTOZÓK (ALAPÉRTELMEZETT / LIGHT) --- */
 :root {
-  /* Alapértelmezett (Light) */
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --bg-card: #ffffff;
-  --border-card: #e2e8f0;
+  --text-main: #1e293b;       /* Sötétkék/Fekete szöveg */
+  --text-muted: #64748b;      /* Szürkés szöveg */
+  --bg-card: #ffffff;         /* Fehér kártya */
+  --border-card: #e2e8f0;     /* Világos keret */
   --shadow-card: 0 4px 6px rgba(0,0,0,0.05);
   --primary-grad: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
 }
 
-/* --- DARK MODE (Az App.js-ben lévő .dark-mode osztályra reagál) --- */
-.app-container.dark-mode {
-  background-color: #0f172a;       /* Sötét háttér az egész appnak */
-  color: #f1f5f9;                  /* Világos szöveg */
-  
-  /* Változók felülírása sötét módra */
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --bg-card: #1e293b;              /* Sötét kártya */
-  --border-card: #334155;          /* Sötét keret */
-  --shadow-card: 0 4px 6px rgba(0,0,0,0.4);
+/* --- DARK MODE KONFIGURÁCIÓ --- */
+.app-container.dark-mode, .dark-mode {
+  --text-main: #f8fafc;       /* Majdnem fehér szöveg */
+  --text-muted: #cbd5e1;      /* Világosszürke szöveg */
+  --bg-card: #1e293b;         /* Sötétkék kártya */
+  --border-card: #334155;     /* Sötét keret */
+  --shadow-card: 0 4px 15px rgba(0,0,0,0.4);
 }
 
 /* --- KONTÉNER --- */
 .dashboard-container {
-  /* A háttérszínt már az app-container kezeli, de a biztonság kedvéért: */
-  background-color: transparent; 
+  background-color: transparent;
   padding-top: 2rem;
   padding-bottom: 4rem;
+  min-height: 100vh;
 }
 
-/* --- KÁRTYÁK (Bootstrap Override) --- */
+/* --- KÁRTYÁK ALAP STÍLUSA --- */
 .dashboard-card {
   background-color: var(--bg-card) !important;
   border: 1px solid var(--border-card) !important;
@@ -39,24 +34,84 @@
   box-shadow: var(--shadow-card);
   transition: all 0.3s ease;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
+/* --- DARK MODE CÍMSOR JAVÍTÁS (EZ OLDJA MEG A UNIT 1-et!) --- */
+/* Most már nem csak a kártyán belül, hanem GLOBÁLISAN a dashboardon minden címsor fehér lesz */
+.app-container.dark-mode h1,
+.app-container.dark-mode h2,
+.app-container.dark-mode h3,
+.app-container.dark-mode h4,
+.app-container.dark-mode h5,
+.app-container.dark-mode h6,
+.app-container.dark-mode strong,
+.dark-mode .dashboard-container h2, /* Specifikusan a Unit címekre */
+.dark-mode .dashboard-container h3 {
+  color: #f8fafc !important;
+}
+
+/* --- KÁRTYÁK DARK MODE FIX --- */
+/* Kényszerítjük a hátteret és a szövegszínt */
+.app-container.dark-mode .dashboard-card,
+.dark-mode .dashboard-card {
+  background-color: #1e293b !important; 
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+}
+
+/* Biztonsági szabály: Minden elem a kártyán belül legyen fehér (kivéve, ha felülírjuk) */
+.dark-mode .dashboard-card p,
+.dark-mode .dashboard-card span,
+.dark-mode .dashboard-card div {
+  color: #f8fafc !important;
+}
+
+/* Hover effekt */
 .dashboard-card:hover {
   transform: translateY(-5px);
   border-color: #8b5cf6 !important;
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.15) !important;
 }
 
-/* Statisztikák */
-.stat-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-.stat-value { font-size: 1.8rem; font-weight: 800; }
+.dark-mode .dashboard-card:hover {
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.25) !important;
+  border-color: #a78bfa !important;
+}
+
+/* --- STATISZTIKÁK --- */
+.stat-icon { 
+  font-size: 2.5rem; 
+  margin-bottom: 0.5rem; 
+  display: block;
+}
+
+.stat-value { 
+  font-size: 1.8rem; 
+  font-weight: 800; 
+  color: var(--text-main);
+}
+
+.dark-mode .stat-value {
+  color: #ffffff !important;
+}
+
 .stat-label { 
   font-size: 0.85rem; 
   text-transform: uppercase; 
   font-weight: bold; 
-  color: var(--text-muted); 
+  color: var(--text-muted) !important; /* Itt engedjük a szürke színt */
 }
 
-/* Gombok */
+/* Sötét módban a címke (label) világosszürke legyen */
+.dark-mode .stat-label {
+  color: #94a3b8 !important; 
+}
+
+/* --- GOMBOK --- */
 .cta-button {
   background: var(--primary-grad);
   border: none;
@@ -68,21 +123,55 @@
   text-decoration: none;
   display: inline-block;
   box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  text-align: center;
 }
-.cta-button:hover { transform: translateY(-2px); color: white; }
 
-/* Küldetések */
+.cta-button span, .cta-button div {
+    color: white !important;
+}
+
+.cta-button:hover { 
+  transform: translateY(-2px); 
+  color: white !important; 
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+}
+
+/* --- KÜLDETÉSEK LISTA --- */
 .quest-item {
   display: flex;
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid var(--border-card);
+  color: var(--text-main);
 }
-.quest-item:last-child { border-bottom: none; }
 
-/* Linkek */
+.dark-mode .quest-item {
+  border-bottom-color: #334155;
+  color: #f8fafc !important;
+}
+
+.quest-item:last-child { 
+  border-bottom: none; 
+}
+
+/* --- LINKEK --- */
 .quick-link-btn {
-    text-decoration: none;
-    color: var(--text-main);
+  text-decoration: none;
+  color: var(--text-main) !important;
+  transition: color 0.2s;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Linkek hover színe (ezt NE írja felül a fehér szabály) */
+.quick-link-btn:hover {
+  color: #8b5cf6 !important;
+}
+
+.dark-mode .quick-link-btn:hover {
+  color: #a78bfa !important;
 }

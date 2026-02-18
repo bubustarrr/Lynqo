@@ -1,75 +1,46 @@
-/* --- ALAP STRUKTÚRA --- */
+/* =========================================
+   1. ALAP STRUKTÚRA ÉS HÁTTÉR
+   ========================================= */
+
 .main-page-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
-  min-height: 100vh; /* Hogy kitöltse a képernyőt */
+  min-height: 100vh;
   transition: background 0.3s ease;
+  padding-top: 40px;
+}
+
+/* --- LIGHT MODE HÁTTÉR --- */
+/* Finom átmenet fehérből halvány lilába */
+.light-mode.app-container .main-page-container, 
+.app-container.light-mode .main-page-container {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
 }
 
 /* =========================================
-   LIGHT MODE DESIGN (PRÉMIUM STÍLUS)
+   2. TYPOGRAPHY (CÍMSOROK, SZÖVEGEK)
    ========================================= */
 
-/* HÁTTÉR: Finom átmenet, hogy ne legyen üres fehér */
-.light-mode.app-container .main-page-container, 
-/* Ha a container osztályát használod közvetlenül: */
-.app-container.light-mode .main-page-container {
-  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%); /* Fehér -> Halvány lila */
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  letter-spacing: -1px;
 }
 
-/* Címsor */
+/* Light Mode Címsor (Gradiens) */
 .light-mode .hero-title {
-  background: linear-gradient(135deg, #7c3aed, #db2777); /* Mélyebb lila és pink */
+  background: linear-gradient(135deg, #7c3aed, #db2777);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-.light-mode .hero-subtitle {
-  color: #475569; /* Slate-600: jól olvasható sötétszürke */
-  font-weight: 500;
-}
-
-/* Kártyák: "Lebegő" fehér kártyák */
-.light-mode .feature-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0; /* Halvány keret */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-              0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Szép, lágy árnyék */
-  color: #1e293b;
-}
-
-.light-mode .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
-              0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: #d8b4fe; /* Hoverre halvány lila keret */
-}
-
-.light-mode .feature-icon {
-  background: #f3f4f6;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1rem auto;
-  font-size: 2.5rem;
-}
-
-.light-mode .section-title {
-  color: #1e293b;
-  font-weight: 800;
-}
-
-/* =========================================
-   DARK MODE DESIGN (NEON / GLOW)
-   ========================================= */
-
+/* Dark Mode Címsor (Neon Glow) */
 .dark-mode .hero-title {
   background: linear-gradient(135deg, #a78bfa, #f472b6);
   -webkit-background-clip: text;
@@ -77,50 +48,78 @@
   filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.4));
 }
 
-.dark-mode .hero-subtitle {
-  color: #cbd5e1;
+.hero-subtitle, .subtitle-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 550px;
+  font-weight: 500;
 }
 
-.dark-mode .feature-card {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  color: #e2e8f0;
+/* Színek módhoz igazítva */
+.light-mode .hero-subtitle,
+.light-mode .subtitle-text {
+  color: #475569; /* Sötétszürke */
 }
 
-.dark-mode .feature-card:hover {
-  background: rgba(30, 41, 59, 0.9);
-  border-color: #8b5cf6;
-  transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-}
-
-.dark-mode .section-title {
-  color: #f1f5f9;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-}
-
-/* Admin panel sötét módban */
-.dark-mode .admin-section {
-  background: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.dark-mode .admin-btn {
-  background: rgba(255, 255, 255, 0.05);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dark-mode .admin-btn:hover {
-  background: #8b5cf6;
-  border-color: #8b5cf6;
-  color: white;
+.dark-mode .hero-subtitle,
+.dark-mode .subtitle-text {
+  color: #cbd5e1 !important; /* Világosszürke */
 }
 
 /* =========================================
-   HERO SZEKCIÓ ÉS ANIMÁCIÓK
+   3. GOMBOK (CTA BUTTONS)
+   ========================================= */
+
+.cta-button {
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+/* Primary Button */
+.cta-button.primary {
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.cta-button.primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+  color: white !important;
+}
+
+/* Secondary Button */
+.cta-button.secondary {
+  background: transparent;
+  border: 2px solid #8b5cf6;
+  color: #8b5cf6;
+}
+
+.light-mode .cta-button.secondary:hover {
+  background: rgba(139, 92, 246, 0.05);
+  transform: translateY(-3px);
+}
+
+.dark-mode .cta-button.secondary {
+  border-color: #a78bfa;
+  color: #a78bfa;
+}
+
+.dark-mode .cta-button.secondary:hover {
+  background: rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+}
+
+/* =========================================
+   4. MAIN PAGE HERO & BLOB ANIMÁCIÓ
    ========================================= */
 
 .hero-section {
@@ -129,10 +128,10 @@
   align-items: center;
   max-width: 1200px;
   width: 90%;
-  min-height: 85vh; /* Kicsit magasabb */
+  min-height: 80vh;
   margin: 0 auto;
-  gap: 4rem;
-  padding-top: 2rem;
+  gap: 3rem;
+  padding-bottom: 3rem;
 }
 
 .hero-content {
@@ -141,33 +140,39 @@
   z-index: 2;
 }
 
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .hero-image {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  height: 500px;
+  height: 450px;
 }
 
-/* A SZÍNES ALAKZAT (Blob) */
+/* A SZÍNES ALAKZAT (BLOB) */
 .hero-illustration {
-  width: 450px;
-  height: 450px;
+  width: 400px;
+  height: 400px;
   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
   animation: float 6s ease-in-out infinite, morph 8s ease-in-out infinite;
   transition: all 0.5s ease;
   position: relative;
 }
 
-/* Light Mode Blob - Élénkebb színek */
+/* Light Mode Blob */
 .light-mode .hero-illustration {
   background: linear-gradient(135deg, #a855f7, #ec4899);
   box-shadow: 20px 20px 60px rgba(168, 85, 247, 0.25),
               -10px -10px 40px rgba(255, 255, 255, 0.8);
 }
 
-/* Dark Mode Blob - Neon glow */
+/* Dark Mode Blob */
 .dark-mode .hero-illustration {
   background: linear-gradient(45deg, #4c1d95, #be185d);
   box-shadow: 0 0 60px rgba(139, 92, 246, 0.3),
@@ -188,82 +193,7 @@
 }
 
 /* =========================================
-   TYPOGRAPHY ÉS GOMBOK
-   ========================================= */
-
-.hero-title {
-  font-size: 4rem; /* Nagyobb cím */
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-  letter-spacing: -1px;
-}
-
-.hero-subtitle {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  margin-bottom: 2.5rem;
-  max-width: 550px;
-}
-
-.hero-buttons {
-  display: flex;
-  gap: 1.2rem;
-}
-
-.cta-button {
-  padding: 16px 32px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-block;
-  cursor: pointer;
-}
-
-/* Primary Button */
-.cta-button.primary {
-  background: linear-gradient(90deg, #8b5cf6, #ec4899);
-  color: white;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-  border: 2px solid transparent;
-}
-
-.cta-button.primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
-}
-
-/* Secondary Button */
-.cta-button.secondary {
-  background: transparent;
-  border: 2px solid #8b5cf6;
-  color: #8b5cf6;
-}
-
-.light-mode .cta-button.secondary {
-  border-color: #8b5cf6;
-  color: #7c3aed;
-}
-
-.light-mode .cta-button.secondary:hover {
-  background: rgba(139, 92, 246, 0.05);
-  transform: translateY(-3px);
-}
-
-.dark-mode .cta-button.secondary {
-  border-color: #a78bfa;
-  color: #a78bfa;
-}
-
-.dark-mode .cta-button.secondary:hover {
-  background: rgba(139, 92, 246, 0.15);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
-}
-
-/* =========================================
-   FEATURES SZEKCIÓ
+   5. FEATURES GRID (MAIN PAGE)
    ========================================= */
 
 .features-section {
@@ -278,46 +208,140 @@
   font-size: 2.5rem;
   margin-bottom: 3rem;
   text-align: center;
+  font-weight: 800;
 }
+
+.light-mode .section-title { color: #1e293b; }
+.dark-mode .section-title { color: #f1f5f9; }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Kicsit szélesebb kártyák */
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
   max-width: 1200px;
   width: 90%;
 }
 
 .feature-card {
-  padding: 2.5rem 2rem;
-  border-radius: 24px;
+  padding: 2rem;
+  border-radius: 20px;
   text-align: center;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 }
 
-.feature-card h3 {
-  font-size: 1.5rem;
+/* Light Mode Features */
+.light-mode .feature-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  color: #1e293b;
+}
+.light-mode .feature-card:hover {
+  transform: translateY(-5px);
+  border-color: #d8b4fe;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Features */
+.dark-mode .feature-card {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+.dark-mode .feature-card:hover {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: #8b5cf6;
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 3rem;
   margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-.feature-card p {
-  font-size: 1rem;
-  line-height: 1.5;
-  opacity: 0.9;
+  display: block;
 }
 
 /* =========================================
-   ADMIN PANEL
+   6. LANGUAGE SELECTION PAGE STYLES
+   ========================================= */
+/* Ez a rész kezeli a "LanguageSelectionPage" kártyáit és a színváltást */
+
+/* Közös kártya stílus (Source Lang & Course Select) */
+.custom-card {
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+/* Light Mode: */
+.light-mode .custom-card, 
+.custom-card { /* Alapértelmezett */
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #f1f5f9;
+}
+
+/* Dark Mode: */
+.dark-mode .custom-card,
+.app-container.dark-mode .custom-card {
+  background-color: #1e293b !important; /* Sötétkék kártya */
+  color: #f8fafc !important;           /* Fehér szöveg */
+  border: 1px solid #334155 !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+}
+
+/* Dark Mode Text Fix - Ez oldja meg, hogy látszódjon a szöveg */
+.dark-mode .custom-card h4, 
+.dark-mode .custom-card h6,
+.dark-mode .custom-card p,
+.dark-mode .custom-card small {
+  color: #f8fafc !important;
+}
+
+.dark-mode .custom-card .text-muted {
+  color: #cbd5e1 !important; /* A leírások legyenek világosszürkék, ne fehérek */
+}
+
+/* Zászló kör háttere */
+.flag-circle {
+  transition: background-color 0.3s ease;
+}
+
+.light-mode .flag-circle, .flag-circle {
+  background-color: #ffffff;
+  border: 1px solid #eee;
+}
+
+.dark-mode .flag-circle {
+  background-color: #0f172a !important; /* Sötétebb kék */
+  border-color: #334155 !important;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+}
+
+/* Gomb outline javítása sötét módban */
+.dark-mode .btn-outline-secondary {
+  color: #cbd5e1;
+  border-color: #475569;
+}
+.dark-mode .btn-outline-secondary:hover {
+  background-color: #475569;
+  color: white;
+}
+
+/* =========================================
+   7. ADMIN SECTION & RESZPONZIVITÁS
    ========================================= */
 
 .admin-section {
   width: 100%;
-  background: #f1f5f9; /* Light mode default */
   padding: 3rem 2rem;
   text-align: center;
   margin-top: auto;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  background: rgba(0,0,0,0.02);
+}
+
+.dark-mode .admin-section {
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .admin-buttons {
@@ -337,52 +361,44 @@
   font-weight: 700;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   transition: 0.3s;
-  border: 1px solid transparent;
 }
 
-.admin-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-  color: #7c3aed;
+.dark-mode .admin-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* =========================================
-   MOBIL NÉZET
-   ========================================= */
+.admin-btn:hover, .dark-mode .admin-btn:hover {
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+  color: white;
+}
 
 @media (max-width: 768px) {
   .hero-section {
     flex-direction: column-reverse;
     text-align: center;
-    padding-bottom: 3rem;
     min-height: auto;
   }
-  
   .hero-content {
     align-items: center;
     display: flex;
     flex-direction: column;
   }
-  
   .hero-illustration {
     width: 300px;
     height: 300px;
-    margin-bottom: 2rem;
   }
-  
   .hero-title {
     font-size: 2.8rem;
   }
-  
   .hero-buttons {
     flex-direction: column;
     width: 100%;
-    gap: 1rem;
   }
-  
   .cta-button {
     width: 100%;
     text-align: center;
-    box-sizing: border-box;
   }
 }

@@ -1,36 +1,80 @@
 /* --- ALAP STRUKTÚRA --- */
 .main-page-container {
   width: 100%;
-  /* A hátteret kivettük innen, mert az App.css kezeli */
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-x: hidden; 
-  padding-top: 40px;
+  overflow-x: hidden;
+  min-height: 100vh; /* Hogy kitöltse a képernyőt */
+  transition: background 0.3s ease;
 }
 
-/* --- SZÖVEGSZÍNEK ÉS KÁRTYÁK BEÁLLÍTÁSA --- */
+/* =========================================
+   LIGHT MODE DESIGN (PRÉMIUM STÍLUS)
+   ========================================= */
 
-/* Light Mode specifikus elemek */
+/* HÁTTÉR: Finom átmenet, hogy ne legyen üres fehér */
+.light-mode.app-container .main-page-container, 
+/* Ha a container osztályát használod közvetlenül: */
+.app-container.light-mode .main-page-container {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%); /* Fehér -> Halvány lila */
+}
+
+/* Címsor */
 .light-mode .hero-title {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #7c3aed, #db2777); /* Mélyebb lila és pink */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
+.light-mode .hero-subtitle {
+  color: #475569; /* Slate-600: jól olvasható sötétszürke */
+  font-weight: 500;
+}
+
+/* Kártyák: "Lebegő" fehér kártyák */
 .light-mode .feature-card {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  color: #334155;
+  background: #ffffff;
+  border: 1px solid #e2e8f0; /* Halvány keret */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Szép, lágy árnyék */
+  color: #1e293b;
 }
 
-/* Dark Mode specifikus elemek */
+.light-mode .feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #d8b4fe; /* Hoverre halvány lila keret */
+}
+
+.light-mode .feature-icon {
+  background: #f3f4f6;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  font-size: 2.5rem;
+}
+
+.light-mode .section-title {
+  color: #1e293b;
+  font-weight: 800;
+}
+
+/* =========================================
+   DARK MODE DESIGN (NEON / GLOW)
+   ========================================= */
+
 .dark-mode .hero-title {
   background: linear-gradient(135deg, #a78bfa, #f472b6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.3));
+  filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.4));
 }
 
 .dark-mode .hero-subtitle {
@@ -38,10 +82,10 @@
 }
 
 .dark-mode .feature-card {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(10px);
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   color: #e2e8f0;
 }
 
@@ -49,22 +93,24 @@
   background: rgba(30, 41, 59, 0.9);
   border-color: #8b5cf6;
   transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
 }
 
 .dark-mode .section-title {
   color: #f1f5f9;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 /* Admin panel sötét módban */
 .dark-mode .admin-section {
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .dark-mode .admin-btn {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dark-mode .admin-btn:hover {
@@ -73,16 +119,20 @@
   color: white;
 }
 
-/* --- HERO SZEKCIÓ ÉS BLOB ANIMÁCIÓ --- */
+/* =========================================
+   HERO SZEKCIÓ ÉS ANIMÁCIÓK
+   ========================================= */
+
 .hero-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
   max-width: 1200px;
   width: 90%;
-  min-height: 80vh;
+  min-height: 85vh; /* Kicsit magasabb */
   margin: 0 auto;
-  gap: 2rem;
+  gap: 4rem;
+  padding-top: 2rem;
 }
 
 .hero-content {
@@ -97,31 +147,31 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  height: 400px;
+  height: 500px;
 }
 
-/* EZ A SZÍNES ALAKZAT (Kép helyett) */
+/* A SZÍNES ALAKZAT (Blob) */
 .hero-illustration {
-  width: 400px;
-  height: 400px;
+  width: 450px;
+  height: 450px;
   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
   animation: float 6s ease-in-out infinite, morph 8s ease-in-out infinite;
   transition: all 0.5s ease;
   position: relative;
 }
 
-/* Light Mode Blob */
+/* Light Mode Blob - Élénkebb színek */
 .light-mode .hero-illustration {
-  background: linear-gradient(45deg, #8b5cf6, #ec4899);
-  box-shadow: 20px 20px 60px rgba(139, 92, 246, 0.2),
-              -20px -20px 60px rgba(255, 255, 255, 0.8);
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  box-shadow: 20px 20px 60px rgba(168, 85, 247, 0.25),
+              -10px -10px 40px rgba(255, 255, 255, 0.8);
 }
 
-/* Dark Mode Blob (Világító) */
+/* Dark Mode Blob - Neon glow */
 .dark-mode .hero-illustration {
   background: linear-gradient(45deg, #4c1d95, #be185d);
-  box-shadow: 0 0 50px rgba(139, 92, 246, 0.4),
-              inset 0 0 20px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 60px rgba(139, 92, 246, 0.3),
+              inset 0 0 30px rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -137,51 +187,69 @@
   100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
 }
 
-/* --- KÖZÖS FORMÁZÁSOK (Gombok, Grid, stb) --- */
+/* =========================================
+   TYPOGRAPHY ÉS GOMBOK
+   ========================================= */
+
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 4rem; /* Nagyobb cím */
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.1;
   margin-bottom: 1.5rem;
+  letter-spacing: -1px;
 }
 
 .hero-subtitle {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1.6;
-  margin-bottom: 2rem;
-  max-width: 500px;
+  margin-bottom: 2.5rem;
+  max-width: 550px;
 }
 
 .hero-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .cta-button {
-  padding: 1rem 2rem;
+  padding: 16px 32px;
   border-radius: 50px;
   font-weight: 700;
+  font-size: 1.1rem;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
   cursor: pointer;
 }
 
+/* Primary Button */
 .cta-button.primary {
   background: linear-gradient(90deg, #8b5cf6, #ec4899);
   color: white;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  border: 2px solid transparent;
 }
 
 .cta-button.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
 }
 
+/* Secondary Button */
 .cta-button.secondary {
   background: transparent;
   border: 2px solid #8b5cf6;
   color: #8b5cf6;
+}
+
+.light-mode .cta-button.secondary {
+  border-color: #8b5cf6;
+  color: #7c3aed;
+}
+
+.light-mode .cta-button.secondary:hover {
+  background: rgba(139, 92, 246, 0.05);
+  transform: translateY(-3px);
 }
 
 .dark-mode .cta-button.secondary {
@@ -189,37 +257,67 @@
   color: #a78bfa;
 }
 
-.cta-button.secondary:hover {
-  background: rgba(139, 92, 246, 0.1);
+.dark-mode .cta-button.secondary:hover {
+  background: rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+}
+
+/* =========================================
+   FEATURES SZEKCIÓ
+   ========================================= */
+
+.features-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 5rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  text-align: center;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Kicsit szélesebb kártyák */
+  gap: 2.5rem;
   max-width: 1200px;
   width: 90%;
-  margin-bottom: 4rem;
 }
 
 .feature-card {
-  padding: 2rem;
-  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 
-.feature-icon {
-  font-size: 3rem;
+.feature-card h3 {
+  font-size: 1.5rem;
   margin-bottom: 1rem;
+  font-weight: 700;
 }
+
+.feature-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+/* =========================================
+   ADMIN PANEL
+   ========================================= */
 
 .admin-section {
   width: 100%;
-  background: rgba(0,0,0,0.03);
-  padding: 2rem;
+  background: #f1f5f9; /* Light mode default */
+  padding: 3rem 2rem;
   text-align: center;
   margin-top: auto;
+  border-top: 1px solid #e2e8f0;
 }
 
 .admin-buttons {
@@ -227,42 +325,61 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .admin-btn {
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1.5rem;
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   text-decoration: none;
-  color: #333;
-  font-weight: 600;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: #475569;
+  font-weight: 700;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   transition: 0.3s;
+  border: 1px solid transparent;
 }
+
+.admin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+  color: #7c3aed;
+}
+
+/* =========================================
+   MOBIL NÉZET
+   ========================================= */
 
 @media (max-width: 768px) {
   .hero-section {
     flex-direction: column-reverse;
     text-align: center;
-    padding-bottom: 2rem;
+    padding-bottom: 3rem;
+    min-height: auto;
   }
+  
   .hero-content {
     align-items: center;
     display: flex;
     flex-direction: column;
   }
+  
   .hero-illustration {
-    width: 280px;
-    height: 280px;
+    width: 300px;
+    height: 300px;
+    margin-bottom: 2rem;
   }
+  
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
   }
+  
   .hero-buttons {
     flex-direction: column;
     width: 100%;
+    gap: 1rem;
   }
+  
   .cta-button {
     width: 100%;
     text-align: center;

@@ -9,6 +9,7 @@ export default function MainPage() {
   return (
     <div className="main-page-container">
       
+      {/* HERO SECTION - Bemutatkozás */}
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">Learn Languages with Lynqo</h1>
@@ -29,10 +30,12 @@ export default function MainPage() {
           </div>
         </div>
         <div className="hero-image">
+          {/* A CSS-ben definiált színes blob animáció */}
           <div className="hero-illustration"></div>
         </div>
       </section>
       
+      {/* FEATURES SECTION - Miért válassz minket */}
       <section className="features-section">
         <h2 className="section-title">Why Choose Lynqo?</h2>
         <div className="features-grid">
@@ -58,19 +61,9 @@ export default function MainPage() {
           </div>
         </div>
       </section>
+
+      {/* ADMIN SZEKCIÓ ELTÁVOLÍTVA */}
       
-      <section className="admin-section">
-        <h2 className="section-title">🛠️ Admin Testing (Development)</h2>
-        <div className="admin-buttons">
-          <Link to="/main" className="admin-btn">🏠 Main Page</Link>
-          <Link to="/register" className="admin-btn">📝 Register</Link>
-          <Link to="/login" className="admin-btn">🔐 Login</Link>
-          <Link to="/settings" className="admin-btn">⚙️ Settings</Link>
-          <Link to="/shop" className="admin-btn">🛒 Shop</Link>
-          <Link to="/news" className="admin-btn">📰 News</Link>
-          {user && <Link to="/dashboard" className="admin-btn">💎 Dashboard</Link>}
-        </div>
-      </section>
     </div>
   );
 }

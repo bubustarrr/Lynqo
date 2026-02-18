@@ -1,71 +1,70 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom"; 
 import './Footer.css';
 
-
 export default function Footer() {
-const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const location = useLocation(); 
 
+  // Ellenőrizzük, hogy lecke oldalon vagyunk-e (a 'lesson' szó benne van-e az URL-ben)
+  const isLessonPage = location.pathname.includes('/lesson');
 
-useEffect(() => {
-let lastScrollY = window.scrollY;
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
 
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        setHidden(true); // Lefelé görgetésnél elrejtés
+      } else {
+        setHidden(false); // Felfelé görgetésnél megjelenítés
+      }
+      lastScrollY = window.scrollY;
+    };
 
-const handleScroll = () => {
-if (window.scrollY > lastScrollY) {
-setHidden(true); 
-} else {
-setHidden(false);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Ha lecke oldalon vagyunk, a Footer egyáltalán ne renderelődjön le
+  if (isLessonPage) {
+    return null;
+  }
+
+  return (
+    <footer className={`lynqo-footer ${hidden ? "hidden" : ""}`}>
+      <div className="footer-content">
+        <div className="footer-col">
+          <h4>Lynqo</h4>
+          <p>Language learning made simple.</p>
+          <p className="copyright">
+            © 2026 Lynqo. All rights reserved.
+          </p>
+          <p className="owners">Owners: Lynqo Team: Norbi Robi Bia</p>
+        </div>
+
+        <div className="footer-col">
+          <h4>Contact</h4>
+          <p>Email: <a href="mailto:support@lynqo.ch">support@lynqo.ch</a></p>
+          <p>Phone: +36 70 365 1965</p>
+        </div>
+
+        <div className="footer-col">
+          <h4>Navigation</h4>
+          <a href="/">Home</a>
+        </div>
+
+        <br/>
+        <div className="footer-col">
+          <h4>Follow Us</h4>
+          <div className="socials">
+            <a href="https://www.instagram.com/lynqo_/" target="_blank" rel="noreferrer">Instagram</a>
+            <br/>
+            <a href="#">Twitter</a>
+            <br/>
+            <a href="#">TikTok</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 }
-lastScrollY = window.scrollY;
-};
-
-
-window.addEventListener("scroll", handleScroll);
-return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-
-
-return (
-<footer className={`lynqo-footer ${hidden ? "hidden" : ""}`}>
-<div className="footer-content">
-<div className="footer-col">
-<h4>Lynqo</h4>
-<p>Language learning made simple.</p>
-<p className="copyright">
-© 2026 Lynqo. All rights reserved.
-</p>
-<p className="owners">Owners: Lynqo Team: Norbi Robi Bia</p>
-</div>
-
-
-<div className="footer-col">
-<h4>Contact</h4>
-<p>Email: <a href="mailto:support@lynqo.ch">support@lynqo.ch</a></p>
-<p>Phone: +36 70 365 1965</p>
-</div>
-
-
-<div className="footer-col">
-<h4>Navigation</h4>
-<a href="/">Home</a>
-
-
-
-</div>
-
-<br/>
-<div className="footer-col">
-<h4>Follow Us</h4>
-<div className="socials">
-<a href="https://www.instagram.com/lynqo_/">Instagram</a>
-<br/>
-<a href="#">Twitter</a>
-<br/>
-<a href="#">TikTok</a>
-</div>
-</div>
-</div>
-</footer>
-);
-}
-

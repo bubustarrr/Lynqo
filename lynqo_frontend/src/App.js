@@ -68,16 +68,16 @@ function AppContent() {
           <Route path="/main" element={<MainPage />} />
           <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
           <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
-          <Route path="/dashboard/:courseId" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+<Route path="/dashboard/:courseId" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+<Route path="/dashboard" element={<Navigate to="/dashboard/1" replace />} /> 
+
+<Route path="/course/:courseId/lesson/:lessonId" element={<ProtectedRoute><LessonPage /></ProtectedRoute>} />
+
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
           <Route path="/shopp/subscriptions" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
           <Route path="/shop/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />
           <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
-          <Route 
-       path="/course/:courseId/lesson/:lessonId" 
-       element={<ProtectedRoute><LessonPage /></ProtectedRoute>} 
-    />
           <Route path="/pick-language" element={<ProtectedRoute><LanguageSelectionPage /></ProtectedRoute>} />
           <Route path="/news" element={<NewsPage />} />
           

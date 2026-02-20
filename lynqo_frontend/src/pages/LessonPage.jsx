@@ -179,12 +179,15 @@ export default function LessonPage() {
 
         <div className="flex-grow-1 d-flex flex-column justify-content-center">
             
-            {/* Multiple Choice */}
+                        {/* Multiple Choice */}
             {currentQ.contentType === 'multiple_choice' && Array.isArray(currentQ.options) && (
                 <div className="d-grid gap-3">
                     {currentQ.options.map((opt, idx) => {
                         const text = typeof opt === 'string' ? opt : opt.text;
-                        const audioUrl = typeof opt === 'object' ? opt.audioUrl : null;
+                        
+                        // Treat audioUrl as the number/ID (e.g., "1" for un.mp3)
+                        const mediaId = typeof opt === 'object' ? opt.audioUrl : null;
+                        
                         const isSelected = selectedOption === text;
                         
                         let borderColor = '#e5e7eb';
@@ -204,9 +207,24 @@ export default function LessonPage() {
                                 onClick={() => {
                                     if (!feedback) {
                                         setSelectedOption(text);
-                                        if(audioUrl) {
-                                            const fullUrl = audioUrl.startsWith('http') ? audioUrl : `https://localhost:7118${audioUrl}`;
-                                            new Audio(fullUrl).play().catch(e => console.error(e));
+                                        
+                                        if (mediaId) {
+                                            let fullUrl = '';
+
+                                            // 1. If the DB value is a full path string like "/media/audio/french/deux.mp3"
+                                            if (typeof mediaId === 'string' && mediaId.includes('.mp3')) {
+                                                // We use your static file setup. 
+                                                // We just make sure there are no double slashes.
+                                                const cleanPath = mediaId.startsWith('/') ? mediaId : `/${mediaId}`;
+                                                fullUrl = `https://localhost:7118${cleanPath}`;
+                                            } 
+                                            // 2. If the DB value is a number/ID like "2" or 2
+                                            else {
+                                                fullUrl = `https://localhost:7118/api/media/audio/french/${mediaId}`;
+                                            }
+
+                                            // Play the audio
+                                            new Audio(fullUrl).play().catch(e => console.error("Option audio error:", e));
                                         }
                                     }
                                 }}
@@ -214,7 +232,8 @@ export default function LessonPage() {
                                 style={{ border: `2px solid ${borderColor}`, backgroundColor: bgColor, cursor: feedback ? 'default' : 'pointer' }}
                             >
                                 <div className="d-flex align-items-center gap-3">
-                                    {audioUrl && <span>🔊</span>}
+                                    {/* Only show the icon if mediaId exists */}
+                                    {mediaId && <span>🔊</span>}
                                     <span className="fw-bold fs-5">{text}</span>
                                 </div>
                                 {isSelected && !feedback && <span className="text-primary fs-4">●</span>}
@@ -223,6 +242,7 @@ export default function LessonPage() {
                     })}
                 </div>
             )}
+
 
             {/* Text Input */}
             {(currentQ.contentType === 'fill_blank' || currentQ.contentType === 'text') && (
@@ -242,15 +262,27 @@ export default function LessonPage() {
                 </div>
             )}
 
-            {/* Audio Button */}
-            {currentQ.mediaId && (
-                 <div className="text-center mt-4">
-                      <Button variant="light" className="rounded-circle p-3 shadow-sm" onClick={() => {
-                          new Audio(`https://localhost:7118/api/media/${currentQ.mediaId}`).play();
-                      }}>🔊</Button>
-                 </div>
-             )}
-        </div>
+{/* Audio Button */}
+{currentQ.mediaId && (
+    <div className="text-center mt-4">
+        <Button 
+            variant="light" 
+            className="rounded-circle p-3 shadow-sm"
+            onClick={() => {
+                // Notice the "api/" part here, and NO ".mp3" at the end!
+                // This calls your GetFrenchNumberDirect method
+                const audioUrl = `https://localhost:7118/api/media/audio/french/${currentQ.mediaId}`;
+                new Audio(audioUrl).play().catch(e => console.error("Audio error:", e));
+            }}
+        >
+            🔊
+        </Button>
+
+
+
+                </div>
+            )}
+          </div>
       </Card>
 
       {/* Footer */}

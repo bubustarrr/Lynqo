@@ -2,28 +2,31 @@ import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { Spinner } from 'react-bootstrap';
 import './SettingsPage.css';
 
 export default function SettingsPage() {
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, translations } = useLanguage();
+  
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const t = translations[language] || translations['en'] || {};
 
-  // Az állapot most már az adatbázis logikáját követi
+  // State matches your C# UserSettingsDTO exactly
   const [userSettings, setUserSettings] = useState({
-    notifications: true,
-    dailyGoalMinutes: 15, // Adatbázis: daily_goal_minutes
-    learningLanguage: 'English', // Ez majd a 'courses' táblához kötődik, nem a settings-hez!
-    interfaceLanguage: language, // Adatbázis: ui_language ('en', 'es', stb.)
-    soundEffects: true, // Adatbázis: sound_enabled
-    darkMode: theme === 'dark' // Adatbázis: dark_mode
+    notificationsEnabled: true,
+    dailyGoalMinutes: 15, 
+    uiLanguage: language, 
+    soundEnabled: true, 
+    darkMode: theme === 'dark',
+    learningLanguage: 'English' // Not saved in settings DB, just local state for now
   });
 
   const languages = ['English', 'Spanish', 'French', 'German', 'Italian'];
   
-  // A kódok egyeznek az adatbázis ui_language varchar mezőjével
   const interfaceLanguages = [
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' },
@@ -31,46 +34,88 @@ export default function SettingsPage() {
     { code: 'de', name: 'Deutsch' }
   ];
   
-  // Percekben megadott napi célok
   const dailyGoals = [5, 10, 15, 20, 30, 45, 60];
 
+  // 1. FETCH INITIAL SETTINGS FROM DB
   useEffect(() => {
-    setUserSettings(prev => ({ ...prev, darkMode: theme === 'dark' }));
-  }, [theme]);
+    if (!token) return;
 
-  const handleSave = async () => {
-    // 1. Összerakjuk a csomagot PONTOSAN úgy, ahogy az SQL várja
-    const payloadToDatabase = {
-      dark_mode: userSettings.darkMode ? 1 : 0,
-      sound_enabled: userSettings.soundEffects ? 1 : 0,
-      daily_goal_minutes: userSettings.dailyGoalMinutes,
-      ui_language: userSettings.interfaceLanguage,
-      notifications_enabled: userSettings.notifications ? 1 : 0
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('https://localhost:7118/api/Settings', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+          const dbSettings = await response.json();
+          // Update state with DB values
+          setUserSettings(prev => ({
+            ...prev,
+            darkMode: dbSettings.darkMode ?? prev.darkMode,
+            soundEnabled: dbSettings.soundEnabled ?? prev.soundEnabled,
+            dailyGoalMinutes: dbSettings.dailyGoalMinutes ?? prev.dailyGoalMinutes,
+            uiLanguage: dbSettings.uiLanguage || prev.uiLanguage,
+            notificationsEnabled: dbSettings.notificationsEnabled ?? prev.notificationsEnabled
+          }));
+
+          // Apply UI Language and Theme globally if they differ
+          if (dbSettings.uiLanguage && dbSettings.uiLanguage !== language) {
+              setLanguage(dbSettings.uiLanguage);
+          }
+          if (dbSettings.darkMode && theme === 'light') {
+              toggleTheme();
+          } else if (!dbSettings.darkMode && theme === 'dark') {
+              toggleTheme();
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load settings from DB:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    console.log('Sending to DB:', payloadToDatabase);
+    fetchSettings();
+  }, [token]);
 
-    /* // 2. Itt lesz a jövőbeli Backend hívásod:
+
+  // 2. SAVE SETTINGS TO DB
+  const handleSave = async () => {
+    setSaving(true);
+    
+    // We send data exactly matching your UserSettingsDTO.cs
+    const payloadToDatabase = {
+      DarkMode: userSettings.darkMode,
+      SoundEnabled: userSettings.soundEnabled,
+      DailyGoalMinutes: userSettings.dailyGoalMinutes,
+      UiLanguage: userSettings.uiLanguage,
+      NotificationsEnabled: userSettings.notificationsEnabled
+    };
+
     try {
-      const response = await fetch('http://localhost:5000/api/settings/update', {
-        method: 'POST',
+      const response = await fetch('https://localhost:7118/api/Settings', {
+        method: 'PUT', // Or POST depending on how your backend controller is setup
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}` // Ha használsz JWT tokent
+          'Authorization': `Bearer ${token}` 
         },
         body: JSON.stringify(payloadToDatabase)
       });
       
       if(response.ok) {
         alert('Settings saved successfully!');
+      } else {
+          alert('Failed to save settings. Check console.');
+          console.error(await response.text());
       }
     } catch (error) {
       console.error('Error saving settings:', error);
+      alert('Network error while saving.');
+    } finally {
+        setSaving(false);
     }
-    */
-    
-    alert('Settings saved! (Check console for payload)');
   };
+
 
   const handleDarkModeToggle = (e) => {
     const isDark = e.target.checked;
@@ -82,9 +127,17 @@ export default function SettingsPage() {
 
   const handleInterfaceLanguageChange = (e) => {
     const selectedLang = e.target.value;
-    setUserSettings({ ...userSettings, interfaceLanguage: selectedLang });
+    setUserSettings({ ...userSettings, uiLanguage: selectedLang });
     setLanguage(selectedLang);
   };
+
+  if (loading) {
+      return (
+          <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spinner animation="border" variant="primary" />
+          </div>
+      );
+  }
 
   return (
     <div className="settings-page">
@@ -93,8 +146,8 @@ export default function SettingsPage() {
           <h1 className="settings-title">⚙️ {t.settings || "Settings"}</h1>
           <p className="settings-subtitle">Manage your preferences and learning goals</p>
         </div>
-        <button className="save-button" onClick={handleSave}>
-          💾 Save Changes
+        <button className="save-button" onClick={handleSave} disabled={saving}>
+          {saving ? '⏳ Saving...' : '💾 Save Changes'}
         </button>
       </div>
 
@@ -119,7 +172,7 @@ export default function SettingsPage() {
             </div>
             
             <div className="setting-group">
-              <label>Learning Language</label>
+              <label>Learning Language (WIP)</label>
               <select 
                 value={userSettings.learningLanguage}
                 onChange={(e) => setUserSettings({...userSettings, learningLanguage: e.target.value})}
@@ -141,7 +194,7 @@ export default function SettingsPage() {
             <div className="setting-group">
               <label>Interface Language</label>
               <select 
-                value={userSettings.interfaceLanguage}
+                value={userSettings.uiLanguage}
                 onChange={handleInterfaceLanguageChange}
                 className="select-field"
               >
@@ -169,8 +222,8 @@ export default function SettingsPage() {
               <span className="setting-desc">Play sounds when completing lessons</span>
             </div>
             <label className="toggle-switch">
-              <input type="checkbox" checked={userSettings.soundEffects}
-                onChange={(e) => setUserSettings({...userSettings, soundEffects: e.target.checked})} />
+              <input type="checkbox" checked={userSettings.soundEnabled}
+                onChange={(e) => setUserSettings({...userSettings, soundEnabled: e.target.checked})} />
               <span className="toggle-slider"></span>
             </label>
           </div>
@@ -188,8 +241,8 @@ export default function SettingsPage() {
             <label className="toggle-switch">
               <input 
                 type="checkbox" 
-                checked={userSettings.notifications}
-                onChange={(e) => setUserSettings({...userSettings, notifications: e.target.checked})}
+                checked={userSettings.notificationsEnabled}
+                onChange={(e) => setUserSettings({...userSettings, notificationsEnabled: e.target.checked})}
               />
               <span className="toggle-slider"></span>
             </label>

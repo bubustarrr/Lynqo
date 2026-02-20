@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Row, Col, Form, InputGroup } from 'react-bootstrap';
-import { FaShoppingCart, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+// Hozzáadtam a FaArrowLeft ikont
+import { FaShoppingCart, FaChevronLeft, FaChevronRight, FaArrowLeft } from 'react-icons/fa';
+// Hozzáadtam a useNavigate hookot
+import { useNavigate } from 'react-router-dom';
+
 import './MerchPage.css';
 import { useCart } from '../context/CartContext';
-import ShopCart from '../components/shop/ShopCart'; // Importáljuk a kosár komponenst
+import ShopCart from '../components/shop/ShopCart'; 
 
 import kep1 from '../assets/merch/kep1.png';
 import kep2 from '../assets/merch/kep2.png';
@@ -95,6 +99,9 @@ const MerchCard = ({ item }) => {
 export default function MerchPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  
+  // Navigáció inicializálása
+  const navigate = useNavigate();
 
   const filteredItems = MERCH_ITEMS.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -104,7 +111,19 @@ export default function MerchPage() {
 
   return (
     <div className="news-page-container">
-      <header className="news-header">
+      
+      {/* Vissza gomb a navigációhoz */}
+      <div className="w-100 px-4 pt-4" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <button 
+          className="cta-button secondary" 
+          onClick={() => navigate('/shop')}
+          style={{ color: '#8b5cf6', borderColor: '#8b5cf6' }}
+        >
+          <FaArrowLeft className="me-2 mb-1" style={{ color: '#8b5cf6' }} /> 
+        </button>
+      </div>
+
+      <header className="news-header mt-3">
         <h1 className="news-hero-title">Lynqo Store</h1>
         <p className="news-subtitle">Exclusive gear for language lovers</p>
       </header>
@@ -153,7 +172,6 @@ export default function MerchPage() {
             <div className="promo-card mb-4">
               <h5>Free Shipping?</h5>
               <p className="small">On all orders over $100!</p>
-            
             </div>
 
             {/* Itt jelenik meg a kosár tartalma a sidebarban */}

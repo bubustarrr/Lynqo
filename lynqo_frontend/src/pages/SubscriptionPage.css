@@ -1,0 +1,146 @@
+/* =========================================
+   SUBSCRIPTION / PRICING PAGE STYLES
+   ========================================= */
+
+   
+/* A kártyák rácsszerkezete (a features-grid mintájára, de kifejezetten az árazáshoz) */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  width: 90%;
+  margin: 0 auto;
+  align-items: center; /* Hogy a kiemelt kártya középen nagyobb lehessen */
+}
+
+/* Alap árazási kártya */
+.pricing-card {
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Light Mode - Kártya stílus */
+.light-mode .pricing-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  color: #1e293b;
+}
+
+.light-mode .pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode - Kártya stílus */
+.dark-mode .pricing-card {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .pricing-card:hover {
+  background: rgba(30, 41, 59, 0.9);
+  transform: translateY(-5px);
+}
+
+/* --- KIEMELT (PRO) KÁRTYA --- */
+.pricing-card.highlighted {
+  transform: scale(1.05);
+  border: 2px solid #8b5cf6;
+  z-index: 2;
+}
+
+.light-mode .pricing-card.highlighted {
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+}
+
+.dark-mode .pricing-card.highlighted {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+  border-color: #a78bfa;
+}
+
+.pricing-card.highlighted:hover {
+  transform: scale(1.05) translateY(-5px);
+}
+
+/* "Legnépszerűbb" Címke */
+.popular-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  color: white;
+  padding: 5px 20px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+}
+
+/* Ár tipográfia */
+.price-display {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 1rem 0;
+}
+
+.price-period {
+  font-size: 1.2rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+/* Lista stílusok */
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.pricing-features li {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.05rem;
+}
+
+.feature-icon-check {
+  color: #10b981; /* Sikeres zöld szín */
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.feature-disabled {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+
+/* Mobil reszponzivitás */
+@media (max-width: 900px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+  
+  .pricing-card.highlighted {
+    transform: scale(1); /* Mobilon ne lógjon ki a képernyőről */
+  }
+  
+  .pricing-card.highlighted:hover {
+    transform: translateY(-5px);
+  }
+}

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"; 
+import { useLocation, Link } from "react-router-dom"; // Link importálása a gyors navigációhoz
 import './Footer.css';
 
 export default function Footer() {
   const [hidden, setHidden] = useState(false);
   const location = useLocation(); 
 
-  // Ellenőrizzük, hogy lecke oldalon vagyunk-e (a 'lesson' szó benne van-e az URL-ben)
   const isLessonPage = location.pathname.includes('/lesson');
 
   useEffect(() => {
@@ -14,9 +13,9 @@ export default function Footer() {
 
     const handleScroll = () => {
       if (window.scrollY > lastScrollY) {
-        setHidden(true); // Lefelé görgetésnél elrejtés
+        setHidden(true); 
       } else {
-        setHidden(false); // Felfelé görgetésnél megjelenítés
+        setHidden(false); 
       }
       lastScrollY = window.scrollY;
     };
@@ -25,7 +24,6 @@ export default function Footer() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Ha lecke oldalon vagyunk, a Footer egyáltalán ne renderelődjön le
   if (isLessonPage) {
     return null;
   }
@@ -39,7 +37,7 @@ export default function Footer() {
           <p className="copyright">
             © 2026 Lynqo. All rights reserved.
           </p>
-          <p className="owners">Owners: Lynqo Team: Norbi Robi Bia</p>
+          <p className="owners">Owners: Norbi, Robi, Bia</p>
         </div>
 
         <div className="footer-col">
@@ -48,19 +46,20 @@ export default function Footer() {
           <p>Phone: +36 70 365 1965</p>
         </div>
 
+        {/* Kibővített Navigáció */}
         <div className="footer-col">
           <h4>Navigation</h4>
-          <a href="/">Home</a>
+          <Link to="/">Home</Link>
+          <Link to="/news">News</Link>
+          <Link to="/shop">Shop</Link>
         </div>
 
-        <br/>
+
         <div className="footer-col">
           <h4>Follow Us</h4>
           <div className="socials">
             <a href="https://www.instagram.com/lynqo_/" target="_blank" rel="noreferrer">Instagram</a>
-            <br/>
             <a href="#">Twitter</a>
-            <br/>
             <a href="#">TikTok</a>
           </div>
         </div>

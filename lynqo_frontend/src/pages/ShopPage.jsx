@@ -7,6 +7,7 @@ export default function ShopLandingPage() {
   const navigate = useNavigate();
 
   return (
+    
     <div className="shop-landing-wrapper">
       <div className="gradient-bg d-flex align-items-center justify-content-center min-vh-100 p-4">
         <div className="content-wrapper text-center text-white">
@@ -14,6 +15,7 @@ export default function ShopLandingPage() {
           <p className="lead mb-5 px-4 drop-shadow fs-4">
             Upgrade your learning experience or show your love for Lynqo with exclusive merchandise.
           </p>
+          
 
           <div className="btn-group-wrapper mb-5">
             <Button 

@@ -164,17 +164,25 @@ export default function DashboardPage() {
                                 START LESSON
                             </Link>
                         </>
-                    ) : (
-                        <>
-                            <div style={{fontSize: '4rem', marginBottom: '1rem'}}>🎉</div>
-                            <h2>Course Complete!</h2>
-                            <p>You have finished all available lessons.</p>
-                            <Link to="/pick-language" className="btn btn-primary mt-3">Start New Course</Link>
-                        </>
-                    )}
+                        ) : (
+                            <>
+                                <div style={{fontSize: '4rem', marginBottom: '1rem'}}>🎉</div>
+                                <h2 className="mb-3 fw-bold">Course Complete!</h2>
+                                <p className="mb-5 text-muted" style={{fontSize: '1.2rem'}}>You have finished all available lessons.</p>
+                                
+                                {/* Changed this to use your custom cta-button class! */}
+                                <Link 
+                                    to="/pick-language" 
+                                    className="cta-button"
+                                >
+                                    START NEW COURSE
+                                </Link>
+                            </>
+                        )}
+
                 </Card>
             </Col>
-
+            
             <Col lg={4}>
                 <Card className="dashboard-card p-4">
                     <h4 className="fw-bold mb-3 text-uppercase text-muted" style={{fontSize: '1rem'}}>Quick Links</h4>

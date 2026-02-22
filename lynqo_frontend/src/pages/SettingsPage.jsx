@@ -15,14 +15,14 @@ export default function SettingsPage() {
 
   const t = translations[language] || translations['en'] || {};
 
-  // State matches your C# UserSettingsDTO exactly
+  // Helyi state, ami pontosan leképezi a beállításokat
   const [userSettings, setUserSettings] = useState({
     notificationsEnabled: true,
     dailyGoalMinutes: 15, 
     uiLanguage: language, 
     soundEnabled: true, 
     darkMode: theme === 'dark',
-    learningLanguage: 'English' // Not saved in settings DB, just local state for now
+    learningLanguage: 'English' // Csak frontend state, nincs a DB-ben
   });
 
   const languages = ['English', 'Spanish', 'French', 'German', 'Italian'];
@@ -36,19 +36,26 @@ export default function SettingsPage() {
   
   const dailyGoals = [5, 10, 15, 20, 30, 45, 60];
 
-  // 1. FETCH INITIAL SETTINGS FROM DB
+  // 1. BEÁLLÍTÁSOK LEKÉRÉSE AZ ADATBÁZISBÓL (GET)
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+        setLoading(false);
+        return;
+    }
 
     const fetchSettings = async () => {
       try {
         const response = await fetch('https://localhost:7118/api/Settings', {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
         });
         
         if (response.ok) {
           const dbSettings = await response.json();
-          // Update state with DB values
+          
+          // Megjegyzés: a C# alapértelmezetten camelCase formátumban küldi a JSON-t (pl. darkMode)
           setUserSettings(prev => ({
             ...prev,
             darkMode: dbSettings.darkMode ?? prev.darkMode,
@@ -58,7 +65,7 @@ export default function SettingsPage() {
             notificationsEnabled: dbSettings.notificationsEnabled ?? prev.notificationsEnabled
           }));
 
-          // Apply UI Language and Theme globally if they differ
+          // Alkalmazzuk a nyelvet és a témát globálisan is, ha eltérnek
           if (dbSettings.uiLanguage && dbSettings.uiLanguage !== language) {
               setLanguage(dbSettings.uiLanguage);
           }
@@ -76,14 +83,16 @@ export default function SettingsPage() {
     };
 
     fetchSettings();
-  }, [token]);
+  }, [token, language, theme, setLanguage, toggleTheme]);
 
 
-  // 2. SAVE SETTINGS TO DB
+  // 2. BEÁLLÍTÁSOK MENTÉSE AZ ADATBÁZISBA (PUT)
   const handleSave = async () => {
     setSaving(true);
     
-    // We send data exactly matching your UserSettingsDTO.cs
+    // Ezt a JSON-t küldjük a C# UserSettingsDTO-nak.
+    // A C# model binding nem érzékeny a kis/nagybetűkre, de a biztonság kedvéért 
+    // egyezik a DTO tulajdonságaival (PascalCase).
     const payloadToDatabase = {
       DarkMode: userSettings.darkMode,
       SoundEnabled: userSettings.soundEnabled,
@@ -94,7 +103,7 @@ export default function SettingsPage() {
 
     try {
       const response = await fetch('https://localhost:7118/api/Settings', {
-        method: 'PUT', // Or POST depending on how your backend controller is setup
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}` 
@@ -105,11 +114,12 @@ export default function SettingsPage() {
       if(response.ok) {
         alert('Settings saved successfully!');
       } else {
-          alert('Failed to save settings. Check console.');
-          console.error(await response.text());
+        const errorText = await response.text();
+        alert('Failed to save settings. Check console.');
+        console.error("Save error details:", errorText);
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.error('Network error while saving settings:', error);
       alert('Network error while saving.');
     } finally {
         setSaving(false);
@@ -153,7 +163,7 @@ export default function SettingsPage() {
 
       <div className="settings-container">
         
-        {/* TANULÁS SZEKCIÓ */}
+        {/* LEARNING SECTION */}
         <section className="settings-card">
           <h2 className="card-title">📚 Learning</h2>
           
@@ -186,7 +196,7 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* INTERFÉSZ ÉS RENDSZER SZEKCIÓ */}
+        {/* INTERFACE & SYSTEM SECTION */}
         <section className="settings-card">
           <h2 className="card-title">🖥️ Interface & System</h2>
           
@@ -229,7 +239,7 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* ÉRTESÍTÉSEK SZEKCIÓ */}
+        {/* NOTIFICATIONS SECTION */}
         <section className="settings-card">
           <h2 className="card-title">🔔 Notifications</h2>
           

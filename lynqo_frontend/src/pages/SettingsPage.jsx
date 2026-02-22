@@ -88,6 +88,7 @@ export default function SettingsPage() {
 
   // 2. BEÁLLÍTÁSOK MENTÉSE AZ ADATBÁZISBA (PUT)
   const handleSave = async () => {
+    console.log("Jelenlegi token:", token);
     setSaving(true);
     
     // Ezt a JSON-t küldjük a C# UserSettingsDTO-nak.

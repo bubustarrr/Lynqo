@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Table, Card, Spinner, Button } from 'react-bootstrap';
+import { Container, Table, Card, Spinner } from 'react-bootstrap'; // Kivettem a felesleges Button-t a bootstrap-ből, mert egyedi gombot használsz
 import { useNavigate } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa'; // Ne felejtsd el az ikont!
 import './LeaderboardPage.css'; 
 
 export default function LeaderboardPage() {
@@ -31,35 +32,43 @@ export default function LeaderboardPage() {
         fetchLeaderboard();
     }, [token, timeframe]);
 
-
-    console.log("My User ID:", user?.id, typeof user?.id);
-console.log("Leader ID:", leaders[0]?.id, typeof leaders[0]?.id);
-
     return (
         <Container className="leaderboard-container">
-            <div className="leaderboard-header">
-                <Button variant="link" onClick={() => navigate(-1)} className="back-button">
-                    ← Back
-                </Button>
+            {/* Vissza gomb a navigációhoz - Beillesztve */}
+            <div className="w-100 mb-4 d-flex justify-content-start">
+                <button 
+                    className="cta-button secondary" 
+                    onClick={() => navigate('/main')}
+                    style={{ 
+                        color: '#8b5cf6', 
+                        borderColor: '#8b5cf6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '10px 20px' 
+                    }}
+                >
+                    <FaArrowLeft className="me-2" style={{ color: '#8b5cf6' }} />
+                
+                </button>
+            </div>
+
+            <div className="leaderboard-header d-flex justify-content-center">
                 <h1 className="leaderboard-title">🏆 Leaderboard</h1>
-                <div style={{width: '80px'}}></div>
             </div>
 
             <div className="leaderboard-toggle">
-                <Button 
-                    variant={timeframe === 'weekly' ? 'primary' : 'outline-primary'} 
+                <button 
+                    className={`toggle-btn ${timeframe === 'weekly' ? 'btn-primary' : ''}`}
                     onClick={() => setTimeframe('weekly')}
-                    className="toggle-btn"
                 >
                     This Week
-                </Button>
-                <Button 
-                    variant={timeframe === 'global' ? 'primary' : 'outline-primary'} 
+                </button>
+                <button 
+                    className={`toggle-btn ${timeframe === 'global' ? 'btn-primary' : ''}`}
                     onClick={() => setTimeframe('global')}
-                    className="toggle-btn"
                 >
                     All Time
-                </Button>
+                </button>
             </div>
 
             {loading ? (
@@ -107,4 +116,3 @@ console.log("Leader ID:", leaders[0]?.id, typeof leaders[0]?.id);
         </Container>
     );
 }
-

@@ -1,136 +1,182 @@
-/* LeaderboardPage.css */
+/* =========================================
+   LEADERBOARD SPECIFIKUS DESIGN
+   ========================================= */
 
 .leaderboard-container {
-    max-width: 800px;
-    margin-top: 3rem;
+    max-width: 900px;
+    margin-top: 2rem;
+    padding-bottom: 5rem;
 }
 
+/* --- Fejléc és Cím --- */
 .leaderboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.back-button {
-    text-decoration: none;
-    font-size: 1.25rem;
-    padding: 0;
+    margin-bottom: 2rem;
 }
 
 .leaderboard-title {
+    font-size: 2.5rem;
     font-weight: 800;
     margin: 0;
+    background: linear-gradient(135deg, #7c3aed, #db2777);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-/* Toggle Buttons */
+.dark-mode .leaderboard-title {
+    background: linear-gradient(135deg, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.back-button {
+    color: #7c3aed !important;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+}
+
+/* --- Toggle Buttons (A főoldali CTA stílusában) --- */
 .leaderboard-toggle {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    background: rgba(124, 58, 237, 0.1);
+    padding: 6px;
+    border-radius: 50px;
+    width: fit-content;
+    margin: 0 auto 2.5rem auto;
 }
 
 .toggle-btn {
+    border: none !important;
+    padding: 10px 25px;
+    border-radius: 50px !important;
     font-weight: 700;
-    padding: 0.5rem 1.5rem;
-    border-radius: 50px;
-    min-width: 120px;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease;
+    background: transparent !important;
+    color: #7c3aed !important;
 }
 
-.toggle-btn:hover {
-    transform: translateY(-2px);
+/* Aktív gomb gradienssel */
+.toggle-btn.btn-primary {
+    background: linear-gradient(90deg, #8b5cf6, #ec4899) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
-/* Card & Table */
+.dark-mode .leaderboard-toggle {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- A Kártya és Táblázat --- */
 .leaderboard-card {
-    border-radius: 20px;
+    border-radius: 24px !important;
+    border: none !important;
     overflow: hidden;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
-.leaderboard-table th {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    font-weight: 700;
+.light-mode .leaderboard-card {
+    background: #ffffff !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #f1f5f9 !important;
+}
+
+.dark-mode .leaderboard-card {
+    background: rgba(47, 64, 92, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Táblázat fejléce */
+.leaderboard-table thead th {
+    background: transparent;
+    border-bottom: 2px solid rgba(124, 58, 237, 0.1);
+    color: #64748b;
     text-transform: uppercase;
-    font-size: 0.85rem;
-    color: #6c757d;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 1.5rem;
+}
+
+.dark-mode .leaderboard-table thead th {
+    color: #94a3b8;
+}
+
+/* Sorok stílusa */
+.leaderboard-table tbody tr {
+    transition: all 0.2s ease;
 }
 
 .leaderboard-table td {
+    padding: 1.2rem !important;
     vertical-align: middle;
-    padding: 1rem;
 }
 
-/* Rank Column */
-.rank-cell {
-    font-size: 1.25rem;
-    width: 80px;
-}
-
-/* Learner Column */
-.learner-cell {
-    text-align: left;
-    padding-left: 1.5rem;
-}
-
-.learner-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.avatar-img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+/* Felhasználói avatar */
+.avatar-img, .avatar-placeholder {
+    width: 45px;
+    height: 45px;
+    border-radius: 14px; /* Modernebb, lekerekített négyzet */
+    margin-right: 12px;
 }
 
 .avatar-placeholder {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #6c757d;
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
     color: white;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.learner-info span {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+/* --- Rangok (🥇🥈🥉) --- */
+.rank-cell {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #64748b;
+}
+
+/* --- XP cella --- */
+.xp-cell {
+    font-weight: 800;
+    color: #7c3aed !important;
+}
+
+.dark-mode .xp-cell {
+    color: #a78bfa !important;
+}
+
+/* --- Aktuális felhasználó kiemelése --- */
+.current-user-row {
+    background: rgba(139, 92, 246, 0.08) !important;
+}
+
+.dark-mode .current-user-row {
+    background: rgba(139, 92, 246, 0.15) !important;
 }
 
 .current-user-badge {
-    background-color: var(--primary-color, #0d6efd); /* Adjust to your brand color */
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: bold;
-    margin-left: 0.5rem;
-    text-transform: uppercase;
+    background: linear-gradient(90deg, #8b5cf6, #ec4899);
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 50px;
+    margin-left: 10px;
 }
 
-/* Highlight Row for Current User */
-.current-user-row {
-    background-color: #e7f1ff !important; /* Light blue */
-    font-weight: bold;
-    border-left: 4px solid #0d6efd;
+/* Spinner */
+.text-primary {
+    color: #8b5cf6 !important;
 }
 
-/* XP Column */
-.xp-cell {
-    font-weight: 800;
-    color: #f59e0b; /* Amber/Gold */
-    font-size: 1.1rem;
-    width: 120px;
-}
 
-.spacer-bottom {
-    height: 100px;
-}

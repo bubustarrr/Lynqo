@@ -112,6 +112,7 @@ export default function MerchPage() {
   return (
     <div className="news-page-container">
       
+
       {/* Vissza gomb a navigációhoz */}
       <div className="w-100 px-4 pt-4" style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <button 
@@ -122,11 +123,12 @@ export default function MerchPage() {
           <FaArrowLeft className="me-2 mb-1" style={{ color: '#8b5cf6' }} /> 
         </button>
       </div>
-
       <header className="news-header mt-3">
+        
         <h1 className="news-hero-title">Lynqo Store</h1>
         <p className="news-subtitle">Exclusive gear for language lovers</p>
       </header>
+      
 
       <div className="news-layout">
         <main className="shop-main-content">

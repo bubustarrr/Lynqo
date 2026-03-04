@@ -87,3 +87,9 @@ font-size: 0.85rem;
 font-size: 1rem;
 }
 }
+
+.socials {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; 
+}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Table, Card, Spinner } from 'react-bootstrap'; // Kivettem a felesleges Button-t a bootstrap-ből, mert egyedi gombot használsz
+import { Container, Table, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa'; // Ne felejtsd el az ikont!
+import { FaArrowLeft } from 'react-icons/fa';
 import './LeaderboardPage.css'; 
 
 export default function LeaderboardPage() {
@@ -34,21 +34,19 @@ export default function LeaderboardPage() {
 
     return (
         <Container className="leaderboard-container">
-            {/* Vissza gomb a navigációhoz - Beillesztve */}
+            {/* Vissza gomb */}
             <div className="w-100 mb-4 d-flex justify-content-start">
                 <button 
                     className="cta-button secondary" 
                     onClick={() => navigate('/main')}
                     style={{ 
-                        color: '#8b5cf6', 
-                        borderColor: '#8b5cf6',
                         display: 'flex',
                         alignItems: 'center',
                         padding: '10px 20px' 
                     }}
                 >
-                    <FaArrowLeft className="me-2" style={{ color: '#8b5cf6' }} />
-                
+                    <FaArrowLeft className="me-2" />
+                    Back
                 </button>
             </div>
 
@@ -95,10 +93,10 @@ export default function LeaderboardPage() {
                                                 <img src={learner.profilePicUrl} alt="" className="avatar-img" />
                                             ) : (
                                                 <div className="avatar-placeholder">
-                                                    {learner.username[0].toUpperCase()}
+                                                    {(learner.displayName || learner.username)[0].toUpperCase()}
                                                 </div>
                                             )}
-                                            <span>{learner.displayName || learner.username}</span>
+                                            <span className="learner-name">{learner.displayName || learner.username}</span>
                                             {learner.username === user?.username && <span className="current-user-badge">YOU</span>}
                                         </div>
                                     </td>

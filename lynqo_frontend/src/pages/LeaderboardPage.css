@@ -26,24 +26,14 @@
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
+/* Sötét módos cím */
 .dark-mode .leaderboard-title {
     background: linear-gradient(135deg, #a78bfa, #f472b6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-.back-button {
-    color: #7c3aed !important;
-    font-weight: 700;
-    text-decoration: none;
-    transition: transform 0.2s ease;
-}
-
-.back-button:hover {
-    transform: translateX(-5px);
-}
-
-/* --- Toggle Buttons (A főoldali CTA stílusában) --- */
+/* --- Toggle Buttons --- */
 .leaderboard-toggle {
     display: flex;
     justify-content: center;
@@ -64,7 +54,6 @@
     color: #7c3aed !important;
 }
 
-/* Aktív gomb gradienssel */
 .toggle-btn.btn-primary {
     background: linear-gradient(90deg, #8b5cf6, #ec4899) !important;
     color: white !important;
@@ -75,7 +64,7 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* --- A Kártya és Táblázat --- */
+/* --- A Kártya és Táblázat (Téma javítás) --- */
 .leaderboard-card {
     border-radius: 24px !important;
     border: none !important;
@@ -84,19 +73,39 @@
     backdrop-filter: blur(10px);
 }
 
+/* Világos mód */
 .light-mode .leaderboard-card {
     background: #ffffff !important;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05) !important;
     border: 1px solid #f1f5f9 !important;
 }
 
+.light-mode .leaderboard-table {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+}
+
+/* Sötét mód - Itt volt a hiba */
 .dark-mode .leaderboard-card {
-    background: rgba(47, 64, 92, 0.7) !important;
+    background: rgba(30, 41, 59, 0.8) !important; /* Sötétebb alap */
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Táblázat fejléce */
+.dark-mode .leaderboard-table {
+    background-color: transparent !important;
+    color: #f1f5f9 !important; /* Világos szöveg */
+}
+
+/* Kényszerítjük a Bootstrap cellákat a sötét módra */
+.dark-mode .leaderboard-table td, 
+.dark-mode .leaderboard-table th,
+.dark-mode .leaderboard-table tr {
+    background-color: transparent !important;
+    color: inherit !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 .leaderboard-table thead th {
     background: transparent;
     border-bottom: 2px solid rgba(124, 58, 237, 0.1);
@@ -107,44 +116,32 @@
     padding: 1.5rem;
 }
 
-.dark-mode .leaderboard-table thead th {
-    color: #94a3b8;
+/* --- Felhasználói avatar és Név --- */
+.learner-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
 }
 
-/* Sorok stílusa */
-.leaderboard-table tbody tr {
-    transition: all 0.2s ease;
-}
-
-.leaderboard-table td {
-    padding: 1.2rem !important;
-    vertical-align: middle;
-}
-
-/* Felhasználói avatar */
 .avatar-img, .avatar-placeholder {
     width: 45px;
     height: 45px;
-    border-radius: 14px; /* Modernebb, lekerekített négyzet */
-    margin-right: 12px;
+    border-radius: 14px;
+    flex-shrink: 0;
 }
 
 .avatar-placeholder {
     background: linear-gradient(135deg, #8b5cf6, #ec4899);
     color: white;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.learner-info span {
+.learner-name {
     font-weight: 600;
-    font-size: 1.05rem;
-}
-
-/* --- Rangok (🥇🥈🥉) --- */
-.rank-cell {
-    font-weight: 800;
-    font-size: 1.2rem;
-    color: #64748b;
 }
 
 /* --- XP cella --- */
@@ -163,20 +160,18 @@
 }
 
 .dark-mode .current-user-row {
-    background: rgba(139, 92, 246, 0.15) !important;
+    background: rgba(139, 92, 246, 0.2) !important; /* Erősebb kiemelés sötétben */
 }
 
 .current-user-badge {
     background: linear-gradient(90deg, #8b5cf6, #ec4899);
+    color: white;
     font-size: 0.65rem;
     padding: 3px 8px;
     border-radius: 50px;
-    margin-left: 10px;
+    font-weight: 800;
 }
 
-/* Spinner */
-.text-primary {
-    color: #8b5cf6 !important;
+.spacer-bottom {
+    height: 50px;
 }
-
-

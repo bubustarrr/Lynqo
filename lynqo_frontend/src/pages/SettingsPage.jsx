@@ -83,7 +83,8 @@ export default function SettingsPage() {
     };
 
     fetchSettings();
-  }, [token, language, theme, setLanguage, toggleTheme]);
+  // JAVÍTVA: Csak a token maradt a dependency array-ben, így a téma váltásakor nem fut le újra a lekérdezés!
+  }, [token]); 
 
 
   // 2. BEÁLLÍTÁSOK MENTÉSE AZ ADATBÁZISBA (PUT)

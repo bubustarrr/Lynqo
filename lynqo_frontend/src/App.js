@@ -26,6 +26,7 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
 // AZ ÚJ ELŐFIZETÉS OLDAL IMPORTJA:
 import SubscriptionPage from './pages/SubscriptionPage'; 
+import ProfileEditPage from './pages/ProfileEditPage';
 
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
@@ -82,12 +83,14 @@ function AppContent() {
           <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
           <Route path="/pick-language" element={<ProtectedRoute><LanguageSelectionPage /></ProtectedRoute>} />
           <Route path="/news" element={<NewsPage />} />
+          <Route path="/edit-profile" element={<ProtectedRoute><ProfileEditPage /></ProtectedRoute>} />
           
           {/* --- SHOP SZEKCIÓ --- */}
           <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
           {/* JAVÍTVA: Helyes URL és a helyes SubscriptionPage komponens */}
           <Route path="/shop/subscriptions" element={<ProtectedRoute><SubscriptionPage /></ProtectedRoute>} />
           <Route path="/shop/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />
+          
 
           {/* Fallback (ha valaki nem létező URL-t ír be) */}
           <Route path="/" element={<Navigate to="/main" replace />} />

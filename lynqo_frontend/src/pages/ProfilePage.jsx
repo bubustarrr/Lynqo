@@ -231,7 +231,13 @@ export default function ProfilePage() {
               <p className="profile-email-display">{p.email}</p>
               <p className="member-since">{t('profile.member_since')}: {p.createdAt}</p>
             </div>
-            <button className="settings-btn" onClick={() => navigate('/settings')}>⚙️ {t('profile.settings_btn')}</button>
+            {/* ProfilePage.jsx - A régi settings-btn helyett: */}
+              <button 
+               className="settings-btn" 
+                onClick={() => navigate('/edit-profile')}
+              >
+                  ✏️ {t('Edit Profile') || 'profile.edit_profile_btn'}
+                </button>
           </div>
 
           <h2 className="column-title">{t('profile.achievements_title')}</h2>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // 1. IMPORT THIS
+import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -8,14 +8,11 @@ import './NavBar.css';
 
 export default function NavBar() {
   const { user, logout } = useContext(AuthContext);
-  const { language, setLanguage, translations } = useLanguage(); // Keeps your old logic
-  const { i18n } = useTranslation(); // 2. GET THE TRANSLATOR INSTANCE
+  const { language, setLanguage, translations } = useLanguage();
+  const { i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  // If you want to use the new translations in the Navbar too, 
-  // you can use const { t } = useTranslation();
-  // For now, we keep your old 't' to not break the navbar layout.
   const t = translations[language] || translations['en'] || {};
   
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -41,17 +38,9 @@ export default function NavBar() {
     navigate('/main');
   };
 
-  // 3. UPDATED LANGUAGE HANDLER
   const handleLanguageChange = (langCode) => {
-    setLanguage(langCode);         // Updates your custom Context
-    i18n.changeLanguage(langCode); // Updates react-i18next (Fixes ProfilePage)
-    setActiveDropdown(null);
-  };
-
-  const handleThemeChange = (selectedMode) => {
-    if (theme !== selectedMode) {
-      toggleTheme();
-    }
+    setLanguage(langCode);
+    i18n.changeLanguage(langCode);
     setActiveDropdown(null);
   };
 
@@ -96,20 +85,24 @@ export default function NavBar() {
 
       {/* RIGHT SIDE */}
       <div className="navbar-right">
-        <div className="dropdown-container">
-          <button 
-            className={`nav-btn nav-btn-icon ${activeDropdown === 'theme' ? 'active' : ''}`} 
-            onClick={() => toggleDropdown('theme')} 
-          >
-            {theme === 'light' ? '☀️' : '🌙'} <span className="arrow-mini">▼</span>
-          </button>
-          
-          <div className={`dropdown-menu right-aligned ${activeDropdown === 'theme' ? 'show' : ''}`}>
-            <button className={`dropdown-item ${theme === 'light' ? 'active-item' : ''}`} onClick={() => handleThemeChange('light')}>☀️ Light Mode</button>
-            <button className={`dropdown-item ${theme === 'dark' ? 'active-item' : ''}`} onClick={() => handleThemeChange('dark')}>🌑 Dark Mode</button>
-          </div>
+        
+        {/* ÚJ THEME SWITCH */}
+        <div className="theme-switch-wrapper">
+          <label className="theme-switch">
+            <input 
+              type="checkbox" 
+              checked={theme === 'dark'} 
+              onChange={toggleTheme} 
+            />
+            <div className="theme-switch-slider">
+              <span className="switch-icon sun">☀️</span>
+              <span className="switch-icon moon">🌙</span>
+              <div className="switch-thumb"></div>
+            </div>
+          </label>
         </div>
 
+        {/* NYELVVÁLASZTÓ */}
         <div className="dropdown-container">
           <button 
             className={`nav-btn nav-btn-icon ${activeDropdown === 'lang' ? 'active' : ''}`} 

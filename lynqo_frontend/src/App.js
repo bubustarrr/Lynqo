@@ -14,7 +14,6 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
 import NavBar from './components/common/NavBar';
-import ShopPage from './pages/ShopPage';
 import NewsPage from './pages/NewsPage';
 import SettingsPage from './pages/SettingsPage';
 import Footer from "./components/common/Footer";
@@ -27,6 +26,8 @@ import ProfilePage from './pages/ProfilePage';
 // AZ ÚJ ELŐFIZETÉS OLDAL IMPORTJA:
 import SubscriptionPage from './pages/SubscriptionPage'; 
 import ProfileEditPage from './pages/ProfileEditPage';
+import ShopLandingPage from './pages/ShopLandingPage';
+import PowerupsPage from './pages/PowerUpsPage';
 
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
@@ -86,7 +87,8 @@ function AppContent() {
           <Route path="/edit-profile" element={<ProtectedRoute><ProfileEditPage /></ProtectedRoute>} />
           
           {/* --- SHOP SZEKCIÓ --- */}
-          <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
+          <Route path="/shop" element={<ProtectedRoute><ShopLandingPage /></ProtectedRoute>} />
+          <Route path="/shop/powerups" element={<ProtectedRoute><PowerupsPage /></ProtectedRoute>} />
           {/* JAVÍTVA: Helyes URL és a helyes SubscriptionPage komponens */}
           <Route path="/shop/subscriptions" element={<ProtectedRoute><SubscriptionPage /></ProtectedRoute>} />
           <Route path="/shop/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />

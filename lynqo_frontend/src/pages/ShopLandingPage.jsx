@@ -1,13 +1,12 @@
 import { Button } from "react-bootstrap";
-import { FaCrown, FaShoppingBag } from "react-icons/fa";
+import { FaCrown, FaShoppingBag, FaBolt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import './ShopPage.css';
+import './ShopLandingPage.css';
 
 export default function ShopLandingPage() {
   const navigate = useNavigate();
 
   return (
-    
     <div className="shop-landing-wrapper">
       <div className="gradient-bg d-flex align-items-center justify-content-center min-vh-100 p-4">
         <div className="content-wrapper text-center text-white">
@@ -15,11 +14,10 @@ export default function ShopLandingPage() {
           <p className="lead mb-5 px-4 drop-shadow fs-4">
             Upgrade your learning experience or show your love for Lynqo with exclusive merchandise.
           </p>
-          
 
           <div className="btn-group-wrapper mb-5">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="landing-btn subscription-btn me-md-3 mb-3 mb-md-0 px-5 py-3"
               onClick={() => navigate('/shop/subscriptions')}
             >
@@ -27,13 +25,22 @@ export default function ShopLandingPage() {
               Subscriptions
             </Button>
 
-            <Button 
-              size="lg" 
-              className="landing-btn shop-btn px-5 py-3"
+            <Button
+              size="lg"
+              className="landing-btn shop-btn me-md-3 mb-3 mb-md-0 px-5 py-3"
               onClick={() => navigate('/shop/merch')}
             >
               <FaShoppingBag className="fs-3 me-2 mb-1" />
               Online Shop
+            </Button>
+
+            <Button
+              size="lg"
+              className="landing-btn powerups-btn px-5 py-3"
+              onClick={() => navigate('/shop/powerups')}
+            >
+              <FaBolt className="fs-3 me-2 mb-1" />
+              Power-ups
             </Button>
           </div>
 

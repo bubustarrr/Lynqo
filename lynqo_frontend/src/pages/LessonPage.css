@@ -1,0 +1,190 @@
+/* LessonPage.css */
+
+/* --- LÁTVÁNYOS ANIMÁCIÓK --- */
+
+/* Kérdés beúszása - Rugós, elegáns hatás */
+@keyframes slideInRightSpec {
+  0% { opacity: 0; transform: translateX(50px) scale(0.95); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+.animate-slide-in {
+  animation: slideInRightSpec 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Lecke befejezése - Hatalmas felugrás kis forgással */
+@keyframes grandPopIn {
+  0% { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+  70% { transform: scale(0.95) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+.animate-pop-in {
+  animation: grandPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Hibás válasz - Erőteljesebb rázkódás */
+@keyframes violentShake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-8px) rotate(-3deg); }
+  30% { transform: translateX(8px) rotate(3deg); }
+  45% { transform: translateX(-8px) rotate(-3deg); }
+  60% { transform: translateX(8px) rotate(3deg); }
+  75% { transform: translateX(-4px) rotate(-1deg); }
+}
+.animate-shake {
+  animation: violentShake 0.5s ease-in-out forwards;
+}
+
+/* Helyes válasz - Zöld pulzálás és ugrás (Glow effect) */
+@keyframes happyBounceGlow {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(34, 197, 94, 0); }
+  30% { transform: scale(1.05); box-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+  50% { transform: scale(0.95); }
+  70% { transform: scale(1.02); }
+  100% { transform: scale(1); box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
+}
+.animate-bounce-glow {
+  animation: happyBounceGlow 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  z-index: 10;
+  position: relative;
+}
+
+/* Footer visszajelzés - Rugós felugrás */
+@keyframes slideUpBounce {
+  0% { opacity: 0; transform: translateY(40px); }
+  70% { transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slideUpBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+
+/* --- SÖTÉT MÓD (DARK MODE) ÉS DINAMIKUS STÍLUSOK --- */
+
+/* 1. Opciók Alapállapota (Light Mode) */
+.option-card {
+  border: 2px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #1e293b;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.option-card:hover:not(.disabled-option) {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+/* Opciók Alapállapota (Dark Mode) */
+.dark-mode .option-card {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+.dark-mode .option-card:hover:not(.disabled-option) {
+  border-color: #475569;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}
+
+/* 2. Kiválasztott Állapot */
+.option-card.option-selected {
+  border-color: #3b82f6; 
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+.dark-mode .option-card.option-selected {
+  border-color: #3b82f6;
+  background-color: #172554;
+  color: #93c5fd;
+}
+
+/* 3. Helyes Válasz Állapot */
+.option-card.option-correct,
+.lesson-input.option-correct {
+  border-color: #22c55e !important;
+  background-color: #dcfce7 !important;
+  color: #166534 !important;
+}
+.dark-mode .option-card.option-correct,
+.dark-mode .lesson-input.option-correct {
+  border-color: #22c55e !important;
+  background-color: #052e16 !important;
+  color: #86efac !important;
+}
+
+/* 4. Hibás Válasz Állapot */
+.option-card.option-wrong,
+.lesson-input.option-wrong {
+  border-color: #ef4444 !important;
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+}
+.dark-mode .option-card.option-wrong,
+.dark-mode .lesson-input.option-wrong {
+  border-color: #ef4444 !important;
+  background-color: #450a0a !important;
+  color: #fca5a5 !important;
+}
+
+/* --- SZÖVEGBEVITELI MEZŐ (INPUT) JAVÍTÁS --- */
+.lesson-input {
+  border: 2px solid #e2e8f0;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  transition: all 0.3s ease;
+}
+.lesson-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+.dark-mode .lesson-input {
+  background-color: #1e293b !important;
+  border-color: #334155;
+  color: #f8fafc !important;
+}
+.dark-mode .lesson-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
+}
+.dark-mode .lesson-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* --- FOOTER SÖTÉT MÓD JAVÍTÁS --- */
+.feedback-footer {
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+  background-color: #ffffff;
+  border-top: 2px solid #e2e8f0;
+}
+.dark-mode .feedback-footer {
+  background-color: #0f172a;
+  border-top-color: #1e293b;
+}
+
+/* Footer Helyes */
+.feedback-footer.correct-bg { background-color: #dcfce7; border-top-color: #22c55e; }
+.dark-mode .feedback-footer.correct-bg { background-color: #052e16; border-top-color: #22c55e; }
+
+/* Footer Hibás */
+.feedback-footer.wrong-bg { background-color: #fee2e2; border-top-color: #ef4444; }
+.dark-mode .feedback-footer.wrong-bg { background-color: #450a0a; border-top-color: #ef4444; }
+
+/* Szövegszínek javítása sötét módú footerben */
+.dark-mode .feedback-footer.correct-bg h4 { color: #86efac !important; }
+.dark-mode .feedback-footer.wrong-bg h4,
+.dark-mode .feedback-footer.wrong-bg div { color: #fca5a5 !important; }
+
+/* --- KÁRTYA SZÖVEGEK JAVÍTÁSA SÖTÉT MÓDBAN --- */
+.dark-mode .dashboard-card h1,
+.dark-mode .dashboard-card h3 {
+  color: #f8fafc !important;
+}
+.dark-mode .dashboard-card .text-muted {
+  color: #94a3b8 !important; 
+}
+
+/* Tiltott kattintás visszajelzés alatt */
+.disabled-option {
+  cursor: default !important;
+}

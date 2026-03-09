@@ -1,24 +1,34 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Table, Card, Spinner } from 'react-bootstrap';
+import { Container, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import './LeaderboardPage.css'; 
+import './LeaderboardPage.css';
 
 export default function LeaderboardPage() {
-    const { token, user } = useContext(AuthContext);
+    const { token, user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const [leaders, setLeaders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [timeframe, setTimeframe] = useState('weekly');
+    const [imgErrors, setImgErrors] = useState({});
 
     useEffect(() => {
+        if (!token) return;
+
         const fetchLeaderboard = async () => {
             setLoading(true);
             try {
                 const res = await fetch(`https://localhost:7118/api/Leaderboard/${timeframe}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
+
+                if (res.status === 401) {
+                    logout();
+                    navigate('/login');
+                    return;
+                }
+
                 if (res.ok) {
                     const data = await res.json();
                     setLeaders(data);
@@ -29,21 +39,27 @@ export default function LeaderboardPage() {
                 setLoading(false);
             }
         };
+
         fetchLeaderboard();
-    }, [token, timeframe]);
+    }, [token, timeframe, logout, navigate]);
+
+    const getRankDisplay = (rank) => {
+        if (rank === 1) return '🥇';
+        if (rank === 2) return '🥈';
+        if (rank === 3) return '🥉';
+        return rank;
+    };
+
+    const isCurrentUser = (learner) =>
+        learner.username?.toLowerCase() === user?.username?.toLowerCase();
 
     return (
         <Container className="leaderboard-container">
-            {/* Vissza gomb */}
             <div className="w-100 mb-4 d-flex justify-content-start">
-                <button 
-                    className="cta-button secondary" 
-                    onClick={() => navigate('/main')}
-                    style={{ 
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '10px 20px' 
-                    }}
+                <button
+                    className="cta-button secondary"
+                    onClick={() => navigate(-1)}
+                    style={{ display: 'flex', alignItems: 'center', padding: '10px 20px' }}
                 >
                     <FaArrowLeft className="me-2" />
                     Back
@@ -55,13 +71,13 @@ export default function LeaderboardPage() {
             </div>
 
             <div className="leaderboard-toggle">
-                <button 
+                <button
                     className={`toggle-btn ${timeframe === 'weekly' ? 'btn-primary' : ''}`}
                     onClick={() => setTimeframe('weekly')}
                 >
                     This Week
                 </button>
-                <button 
+                <button
                     className={`toggle-btn ${timeframe === 'global' ? 'btn-primary' : ''}`}
                     onClick={() => setTimeframe('global')}
                 >
@@ -73,7 +89,7 @@ export default function LeaderboardPage() {
                 <div className="text-center p-5"><Spinner animation="border" variant="primary" /></div>
             ) : (
                 <Card className="leaderboard-card">
-                    <Table hover className="leaderboard-table mb-0 text-center">
+                    <table className="leaderboard-table mb-0 text-center w-100">
                         <thead>
                             <tr>
                                 <th>Rank</th>
@@ -82,32 +98,51 @@ export default function LeaderboardPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {leaders.map((learner) => (
-                                <tr key={learner.id} className={learner.username === user?.username ? "current-user-row" : ""}>
-                                    <td className="rank-cell">
-                                        {learner.rank === 1 ? '🥇' : learner.rank === 2 ? '🥈' : learner.rank === 3 ? '🥉' : learner.rank}
+                            {leaders.length === 0 ? (
+                                <tr>
+                                    <td colSpan="3" className="p-5 text-muted">
+                                        No data yet. Start learning!
                                     </td>
-                                    <td className="learner-cell">
-                                        <div className="learner-info">
-                                            {learner.profilePicUrl ? (
-                                                <img src={learner.profilePicUrl} alt="" className="avatar-img" />
-                                            ) : (
-                                                <div className="avatar-placeholder">
-                                                    {(learner.displayName || learner.username)[0].toUpperCase()}
-                                                </div>
-                                            )}
-                                            <span className="learner-name">{learner.displayName || learner.username}</span>
-                                            {learner.username === user?.username && <span className="current-user-badge">YOU</span>}
-                                        </div>
-                                    </td>
-                                    <td className="xp-cell">{learner.xp} XP</td>
                                 </tr>
-                            ))}
-                            {leaders.length === 0 && (
-                                <tr><td colSpan="3" className="p-5 text-muted">No data yet. Start learning!</td></tr>
+                            ) : (
+                                leaders.map((learner) => (
+                                    <tr
+                                        key={learner.id}
+                                        className={isCurrentUser(learner) ? 'current-user-row' : ''}
+                                    >
+                                        <td className="rank-cell">
+                                            {getRankDisplay(learner.rank)}
+                                        </td>
+                                        <td className="learner-cell">
+                                            <div className="learner-info">
+                                                {learner.profilePicUrl && !imgErrors[learner.id] ? (
+                                                    <img
+                                                        src={
+                                                            learner.profilePicUrl.startsWith('http')
+                                                                ? learner.profilePicUrl
+                                                                : `https://localhost:7118/${learner.profilePicUrl}`
+                                                        }
+                                                        alt=""
+                                                        className="avatar-img"
+                                                        onError={() => setImgErrors(prev => ({ ...prev, [learner.id]: true }))}
+                                                    />
+                                                ) : (
+                                                    <div className="avatar-placeholder">
+                                                        {learner.displayName?.[0]?.toUpperCase() ?? '?'}
+                                                    </div>
+                                                )}
+                                                <span className="learner-name">{learner.displayName}</span>
+                                                {isCurrentUser(learner) && (
+                                                    <span className="current-user-badge">YOU</span>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td className="xp-cell">{learner.xp.toLocaleString()} XP</td>
+                                    </tr>
+                                ))
                             )}
                         </tbody>
-                    </Table>
+                    </table>
                 </Card>
             )}
             <div className="spacer-bottom"></div>

@@ -107,7 +107,8 @@ export default function ProfilePage() {
             streak: stats.streak ?? stats.Streak ?? 0,
             totalXp: stats.totalXp ?? stats.TotalXp ?? 0,
             hearts: stats.hearts ?? stats.Hearts ?? 5,
-            coins: stats.coins ?? stats.Coins ?? 0
+            coins: stats.coins ?? stats.Coins ?? 0,
+            isPremium: stats.isPremium ?? stats.IsPremium ?? (prev?.isPremium || false) // Biztosítjuk, hogy a prémium státusz frissüljön
           }));
         }
 
@@ -491,10 +492,19 @@ export default function ProfilePage() {
               )}
             </div>
 
-            <div className="promo-card mt-4">
-              <h3>{t('profile.promo.title')}</h3>
-              <button className="discord-btn">{t('profile.promo.btn')}</button>
-            </div>
+            {/* ITT VAN A FELTÉTEL: Csak akkor jelenik meg, ha nem prémium! */}
+            {!p.isPremium && (
+              <div className="promo-card mt-4">
+                <h3>{t('profile.promo.title')}</h3>
+                <button 
+                  className="discord-btn"
+                  onClick={() => navigate('/shop/subscriptions')} // Extraként hozzáadtam a kattintás funkciót is!
+                >
+                  {t('profile.promo.btn')}
+                </button>
+              </div>
+            )}
+
           </div>
         </aside>
       </div>

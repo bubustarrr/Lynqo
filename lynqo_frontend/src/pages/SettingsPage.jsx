@@ -21,11 +21,8 @@ export default function SettingsPage() {
     dailyGoalMinutes: 15, 
     uiLanguage: language, 
     soundEnabled: true, 
-    darkMode: theme === 'dark',
-    learningLanguage: 'English' // Csak frontend state, nincs a DB-ben
+    darkMode: theme === 'dark'
   });
-
-  const languages = ['English', 'Spanish', 'French', 'German', 'Italian'];
   
   const interfaceLanguages = [
     { code: 'en', name: 'English' },
@@ -55,7 +52,6 @@ export default function SettingsPage() {
         if (response.ok) {
           const dbSettings = await response.json();
           
-          // Megjegyzés: a C# alapértelmezetten camelCase formátumban küldi a JSON-t (pl. darkMode)
           setUserSettings(prev => ({
             ...prev,
             darkMode: dbSettings.darkMode ?? prev.darkMode,
@@ -65,7 +61,6 @@ export default function SettingsPage() {
             notificationsEnabled: dbSettings.notificationsEnabled ?? prev.notificationsEnabled
           }));
 
-          // Alkalmazzuk a nyelvet és a témát globálisan is, ha eltérnek
           if (dbSettings.uiLanguage && dbSettings.uiLanguage !== language) {
               setLanguage(dbSettings.uiLanguage);
           }
@@ -83,7 +78,6 @@ export default function SettingsPage() {
     };
 
     fetchSettings();
-  // JAVÍTVA: Csak a token maradt a dependency array-ben, így a téma váltásakor nem fut le újra a lekérdezés!
   }, [token]); 
 
 
@@ -92,9 +86,6 @@ export default function SettingsPage() {
     console.log("Jelenlegi token:", token);
     setSaving(true);
     
-    // Ezt a JSON-t küldjük a C# UserSettingsDTO-nak.
-    // A C# model binding nem érzékeny a kis/nagybetűkre, de a biztonság kedvéért 
-    // egyezik a DTO tulajdonságaival (PascalCase).
     const payloadToDatabase = {
       DarkMode: userSettings.darkMode,
       SoundEnabled: userSettings.soundEnabled,
@@ -164,39 +155,6 @@ export default function SettingsPage() {
       </div>
 
       <div className="settings-container">
-        
-        {/* LEARNING SECTION */}
-        <section className="settings-card">
-          <h2 className="card-title">📚 Learning</h2>
-          
-          <div className="setting-row">
-            <div className="setting-group">
-              <label>Daily Goal (Minutes)</label>
-              <select 
-                value={userSettings.dailyGoalMinutes}
-                onChange={(e) => setUserSettings({...userSettings, dailyGoalMinutes: parseInt(e.target.value)})}
-                className="select-field"
-              >
-                {dailyGoals.map(goal => (
-                  <option key={goal} value={goal}>{goal} min</option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="setting-group">
-              <label>Learning Language (WIP)</label>
-              <select 
-                value={userSettings.learningLanguage}
-                onChange={(e) => setUserSettings({...userSettings, learningLanguage: e.target.value})}
-                className="select-field"
-              >
-                {languages.map(lang => (
-                  <option key={lang} value={lang}>{lang}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </section>
 
         {/* INTERFACE & SYSTEM SECTION */}
         <section className="settings-card">
@@ -230,13 +188,14 @@ export default function SettingsPage() {
 
           <div className="setting-item">
             <div className="setting-info">
-              <span className="setting-label">Sound Effects</span>
-              <span className="setting-desc">Play sounds when completing lessons</span>
+              <span className="setting-label">
+                Sound Effects <span style={{fontSize: '0.75rem', backgroundColor: '#e2e8f0', color: '#64748b', padding: '2px 6px', borderRadius: '4px', marginLeft: '8px', fontWeight: 'bold'}}>Coming Soon</span>
+              </span>
+              <span className="setting-desc">Play sounds when completing lessons (Future update)</span>
             </div>
-            <label className="toggle-switch">
-              <input type="checkbox" checked={userSettings.soundEnabled}
-                onChange={(e) => setUserSettings({...userSettings, soundEnabled: e.target.checked})} />
-              <span className="toggle-slider"></span>
+            <label className="toggle-switch" style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+              <input type="checkbox" checked={false} disabled />
+              <span className="toggle-slider" style={{ cursor: 'not-allowed' }}></span>
             </label>
           </div>
         </section>
@@ -247,8 +206,8 @@ export default function SettingsPage() {
           
           <div className="setting-item">
             <div className="setting-info">
-              <span className="setting-label">Daily reminders</span>
-              <span className="setting-desc">Get notified to keep your streak alive</span>
+              <span className="setting-label">Email Reminders</span>
+              <span className="setting-desc">Receive daily email notifications to keep your streak alive</span>
             </div>
             <label className="toggle-switch">
               <input 

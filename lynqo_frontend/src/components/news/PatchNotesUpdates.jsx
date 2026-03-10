@@ -20,7 +20,7 @@ const updates = [
     version: "v2.3.5",
     title: "Shop Update",
     date: "2 weeks ago",
-    details: "New avatar frames added to the shop."
+    details: "New merchandise in the shop."
   }
 ];
 
@@ -39,11 +39,18 @@ const PatchNotesUpdates = () => {
             <p className="update-details">{update.details}</p>
           </div>
         ))}
-        
         <div className="promo-card">
           <h3>Join the Discord!</h3>
           <p>Chat with other learners and developers.</p>
-          <button className="discord-btn">Join Now</button>
+          {/* A button helyett <a> taget használunk a külső linkhez */}
+          <a 
+            href="https://discord.gg/QwGrCYnCAe" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="discord-btn"
+          >
+            Join Now
+          </a>
         </div>
       </div>
     </aside>

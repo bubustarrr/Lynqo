@@ -1,28 +1,31 @@
 import React from 'react';
+import paris from '../../assets/news/paris.png';
+import leaderb from '../../assets/news/leaderboard.png';
+import community from '../../assets/news/community.png';
 
 const mainNews = [
   {
     id: 1,
-    title: "New Language Added: Japanese 🇯🇵",
+    title: "New Language Added:  French FR",
     date: "February 8, 2026",
-    image: "https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&w=800&q=80", 
-    description: "We are excited to announce that Japanese is now available on Lynqo! Start learning Hiragana, Katakana, and Kanji today with our new interactive lessons.",
+    image: paris, 
+    description: "We are excited to announce that French is now available on Lynqo! Start learning today with our new interactive lessons.",
     tag: "New Content"
   },
   {
     id: 2,
     title: "Global Leaderboards are Live! 🏆",
     date: "February 1, 2026",
-    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
+    image: leaderb,
     description: "Compete with learners from around the world. Earn XP, climb the ranks, and show off your language mastery on the new global leaderboards.",
     tag: "Feature"
   },
   {
     id: 3,
-    title: "Community Events: Spring Challenge",
+    title: "Community Events Coming Soon...",
     date: "January 25, 2026",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
-    description: "Join the Spring Challenge to earn exclusive badges and merchandise discounts. Complete 30 lessons in 30 days!",
+    image: community,
+    description: "The community event is coming to you soon... Get ready to complete 30 lessons in 30 days!",
     tag: "Event"
   }
 ];

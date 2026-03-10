@@ -192,6 +192,9 @@
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.2s;
+  
+  text-decoration: none; /* ⬅️ EZ TÜNTETI EL AZ ALÁHÚZÁST */
+  
 }
 
 .discord-btn:hover {

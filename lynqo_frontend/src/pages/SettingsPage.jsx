@@ -6,9 +6,9 @@ import { Spinner } from 'react-bootstrap';
 import './SettingsPage.css';
 
 export default function SettingsPage() {
-  const { user, token } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { theme, toggleTheme } = useTheme();
-  const { language, setLanguage, translations } = useLanguage();
+  const { language, translations } = useLanguage();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -19,17 +19,9 @@ export default function SettingsPage() {
   const [userSettings, setUserSettings] = useState({
     notificationsEnabled: true,
     dailyGoalMinutes: 15, 
-    uiLanguage: language, 
     soundEnabled: true, 
     darkMode: theme === 'dark'
   });
-  
-  const interfaceLanguages = [
-    { code: 'en', name: 'English' },
-    { code: 'es', name: 'Español' },
-    { code: 'fr', name: 'Français' },
-    { code: 'de', name: 'Deutsch' }
-  ];
   
   const dailyGoals = [5, 10, 15, 20, 30, 45, 60];
 
@@ -57,13 +49,9 @@ export default function SettingsPage() {
             darkMode: dbSettings.darkMode ?? prev.darkMode,
             soundEnabled: dbSettings.soundEnabled ?? prev.soundEnabled,
             dailyGoalMinutes: dbSettings.dailyGoalMinutes ?? prev.dailyGoalMinutes,
-            uiLanguage: dbSettings.uiLanguage || prev.uiLanguage,
             notificationsEnabled: dbSettings.notificationsEnabled ?? prev.notificationsEnabled
           }));
 
-          if (dbSettings.uiLanguage && dbSettings.uiLanguage !== language) {
-              setLanguage(dbSettings.uiLanguage);
-          }
           if (dbSettings.darkMode && theme === 'light') {
               toggleTheme();
           } else if (!dbSettings.darkMode && theme === 'dark') {
@@ -90,7 +78,6 @@ export default function SettingsPage() {
       DarkMode: userSettings.darkMode,
       SoundEnabled: userSettings.soundEnabled,
       DailyGoalMinutes: userSettings.dailyGoalMinutes,
-      UiLanguage: userSettings.uiLanguage,
       NotificationsEnabled: userSettings.notificationsEnabled
     };
 
@@ -128,12 +115,6 @@ export default function SettingsPage() {
     }
   };
 
-  const handleInterfaceLanguageChange = (e) => {
-    const selectedLang = e.target.value;
-    setUserSettings({ ...userSettings, uiLanguage: selectedLang });
-    setLanguage(selectedLang);
-  };
-
   if (loading) {
       return (
           <div className="d-flex justify-content-center align-items-center vh-100">
@@ -160,21 +141,6 @@ export default function SettingsPage() {
         <section className="settings-card">
           <h2 className="card-title">🖥️ Interface & System</h2>
           
-          <div className="setting-row single-col">
-            <div className="setting-group">
-              <label>Interface Language</label>
-              <select 
-                value={userSettings.uiLanguage}
-                onChange={handleInterfaceLanguageChange}
-                className="select-field"
-              >
-                {interfaceLanguages.map(lang => (
-                  <option key={lang.code} value={lang.code}>{lang.name}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
           <div className="setting-item">
             <div className="setting-info">
               <span className="setting-label">Dark Mode</span>

@@ -2,7 +2,10 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Container, Card, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaHeart, FaBolt } from 'react-icons/fa';
+import { FaHeart, FaBolt } from 'react-icons/fa'; // FaArrowLeft kikerült
+
+// Importáljuk a közös Vissza gomb komponenst
+import BackButton from '../components/common/BackButton';
 
 const POWERUP_ITEMS = [
   {
@@ -104,11 +107,9 @@ export default function PowerupsPage() {
   return (
     <Container className="main-page-container mt-4" style={{ maxWidth: '600px' }}>
 
-      {/* Back */}
-      <div className="mb-4">
-        <Button variant="link" className="p-0 text-decoration-none" onClick={() => navigate(-1)}>
-          <FaArrowLeft className="me-2" />Back
-        </Button>
+      {/* Itt használjuk az új BackButton komponenst "Back" felirattal */}
+      <div className="mb-4"  >
+        <BackButton />
       </div>
 
       <h1 className="fw-bold mb-1 text-center">⚡ Power-ups</h1>

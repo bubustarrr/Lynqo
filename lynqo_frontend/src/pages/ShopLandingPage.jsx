@@ -3,11 +3,21 @@ import { FaCrown, FaShoppingBag, FaBolt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import './ShopLandingPage.css';
 
+// Itt is beimportáljuk az univerzális Vissza gombot
+import BackButton from '../components/common/BackButton';
+
 export default function ShopLandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="shop-landing-wrapper">
+    // A position-relative fontos ide, hogy ehhez képest tudjuk abszolút pozícionálni a gombot
+    <div className="shop-landing-wrapper position-relative">
+      
+      {/* A Vissza gomb konténere: kitűzzük a bal felső sarokba, és kap egy magas z-indexet, hogy biztosan kattintható legyen */}
+      <div className="position-absolute top-0 start-0 w-100 z-3">
+        <BackButton  wrapperClass="d-flex justify-content-start p-4" />
+      </div>
+
       <div className="gradient-bg d-flex align-items-center justify-content-center min-vh-100 p-4">
         <div className="content-wrapper text-center text-white">
           <h1 className="display-3 fw-bold mb-5 drop-shadow">Lynqo Store</h1>

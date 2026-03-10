@@ -1,12 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaCrown, FaCheck, FaArrowLeft, FaTimes } from "react-icons/fa";
+// A useNavigate kikerült innen
+import { FaCrown, FaCheck, FaTimes } from "react-icons/fa"; // FaArrowLeft kikerült
 import { AuthContext } from '../context/AuthContext';
 import { Spinner } from 'react-bootstrap';
 import './SubscriptionPage.css';
 
+// Itt importáljuk be az általad kért útvonalról a komponenst
+import BackButton from '../components/common/BackButton'; 
+
 export default function SubscriptionPage() {
-  const navigate = useNavigate();
   const { token } = useContext(AuthContext);
   
   // --- ÁLLAPOTOK ---
@@ -137,11 +139,8 @@ export default function SubscriptionPage() {
   return (
     <div className="main-page-container position-relative">
       
-      <div className="w-100 px-4 pt-4" style={{ maxWidth: '1200px' }}>
-        <button className="cta-button secondary" onClick={() => navigate('/shop')}>
-          <FaArrowLeft className="me-2 mb-1" style={{ color: '#8b5cf6' }} /> Vissza
-        </button>
-      </div>
+      {/* Itt használjuk az új gombot, átadva neki a "Vissza" szöveget és az útvonalat */}
+      <BackButton to="/shop"  />
 
       <div className="text-center mt-4 mb-5 px-3">
         <h1 className="hero-title">Válaszd ki a csomagodat</h1>

@@ -53,7 +53,9 @@ export default function Footer() {
           <Link to="/news">News</Link>
           <Link to="/shop">Shop</Link>
           <Link to="/leaderboard">Leaderboard</Link>
+          
         </div>
+        
 
 
         <div className="footer-col">

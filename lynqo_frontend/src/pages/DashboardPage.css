@@ -175,3 +175,36 @@
 .dark-mode .quick-link-btn:hover {
   color: #a78bfa !important;
 }
+
+.dashboard-quick-btn {
+  display: flex;
+  align-items: center;
+  background-color: #1e293b;
+  border: 2px solid #334155;
+  border-radius: 16px;
+  padding: 12px 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.dashboard-quick-btn:hover {
+  background-color: #334155;
+  transform: translateY(-2px);
+  border-color: #475569;
+}
+
+.btn-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  margin-right: 16px;
+}
+
+.btn-text {
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 1.1rem;
+}

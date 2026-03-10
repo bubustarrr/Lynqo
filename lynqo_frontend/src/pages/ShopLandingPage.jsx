@@ -46,7 +46,7 @@ export default function ShopLandingPage() {
 
             <Button
               size="lg"
-              className="landing-btn powerups-btn px-5 py-3"
+              className="landing-btn powerups-btn me-md-3 mb-3 mb-md-0 px-5 py-3"
               onClick={() => navigate('/shop/powerups')}
             >
               <FaBolt className="fs-3 me-2 mb-1" />

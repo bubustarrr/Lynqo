@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -20,34 +20,50 @@ export default function LanguageSelectionPage() {
   const [step, setStep] = useState(1);
   const [availableCourses, setAvailableCourses] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [sourceLanguages, setSourceLanguages] = useState([]);
 
-  // 1. Teljes lista ISO kódokkal
-  const sourceLanguages = [
-    { id: 1, name: 'English', code: 'US' },
-    { id: 2, name: 'Hungarian', code: 'HU' },
-    { id: 3, name: 'German', code: 'DE' },
-    { id: 4, name: 'French', code: 'FR' },
-    { id: 5, name: 'Spanish', code: 'ES' },
-    { id: 6, name: 'Italian', code: 'IT' },
-    { id: 7, name: 'Portuguese', code: 'PT' },
-    { id: 8, name: 'Dutch', code: 'NL' },
-    { id: 9, name: 'Polish', code: 'PL' },
-    { id: 10, name: 'Romanian', code: 'RO' },
-    { id: 11, name: 'Czech', code: 'CZ' },
-    { id: 12, name: 'Slovak', code: 'SK' },
-    { id: 13, name: 'Ukrainian', code: 'UA' },
-    { id: 14, name: 'Russian', code: 'RU' },
-    { id: 15, name: 'Turkish', code: 'TR' },
-    { id: 16, name: 'Arabic', code: 'SA' },
-    { id: 17, name: 'Chinese', code: 'CN' },
-    { id: 18, name: 'Japanese', code: 'JP' },
-    { id: 19, name: 'Korean', code: 'KR' }
-  ];
+  // Fetch languages from backend
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const res = await fetch('https://localhost:7118/api/Languages');
+        if (res.ok) {
+          const langs = await res.json();
+          setSourceLanguages(langs);
+        }
+      } catch (err) {
+        console.error("Failed to load languages", err);
+      }
+    };
+    fetchLanguages();
+  }, []);
 
-  // 2. Kurzus nyelv -> ISO kód segédfüggvény (minden id-t kezel)
-  const getFlagCode = (langId) => {
-    const lang = sourceLanguages.find(l => l.id === langId);
-    return lang ? lang.code : null;
+  const getFlagCode = (langCode) => {
+    if (!langCode) return null;
+    
+    const map = {
+      en: 'US',
+      hu: 'HU',
+      de: 'DE',
+      fr: 'FR',
+      es: 'ES',
+      it: 'IT',
+      pt: 'PT',
+      nl: 'NL',
+      pl: 'PL',
+      ro: 'RO',
+      cs: 'CZ',
+      sk: 'SK',
+      uk: 'UA',
+      ru: 'RU',
+      tr: 'TR',
+      ar: 'SA',
+      zh: 'CN',
+      ja: 'JP',
+      ko: 'KR',
+    };
+
+    return map[langCode.toLowerCase()] || langCode.toUpperCase();
   };
 
   const fetchCourses = async (id) => {
@@ -88,34 +104,39 @@ export default function LanguageSelectionPage() {
 
       {/* STEP 1: SELECT NATIVE LANGUAGE */}
       {step === 1 && (
-        <Row className="justify-content-center g-4">
-          {sourceLanguages.map((lang) => (
-            <Col key={lang.id} xs={6} md={3} lg={2}>
-              <Card 
-                className="h-100 shadow-sm border-0 custom-card transition-hover" 
-                onClick={() => fetchCourses(lang.id)}
-                style={{borderRadius: '16px', cursor: 'pointer', overflow: 'hidden'}}
-              >
-                <Card.Body className="d-flex flex-column align-items-center justify-content-center p-3">
-                  {/* ZÁSZLÓ KONTEINER - Nincs fehér csík */}
-                  <div className="mb-3" style={{ width: '70px', height: '50px', overflow: 'hidden', borderRadius: '6px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-                    <ReactCountryFlag 
-                      countryCode={lang.code} 
-                      svg 
-                      style={{
-                        width: '100%', 
-                        height: '100%', 
-                        display: 'block', 
-                        objectFit: 'cover'
-                      }} 
-                    />
-                  </div>
-                  <h6 className="fw-bold m-0">{lang.name}</h6>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+        <>
+          {sourceLanguages.length === 0 ? (
+             <div className="py-5"><Spinner animation="border" variant="primary"/></div>
+          ) : (
+            <Row className="justify-content-center g-4">
+              {sourceLanguages.map((lang) => (
+                <Col key={lang.id} xs={6} md={3} lg={2}>
+                  <Card 
+                    className="h-100 shadow-sm border-0 custom-card transition-hover" 
+                    onClick={() => fetchCourses(lang.id)}
+                    style={{borderRadius: '16px', cursor: 'pointer', overflow: 'hidden'}}
+                  >
+                    <Card.Body className="d-flex flex-column align-items-center justify-content-center p-3">
+                      <div className="mb-3" style={{ width: '70px', height: '50px', overflow: 'hidden', borderRadius: '6px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+                        <ReactCountryFlag 
+                          countryCode={getFlagCode(lang.code)} 
+                          svg 
+                          style={{
+                            width: '100%', 
+                            height: '100%', 
+                            display: 'block', 
+                            objectFit: 'cover'
+                          }} 
+                        />
+                      </div>
+                      <h6 className="fw-bold m-0">{lang.name}</h6>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          )}
+        </>
       )}
 
       {/* STEP 2: SELECT TARGET COURSE */}
@@ -135,54 +156,58 @@ export default function LanguageSelectionPage() {
           )}
 
           <Row className="justify-content-center g-4">
-            {availableCourses.map((course) => (
-              <Col key={course.id} xs={12} md={6} lg={5}>
-                <Card 
-                  className="h-100 shadow border-0 custom-card"
-                  style={{borderRadius: '24px', cursor: 'pointer'}}
-                  onClick={() => navigate(`/dashboard/${course.id}`)}
-                >
-                  <Card.Body className="p-4 text-start">
-                    <div className="d-flex align-items-center mb-4">
-                      {/* KÖR ALAKÚ ZÁSZLÓ - Nincs fehér csík */}
-                      <div className="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" 
-                           style={{width: '70px', height: '70px', overflow: 'hidden', border: '2px solid #f0f0f0'}}>
-                        {getFlagCode(course.targetLanguageId) ? (
-                          <ReactCountryFlag 
-                            countryCode={getFlagCode(course.targetLanguageId)} 
-                            svg 
-                            style={{
-                              width: '100%', 
-                              height: '100%', 
-                              display: 'block', 
-                              objectFit: 'cover'
-                            }} 
-                          />
-                        ) : (
-                          <Globe size={32} className="text-muted" />
-                        )}
-                      </div>
-                      <div>
-                        <h4 className="fw-bold m-0">{course.title}</h4>
-                        <div className="d-flex align-items-center text-muted mt-1">
-                          <Info size={14} className="me-1" />
-                          <small className="fw-bold text-uppercase" style={{fontSize: '0.65rem', letterSpacing: '1px'}}>Official Course</small>
+            {availableCourses.map((course) => {
+              // Find the target language object to get its code
+              const targetLang = sourceLanguages.find(l => l.id === course.targetLanguageId);
+              
+              return (
+                <Col key={course.id} xs={12} md={6} lg={5}>
+                  <Card 
+                    className="h-100 shadow border-0 custom-card"
+                    style={{borderRadius: '24px', cursor: 'pointer'}}
+                    onClick={() => navigate(`/dashboard/${course.id}`)}
+                  >
+                    <Card.Body className="p-4 text-start">
+                      <div className="d-flex align-items-center mb-4">
+                        <div className="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" 
+                             style={{width: '70px', height: '70px', overflow: 'hidden', border: '2px solid #f0f0f0'}}>
+                          {targetLang ? (
+                            <ReactCountryFlag 
+                              countryCode={getFlagCode(targetLang.code)} 
+                              svg 
+                              style={{
+                                width: '100%', 
+                                height: '100%', 
+                                display: 'block', 
+                                objectFit: 'cover'
+                              }} 
+                            />
+                          ) : (
+                            <Globe size={32} className="text-muted" />
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="fw-bold m-0">{course.title}</h4>
+                          <div className="d-flex align-items-center text-muted mt-1">
+                            <Info size={14} className="me-1" />
+                            <small className="fw-bold text-uppercase" style={{fontSize: '0.65rem', letterSpacing: '1px'}}>Official Course</small>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <p className="card-desc mb-4 text-secondary" style={{minHeight: '3rem'}}>
-                      {course.description || "Master this language with our expert-led curriculum."}
-                    </p>
-                    
-                    <Button className="w-100 cta-button primary py-3 fw-bold d-flex align-items-center justify-content-center gap-2" 
-                            style={{borderRadius: '14px', backgroundColor: '#58cc02', border: 'none'}}>
-                      Start Learning <ArrowRight size={20} />
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
+                      
+                      <p className="card-desc mb-4 text-secondary" style={{minHeight: '3rem'}}>
+                        {course.description || "Master this language with our expert-led curriculum."}
+                      </p>
+                      
+                      <Button className="w-100 cta-button primary py-3 fw-bold d-flex align-items-center justify-content-center gap-2" 
+                              style={{borderRadius: '14px', backgroundColor: '#58cc02', border: 'none'}}>
+                        Start Learning <ArrowRight size={20} />
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })}
           </Row>
           
           {!loading && (

@@ -2,8 +2,10 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Container, Card, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
 import './LeaderboardPage.css';
+
+// Itt importáljuk az univerzális Vissza gombot
+import BackButton from '../components/common/BackButton';
 
 export default function LeaderboardPage() {
     const { token, user, logout } = useContext(AuthContext);
@@ -55,16 +57,12 @@ export default function LeaderboardPage() {
 
     return (
         <Container className="leaderboard-container">
-            <div className="w-100 mb-4 d-flex justify-content-start">
-                <button
-                    className="cta-button secondary"
-                    onClick={() => navigate(-1)}
-                    style={{ display: 'flex', alignItems: 'center', padding: '10px 20px' }}
-                >
-                    <FaArrowLeft className="me-2" />
-                    Back
-                </button>
-            </div>
+            
+            {/* Itt hívjuk meg a gombot, balra igazítva, a "Back" szöveggel */}
+            <BackButton 
+                
+                wrapperClass="d-flex justify-content-start w-100 mb-4" 
+            />
 
             <div className="leaderboard-header d-flex justify-content-center">
                 <h1 className="leaderboard-title">🏆 Leaderboard</h1>

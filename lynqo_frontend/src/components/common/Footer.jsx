@@ -62,8 +62,8 @@ export default function Footer() {
           <h4>Follow Us</h4>
           <div className="socials">
             <a href="https://www.instagram.com/lynqo_/" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="#">Twitter</a>
-            <a href="#">TikTok</a>
+            <a href="https://discord.gg/QwGrCYnCAe" target="_blank" rel="noreferrer">Discord</a>
+            
           </div>
         </div>
       </div>

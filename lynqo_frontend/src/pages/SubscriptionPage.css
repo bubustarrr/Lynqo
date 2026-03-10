@@ -244,10 +244,27 @@
   background: #fff;
 }
 
+/* Sötét mód inputok - !important szükséges a Bootstrap felülírásához */
 .dark-mode .payment-modal-content .form-control {
-  background-color: #334155;
-  border-color: #475569;
-  color: #fff;
+  background-color: #334155 !important;
+  border-color: #475569 !important;
+  color: #ffffff !important;
+}
+
+/* Ha rákattint / fókuszál */
+.dark-mode .payment-modal-content .form-control:focus {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* Böngésző automatikus kitöltésének (autofill) javítása sötét módban */
+.dark-mode .payment-modal-content .form-control:-webkit-autofill,
+.dark-mode .payment-modal-content .form-control:-webkit-autofill:hover, 
+.dark-mode .payment-modal-content .form-control:-webkit-autofill:focus, 
+.dark-mode .payment-modal-content .form-control:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #334155 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .dark-mode .payment-modal-content .form-control:focus {

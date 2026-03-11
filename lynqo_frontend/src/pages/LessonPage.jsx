@@ -7,7 +7,8 @@ import './LessonPage.css';
 
 export default function LessonPage() {
   const { courseId, lessonId } = useParams();
-  const { token } = useContext(AuthContext);
+  // Assuming your AuthContext provides the token and a user object containing hearts/isPremium
+  const { token, user } = useContext(AuthContext);
   const navigate = useNavigate();
   
   // State
@@ -22,6 +23,7 @@ export default function LessonPage() {
   const [feedback, setFeedback] = useState(null);
   const [hearts, setHearts] = useState(5);
   const [isFinished, setIsFinished] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false); // NEW: Track if user died
 
   // Fetch Lesson
   useEffect(() => {
@@ -30,12 +32,28 @@ export default function LessonPage() {
         return;
     }
 
+    // Set initial hearts from user context if available
+    if (user && user.hearts !== undefined) {
+        setHearts(user.hearts);
+    }
+
     const fetchLesson = async () => {
       setLoading(true);
       try {
         const res = await fetch(`https://localhost:7118/api/Lessons/${lessonId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
+        
+        if (res.status === 400) {
+            const errorData = await res.json();
+            if (errorData.message === "NO_HEARTS") {
+                // If backend rejected because of 0 hearts, show game over instantly
+                setIsGameOver(true);
+                setLoading(false);
+                return;
+            }
+        }
+
         if (res.ok) {
           const data = await res.json();
           setLesson(data.lesson);
@@ -51,7 +69,7 @@ export default function LessonPage() {
       }
     };
     fetchLesson();
-  }, [token, lessonId]);
+  }, [token, lessonId, user]);
 
   // Check Answer
   const checkAnswer = () => {
@@ -64,13 +82,45 @@ export default function LessonPage() {
       setFeedback('correct');
     } else {
       setFeedback('wrong');
-      setHearts(h => Math.max(0, h - 1));
       setMistakes(prev => new Set(prev).add(currentQ.id));
+      
+      // Heart logic
+      const isPremium = user?.isPremium || false;
+      if (!isPremium) {
+          const newHearts = Math.max(0, hearts - 1);
+          setHearts(newHearts);
+          
+          if (newHearts === 0) {
+              handleGameOver();
+          }
+      }
     }
+  };
+
+  // Trigger Game Over
+  const handleGameOver = async () => {
+      setIsGameOver(true);
+      
+      try {
+          // Tell the backend they lost all their hearts so they can't just refresh
+          await fetch(`https://localhost:7118/api/Lessons/sync-hearts`, {
+              method: 'POST',
+              headers: { 
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}` 
+              },
+              body: JSON.stringify(0)
+          });
+      } catch (err) {
+          console.error("Failed to sync game over state", err);
+      }
   };
 
   // Continue
   const handleContinue = () => {
+    // If they are dead, don't let them continue
+    if (isGameOver) return;
+
     const currentQ = queue[0];
     if (feedback === 'correct') {
       const newQueue = queue.slice(1);
@@ -86,7 +136,7 @@ export default function LessonPage() {
     setSelectedOption('');
   };
 
-  // Finish & Save
+  // Finish & Save (Only runs if they win)
   const finishLesson = async () => {
     setIsFinished(true);
     
@@ -126,9 +176,26 @@ export default function LessonPage() {
   };
 
   if (loading) return <div className="p-5 text-center"><Spinner animation="border" /></div>;
-  if (!lesson) return <div className="p-5 text-center">Lesson not found. <Button onClick={() => navigate(`/dashboard/${courseId}`)}>Back</Button></div>;
+  if (!lesson && !isGameOver) return <div className="p-5 text-center">Lesson not found. <Button onClick={() => navigate(`/dashboard/${courseId}`)}>Back</Button></div>;
 
-  // Finished Screen (Hatalmas animált kártya)
+  // --- GAME OVER SCREEN ---
+  if (isGameOver) {
+      return (
+        <Container className="main-page-container mt-5 text-center">
+          <Card className="p-5 shadow-lg border-0 animate-pop-in dashboard-card" style={{borderRadius: '24px'}}>
+              <div style={{fontSize: '5rem'}} className="animate-shake">💔</div>
+              <h1 className="fw-bold mb-3 text-danger">Out of Hearts!</h1>
+              <p className="text-muted fs-5 mb-4">You made too many mistakes. Keep practicing and try again!</p>
+              
+              <Button size="lg" variant="danger" className="w-50 mx-auto mt-2" onClick={() => navigate(`/dashboard/${courseId}`)}>
+                  Back to Dashboard
+              </Button>
+          </Card>
+        </Container>
+      );
+  }
+
+  // --- FINISHED SCREEN ---
   if (isFinished) {
     const accuracy = Math.round(((initialCount - mistakes.size) / initialCount) * 100);
     return (
@@ -143,7 +210,7 @@ export default function LessonPage() {
                     <small className="text-muted fw-bold">ACCURACY</small>
                 </div>
                 <div className="col-4">
-                    <h3 className="fw-bold text-danger">{hearts}</h3>
+                    <h3 className="fw-bold text-danger">{user?.isPremium ? '∞' : hearts}</h3>
                     <small className="text-muted fw-bold">HEARTS</small>
                 </div>
                  <div className="col-4">
@@ -175,7 +242,9 @@ export default function LessonPage() {
       <div className="d-flex align-items-center mb-4 gap-3">
         <Button variant="link" onClick={() => navigate(`/dashboard/${courseId}`)} className="text-decoration-none fs-5" style={{color: 'inherit'}}>✕</Button>
         <ProgressBar now={progress} className="flex-grow-1" variant="success" style={{height: '10px', borderRadius: '5px'}} />
-        <div className={`text-danger fw-bold fs-5 ${feedback === 'wrong' ? 'animate-shake' : ''}`}>❤️ {hearts}</div>
+        <div className={`text-danger fw-bold fs-5 ${feedback === 'wrong' ? 'animate-shake' : ''}`}>
+            ❤️ {user?.isPremium ? '∞' : hearts}
+        </div>
       </div>
 
       {/* Question Card */}
@@ -196,9 +265,9 @@ export default function LessonPage() {
                           // Dinamikus CSS osztályok kezelése
                           let stateClass = '';
                           if (feedback && text === currentQ.answer) {
-                               stateClass = 'option-correct animate-bounce-glow'; // Helyes: pulzál és világít
+                               stateClass = 'option-correct animate-bounce-glow'; 
                           } else if (isSelected && feedback === 'wrong') {
-                               stateClass = 'option-wrong animate-shake'; // Hibás: Rázkódik és piros
+                               stateClass = 'option-wrong animate-shake'; 
                           } else if (isSelected) {
                                stateClass = 'option-selected';
                           }

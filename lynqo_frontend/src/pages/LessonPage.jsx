@@ -7,7 +7,8 @@ import './LessonPage.css';
 
 export default function LessonPage() {
   const { courseId, lessonId } = useParams();
-  const { token, user, setUser } = useContext(AuthContext); 
+const { token, user, setUser, authFetch } = useContext(AuthContext); 
+
   const navigate = useNavigate();
   
   const [lesson, setLesson] = useState(null);
@@ -33,9 +34,7 @@ export default function LessonPage() {
     const fetchLesson = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`https://localhost:7118/api/Lessons/${lessonId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authFetch(`https://localhost:7118/api/Lessons/${lessonId}`);
         
         if (res.status === 400) {
             const errorData = await res.json();
@@ -125,7 +124,7 @@ export default function LessonPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [queue, feedback, selectedOption]); // Re-bind when state changes
 
-  const checkAnswer = async () => {
+    const checkAnswer = async () => {
     if (!queue.length) return;
     const currentQ = queue[0];
     const userAnswer = selectedOption.trim().toLowerCase();
@@ -133,33 +132,36 @@ export default function LessonPage() {
 
     if (userAnswer === correctAnswer) {
       setFeedback('correct');
+      
+      // 🔥 NEW: Play Correct Sound!
+      const correctSound = new Audio('/sounds/correct.mp3');
+      correctSound.volume = 0.5; // 50% volume so it doesn't blast their ears
+      correctSound.play().catch(e => console.error("Audio blocked by browser", e));
+
     } else {
       setFeedback('wrong');
       setMistakes(prev => new Set(prev).add(currentQ.id || currentQ.Id));
+      
+      // 🔥 NEW: Play Wrong Sound!
+      const wrongSound = new Audio('/sounds/wrong.mp3');
+      wrongSound.volume = 0.5;
+      wrongSound.play().catch(e => console.error("Audio blocked by browser", e));
       
       if (!isPremium) {
           const newHearts = Math.max(0, hearts - 1);
           setHearts(newHearts); 
           
           try {
-              const res = await fetch(`https://localhost:7118/api/Lessons/sync-hearts`, {
+              const res = await authFetch(`https://localhost:7118/api/Lessons/sync-hearts`, {
                   method: 'POST',
-                  headers: { 
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${token}` 
-                  },
-                  body: JSON.stringify({ 
-                      HeartsRemaining: newHearts, 
-                      heartsRemaining: newHearts 
-                  }) 
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ HeartsRemaining: newHearts, heartsRemaining: newHearts }) 
               });
               
               if (res.ok) {
                   const data = await res.json();
                   const finalHearts = data.hearts !== undefined ? data.hearts : data.Hearts;
-                  if (setUser && user) {
-                      setUser({ ...user, hearts: finalHearts, Hearts: finalHearts });
-                  }
+                  if (setUser && user) setUser({ ...user, hearts: finalHearts, Hearts: finalHearts });
                   if (finalHearts !== undefined) setHearts(finalHearts);
               }
           } catch(err) {
@@ -170,6 +172,7 @@ export default function LessonPage() {
       }
     }
   };
+
 
   const handleContinue = () => {
     if (isGameOver) return; 
@@ -200,12 +203,9 @@ export default function LessonPage() {
     const totalXp = reward + (activeHearts * 2);
 
     try {
-      const res = await fetch(`https://localhost:7118/api/Lessons/${lessonId}/complete`, {
+      const res = await authFetch(`https://localhost:7118/api/Lessons/sync-hearts`, {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             Score: accuracy, score: accuracy,
             Stars: accuracy === 100 ? 3 : (accuracy >= 80 ? 2 : 1), stars: accuracy === 100 ? 3 : (accuracy >= 80 ? 2 : 1),

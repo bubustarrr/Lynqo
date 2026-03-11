@@ -20,7 +20,6 @@ export default function LessonPage() {
   const [feedback, setFeedback] = useState(null);
   
   const [hearts, setHearts] = useState(user?.hearts ?? user?.Hearts ?? 5); 
-  // 🔥 NEW: Store premium status directly from the lesson fetch
   const [isPremium, setIsPremium] = useState(false); 
   
   const [isFinished, setIsFinished] = useState(false);
@@ -56,10 +55,8 @@ export default function LessonPage() {
           const dbHearts = data.hearts !== undefined ? data.hearts : data.Hearts;
           if (dbHearts !== undefined) setHearts(dbHearts); 
 
-          // 🔥 NEW: Grab the premium status straight from the C# backend
           const dbPremium = data.isPremium !== undefined ? data.isPremium : data.IsPremium;
           if (dbPremium !== undefined) {
-              // Handle true/false or 1/0 from database
               setIsPremium(dbPremium === true || dbPremium === 1);
           }
         }
@@ -71,6 +68,62 @@ export default function LessonPage() {
     };
     fetchLesson();
   }, [token, lessonId]); 
+
+  // 🔥 NEW: KEYBOARD SHORTCUTS LISTENER 🔥
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+        // If the user is typing in the text box, don't hijack their numbers!
+        if (e.target.tagName === 'INPUT') return;
+
+        // Press 'Enter' to Check or Continue
+        if (e.key === 'Enter') {
+            if (!feedback && selectedOption) document.getElementById('check-button')?.click();
+            else if (feedback) document.getElementById('continue-button')?.click();
+            return;
+        }
+
+        const currentQ = queue[0];
+        if (!currentQ || feedback) return;
+
+        const rawType = (currentQ.contentType || currentQ.ContentType || 'text').toLowerCase();
+        const isMultipleChoice = rawType === 'multiplechoice' || rawType === 'multiple_choice';
+
+        // Press 1, 2, 3, 4 for multiple choice
+        if (isMultipleChoice) {
+            const keyNum = parseInt(e.key, 10);
+            if (isNaN(keyNum)) return;
+
+            let parsedOptions = [];
+            const optionsString = currentQ.options || currentQ.Options;
+            if (optionsString) {
+                if (typeof optionsString === 'string') {
+                    try { parsedOptions = JSON.parse(optionsString); } catch (err) {}
+                } else if (Array.isArray(optionsString)) {
+                    parsedOptions = optionsString;
+                }
+            }
+
+            if (keyNum >= 1 && keyNum <= parsedOptions.length) {
+                const opt = parsedOptions[keyNum - 1];
+                const text = typeof opt === 'string' ? opt : opt.text;
+                const mediaUrl = typeof opt === 'object' ? opt.audioUrl : null;
+                
+                setSelectedOption(text); // Select the option
+
+                // Play the audio automatically just like clicking it
+                if (mediaUrl) {
+                    let fullUrl = mediaUrl.includes('.mp3') || mediaUrl.includes('.oog')
+                        ? `https://localhost:7118${mediaUrl.startsWith('/') ? mediaUrl : `/${mediaUrl}`}`
+                        : `https://localhost:7118/api/media/audio/french/${mediaUrl}`;
+                    new Audio(fullUrl).play().catch(err => console.error(err));
+                }
+            }
+        }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [queue, feedback, selectedOption]); // Re-bind when state changes
 
   const checkAnswer = async () => {
     if (!queue.length) return;
@@ -235,7 +288,7 @@ export default function LessonPage() {
   const optionsString = currentQ.options || currentQ.Options;
   if (optionsString) {
       if (typeof optionsString === 'string') {
-          try { parsedOptions = JSON.parse(optionsString); } catch (e) { console.error("Parse error", e); }
+          try { parsedOptions = JSON.parse(optionsString); } catch (e) {}
       } else if (Array.isArray(optionsString)) {
           parsedOptions = optionsString;
       }
@@ -294,8 +347,13 @@ export default function LessonPage() {
                                       }
                                   }}
                                   className={`p-3 rounded d-flex align-items-center justify-content-between option-card ${stateClass} ${feedback ? 'disabled-option' : ''}`}
+                                  style={{cursor: 'pointer'}}
                               >
                                   <div className="d-flex align-items-center gap-3">
+                                      {/* 🔥 Added Keyboard Number Indicator 🔥 */}
+                                      <kbd className="bg-secondary text-white rounded px-2 py-1 shadow-sm" style={{fontFamily: 'monospace', fontSize: '1rem'}}>
+                                          {idx + 1}
+                                      </kbd>
                                       {mediaUrl && <span>🔊</span>}
                                       <span className="fw-bold fs-5">{text}</span>
                                   </div>
@@ -319,9 +377,10 @@ export default function LessonPage() {
                           onChange={(e) => setSelectedOption(e.target.value)}
                           disabled={!!feedback}
                           onKeyDown={(e) => {
-                              if (e.key === 'Enter' && !feedback && selectedOption) checkAnswer();
-                              else if (e.key === 'Enter' && feedback) handleContinue();
+                              if (e.key === 'Enter' && !feedback && selectedOption) document.getElementById('check-button')?.click();
+                              else if (e.key === 'Enter' && feedback) document.getElementById('continue-button')?.click();
                           }}
+                          autoFocus
                       />
                   </div>
               )}
@@ -357,9 +416,11 @@ export default function LessonPage() {
                 )}
             </div>
             {!feedback ? (
-                <Button size="lg" className="cta-button primary px-5 py-3 fw-bold shadow-sm" disabled={!selectedOption} onClick={checkAnswer}>CHECK</Button>
+                // 🔥 Added id="check-button" for the keyboard shortcut
+                <Button id="check-button" size="lg" className="cta-button primary px-5 py-3 fw-bold shadow-sm" disabled={!selectedOption} onClick={checkAnswer}>CHECK</Button>
             ) : (
-                <Button size="lg" variant={feedback === 'correct' ? 'success' : 'danger'} className="px-5 py-3 fw-bold shadow animate-slide-up" onClick={handleContinue}>CONTINUE</Button>
+                // 🔥 Added id="continue-button" for the keyboard shortcut
+                <Button id="continue-button" size="lg" variant={feedback === 'correct' ? 'success' : 'danger'} className="px-5 py-3 fw-bold shadow animate-slide-up" onClick={handleContinue}>CONTINUE</Button>
             )}
         </Container>
       </div>

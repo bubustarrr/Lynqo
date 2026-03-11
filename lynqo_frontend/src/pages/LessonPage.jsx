@@ -7,7 +7,7 @@ import './LessonPage.css';
 
 export default function LessonPage() {
   const { courseId, lessonId } = useParams();
-const { token, user, setUser, authFetch } = useContext(AuthContext); 
+  const { token, user, setUser, authFetch } = useContext(AuthContext); 
 
   const navigate = useNavigate();
   
@@ -68,7 +68,7 @@ const { token, user, setUser, authFetch } = useContext(AuthContext);
     fetchLesson();
   }, [token, lessonId]); 
 
-  // 🔥 NEW: KEYBOARD SHORTCUTS LISTENER 🔥
+  // 🔥 KEYBOARD SHORTCUTS LISTENER 🔥
   useEffect(() => {
     const handleKeyDown = (e) => {
         // If the user is typing in the text box, don't hijack their numbers!
@@ -133,7 +133,7 @@ const { token, user, setUser, authFetch } = useContext(AuthContext);
     if (userAnswer === correctAnswer) {
       setFeedback('correct');
       
-      // 🔥 NEW: Play Correct Sound!
+      // Play Correct Sound!
       const correctSound = new Audio('/sounds/correct.mp3');
       correctSound.volume = 0.5; // 50% volume so it doesn't blast their ears
       correctSound.play().catch(e => console.error("Audio blocked by browser", e));
@@ -142,7 +142,7 @@ const { token, user, setUser, authFetch } = useContext(AuthContext);
       setFeedback('wrong');
       setMistakes(prev => new Set(prev).add(currentQ.id || currentQ.Id));
       
-      // 🔥 NEW: Play Wrong Sound!
+      // Play Wrong Sound!
       const wrongSound = new Audio('/sounds/wrong.mp3');
       wrongSound.volume = 0.5;
       wrongSound.play().catch(e => console.error("Audio blocked by browser", e));
@@ -203,7 +203,8 @@ const { token, user, setUser, authFetch } = useContext(AuthContext);
     const totalXp = reward + (activeHearts * 2);
 
     try {
-      const res = await authFetch(`https://localhost:7118/api/Lessons/sync-hearts`, {
+      // 🔥 JAVÍTVA: A complete végpontot hívjuk meg a sync-hearts helyett! 🔥
+      const res = await authFetch(`https://localhost:7118/api/Lessons/${lessonId}/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -218,8 +219,13 @@ const { token, user, setUser, authFetch } = useContext(AuthContext);
       if (res.ok) {
           const data = await res.json();
           const finalHearts = data.hearts !== undefined ? data.hearts : data.Hearts;
+          
+          // 🔥 ÚJ: Lekérjük a válaszból a Streak-et is 🔥
+          const finalStreak = data.streak !== undefined ? data.streak : data.Streak;
+
           if (setUser && user && finalHearts !== undefined) {
-              setUser({ ...user, hearts: finalHearts, Hearts: finalHearts });
+              // Frissítjük a state-et a szívekkel ÉS a megújult Streak-el
+              setUser({ ...user, hearts: finalHearts, Hearts: finalHearts, streak: finalStreak, Streak: finalStreak });
           }
       }
     } catch (err) {

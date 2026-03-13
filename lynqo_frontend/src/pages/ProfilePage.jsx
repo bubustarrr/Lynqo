@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react'; // ÚJ: useState importálása
 import { useTranslation } from 'react-i18next';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap'; // ÚJ: Button importálása
 import './ProfilePage.css';
 
-// Hook importálása
 import { useProfileData } from '../hooks/useProfileData';
 
-// Komponensek importálása
 import ProfileMainCard from '../components/profile/ProfileMainCard';
 import Achievements from '../components/profile/Achievements';
 import FriendRequests from '../components/profile/FriendRequests';
@@ -15,10 +13,15 @@ import DockedChat from '../components/profile/DockedChat';
 import ProfileStatusBar from '../components/profile/ProfileStatusBar';
 import PremiumPromoCard from '../components/profile/PremiumPromoCard';
 
+// ÚJ: A Modal komponens importálása
+import AddFriendModal from '../components/profile/AddFriendModal';
+
 export default function ProfilePage() {
   const { t } = useTranslation();
   
-  // Minden logikát és adatot a hookból kapunk meg
+  // ÚJ: Állapot a Modal nyitásához/zárásához
+  const [showAddFriendModal, setShowAddFriendModal] = useState(false);
+
   const {
     profileData, friendsList, friendRequests, loading,
     activeChat, setActiveChat, isMinimized, setIsMinimized,
@@ -51,6 +54,17 @@ export default function ProfilePage() {
         </section>
 
         <aside className="profile-sidebar-column">
+          
+          {/* ÚJ: Egy szép, széles gomb a sidebar tetején a barátkereső modal megnyitásához */}
+          <Button 
+            variant="primary" 
+            className="w-100 mb-4 fw-bold shadow-sm" 
+            onClick={() => setShowAddFriendModal(true)}
+          >
+            <i className="bi bi-person-plus-fill me-2"></i> 
+            Barát hozzáadása
+          </Button>
+
           <FriendRequests 
             friendRequests={friendRequests} 
             handleRequest={handleRequest} 
@@ -79,6 +93,14 @@ export default function ProfilePage() {
         sendMessage={sendMessage}
         resolveMediaUrl={resolveMediaUrl}
       />
+
+      {/* ÚJ: A Modal komponens, ami alapból rejtett, de a gomb megnyitja */}
+      <AddFriendModal 
+        show={showAddFriendModal} 
+        handleClose={() => setShowAddFriendModal(false)} 
+        t={t} 
+      />
+
     </div>
   );
 }

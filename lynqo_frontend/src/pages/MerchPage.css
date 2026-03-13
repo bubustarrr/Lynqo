@@ -86,15 +86,46 @@
     transform: scale(1.2);
 }
 
-/* Kiegészítő stílusok a kártyákhoz és szűrőkhöz 
-   (Ha ezek a ShopPage.css-ben voltak, másold át őket ide is) */
+/* Kiegészítő stílusok a kártyákhoz és szűrőkhöz */
 .active-tag {
-    background-color: #007bff !important; /* Példa szín */
+    background-color: #007bff !important;
     color: white !important;
 }
 
+/* Keresőmező alap stílus */
 .custom-input-group {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 5px;
+    transition: all 0.3s ease;
+}
+
+/* SÖTÉT MÓD JAVÍTÁS A KERESŐHÖZ */
+.dark .custom-input-group,
+.dark-mode .custom-input-group {
+    background-color: #271f3a;
+    border-color: #31293e;
+}
+
+/* A szöveg színe sötét módban */
+.dark .custom-input-group input,
+.dark-mode .custom-input-group input {
+    color: #ffffff !important;
+    background-color: transparent;
+    border: none;
+}
+
+/* A placeholder (helyőrző szöveg) színe sötét módban */
+.dark .custom-input-group input::placeholder,
+.dark-mode .custom-input-group input::placeholder {
+    color: #aaaaaa;
+    opacity: 1;
+}
+
+/* Ha a böngésző alapértelmezett sötét módját is kezelni akarod */
+@media (prefers-color-scheme: dark) {
+    /* Akkor is legyen fehér a szöveg, ha nincs explicit osztály a body-n */
+    .custom-input-group input {
+        color: inherit; 
+    }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { useCart } from '../../context/CartContext';
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
 
-export default function ShopCart() {
+export default function ShopCart({ onCheckout }) {
   const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
 
   if (cartItems.length === 0) {
@@ -20,10 +20,35 @@ export default function ShopCart() {
             <small className="text-muted">${item.price}</small>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <button className="btn btn-sm btn-outline-secondary" onClick={() => updateQuantity(item.id, -1)}><FaMinus size={10}/></button>
+            {/* MÓDOSÍTOTT MÍNUSZ GOMB LOGIKA */}
+            <button 
+              className="btn btn-sm btn-outline-secondary" 
+              onClick={() => {
+                if (item.quantity === 1) {
+                  removeFromCart(item.id);
+                } else {
+                  updateQuantity(item.id, -1);
+                }
+              }}
+            >
+              <FaMinus size={10}/>
+            </button>
+
             <span>{item.quantity}</span>
-            <button className="btn btn-sm btn-outline-secondary" onClick={() => updateQuantity(item.id, 1)}><FaPlus size={10}/></button>
-            <button className="btn btn-sm text-danger ms-2" onClick={() => removeFromCart(item.id)}><FaTrash /></button>
+
+            <button 
+              className="btn btn-sm btn-outline-secondary" 
+              onClick={() => updateQuantity(item.id, 1)}
+            >
+              <FaPlus size={10}/>
+            </button>
+
+            <button 
+              className="btn btn-sm text-danger ms-2" 
+              onClick={() => removeFromCart(item.id)}
+            >
+              <FaTrash />
+            </button>
           </div>
         </div>
       ))}
@@ -32,7 +57,9 @@ export default function ShopCart() {
           <span>Total:</span>
           <span>${cartTotal}</span>
         </div>
-        <button className="read-more-btn w-100 mt-3">Proceed to Checkout</button>
+        <button className="read-more-btn w-100 mt-3" onClick={onCheckout}>
+          Proceed to Checkout
+        </button>
       </div>
     </div>
   );

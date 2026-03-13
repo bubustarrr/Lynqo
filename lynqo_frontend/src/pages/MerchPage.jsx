@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './MerchPage.css';
+import { AuthContext } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 // Komponensek
 import BackButton from '../components/common/BackButton'; 
 import MerchFilters from '../components/shop/MerchFilters'; 
 import ShopItems, { MERCH_ITEMS } from '../components/shop/ShopItem'; 
 import ShopCart from '../components/shop/ShopCart'; 
+import PaymentModal from '../components/shop/PaymentModal'; // AZ ÚJ KOMPONENS
 
 export default function MerchPage() {
+  const { token } = useContext(AuthContext);
+  const { clearCart, cartTotal } = useCart();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
-  // Szűrési logika
   const filteredItems = MERCH_ITEMS.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
@@ -30,25 +36,29 @@ export default function MerchPage() {
       <div className="news-layout">
         <main className="shop-main-content">
           <h2 className="column-title">Our Collection</h2>
-          {/* Csak a szűrt listát adjuk át az új komponensnek */}
           <ShopItems items={filteredItems} />
         </main>
 
         <aside className="sidebar-wrapper">
           <h2 className="column-title">Filters & Cart</h2>
-          
           <MerchFilters 
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
+            searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+            selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
           />
-
           <div className="cart-sidebar-section border-top pt-4">
-             <ShopCart />
+             <ShopCart onCheckout={() => setIsPaymentOpen(true)} />
           </div>
         </aside>
       </div>
+
+      {/* AZ ÚJ KISZERVEZETT MODAL HASZNÁLATA */}
+      <PaymentModal 
+        show={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        onSuccess={clearCart}
+        totalAmount={cartTotal}
+        token={token}
+      />
     </div>
   );
 }

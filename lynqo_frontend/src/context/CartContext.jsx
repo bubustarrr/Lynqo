@@ -29,10 +29,15 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  // ÚJ: Kosár ürítése funkció
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, cartTotal }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, cartTotal, clearCart }}>
       {children}
     </CartContext.Provider>
   );

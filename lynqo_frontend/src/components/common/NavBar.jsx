@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -8,8 +7,7 @@ import './NavBar.css';
 
 export default function NavBar() {
   const { user, logout } = useContext(AuthContext);
-  const { language, setLanguage, translations } = useLanguage();
-  const { i18n } = useTranslation();
+  const { language, translations } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -38,12 +36,6 @@ export default function NavBar() {
     navigate('/main');
   };
 
-  const handleLanguageChange = (langCode) => {
-    setLanguage(langCode);
-    i18n.changeLanguage(langCode);
-    setActiveDropdown(null);
-  };
-
   return (
     <nav className="navbar" ref={navRef}>
       
@@ -67,11 +59,11 @@ export default function NavBar() {
               <Link to="/settings" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
                ⚙️ {t.settings || "Settings"}
               </Link>
-                  <div className="dropdown-divider"></div>
-                     <button className="dropdown-item logout" onClick={handleLogout}>
-                         🚪 {t.logout || "Log Out"}
-                     </button>
-                  </div>
+              <div className="dropdown-divider"></div>
+              <button className="dropdown-item logout" onClick={handleLogout}>
+                  🚪 {t.logout || "Log Out"}
+              </button>
+            </div>
           </div>
         ) : (
           <Link to="/login" className="login-link">🔐 {t.login || "Login"}</Link>
@@ -85,8 +77,6 @@ export default function NavBar() {
 
       {/* RIGHT SIDE */}
       <div className="navbar-right">
-        
-        {/* ÚJ THEME SWITCH */}
         <div className="theme-switch-wrapper">
           <label className="theme-switch">
             <input 
@@ -101,23 +91,7 @@ export default function NavBar() {
             </div>
           </label>
         </div>
-
-        {/* NYELVVÁLASZTÓ */}
-        <div className="dropdown-container">
-          <button 
-            className={`nav-btn nav-btn-icon ${activeDropdown === 'lang' ? 'active' : ''}`} 
-            onClick={() => toggleDropdown('lang')} 
-          >
-            🌐 <span className="arrow-mini">▼</span>
-          </button>
-          
-          <div className={`dropdown-menu right-aligned ${activeDropdown === 'lang' ? 'show' : ''}`}>
-            <button className={`dropdown-item ${language === 'en' ? 'active-item' : ''}`} onClick={() => handleLanguageChange('en')}>🇺🇸 English</button>
-            <button className={`dropdown-item ${language === 'es' ? 'active-item' : ''}`} onClick={() => handleLanguageChange('es')}>🇪🇸 Español</button>
-            <button className={`dropdown-item ${language === 'fr' ? 'active-item' : ''}`} onClick={() => handleLanguageChange('fr')}>🇫🇷 Français</button>
-            <button className={`dropdown-item ${language === 'de' ? 'active-item' : ''}`} onClick={() => handleLanguageChange('de')}>🇩🇪 Deutsch</button>
-          </div>
-        </div>
+        {/* Nyelvi dropdown eltávolítva - már a Settings oldalon van */}
       </div>
     </nav>
   );

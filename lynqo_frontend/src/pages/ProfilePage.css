@@ -556,3 +556,97 @@
     color: #adb5bd; 
   }
 }
+
+/* --- ADD FRIEND BUTTON --- */
+.add-friend-btn {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  border: none !important;
+  border-radius: 15px !important;
+  padding: 14px !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
+}
+
+.add-friend-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4) !important;
+  filter: brightness(1.05);
+}
+
+.add-friend-btn:active {
+  transform: translateY(-1px);
+}
+
+/* --- CUSTOM MODAL STYLING --- */
+/* Sötét mód támogatása a Modalhoz */
+.dark-mode .modal-content {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+}
+
+.light-mode .modal-content {
+  background: #ffffff;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  padding: 20px 25px;
+}
+
+.modal-title {
+  color: #8b5cf6;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+/* Custom Input for Modal */
+.friend-input-custom {
+  border-radius: 12px !important;
+  padding: 12px 15px !important;
+  border: 2px solid rgba(139, 92, 246, 0.2) !important;
+  background: rgba(139, 92, 246, 0.05) !important;
+  color: inherit !important;
+  transition: all 0.2s;
+}
+
+.friend-input-custom:focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1) !important;
+  background: transparent !important;
+}
+
+.dark-mode .friend-input-custom {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.add-friend-btn {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px 20px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease-in-out !important;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4) !important;
+}
+
+.add-friend-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #db2777) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6) !important;
+}

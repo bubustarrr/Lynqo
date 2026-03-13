@@ -2,20 +2,21 @@ import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from 'react-i18next'; // Új import
 import { Spinner } from 'react-bootstrap';
 import './SettingsPage.css';
 
 export default function SettingsPage() {
   const { token } = useContext(AuthContext);
   const { theme, toggleTheme } = useTheme();
-  const { language, translations } = useLanguage();
+  const { language, setLanguage, translations } = useLanguage();
+  const { i18n } = useTranslation(); // i18n inicializálása
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const t = translations[language] || translations['en'] || {};
 
-  // Helyi state, ami pontosan leképezi a beállításokat
   const [userSettings, setUserSettings] = useState({
     notificationsEnabled: true,
     dailyGoalMinutes: 15, 
@@ -25,7 +26,6 @@ export default function SettingsPage() {
   
   const dailyGoals = [5, 10, 15, 20, 30, 45, 60];
 
-  // 1. BEÁLLÍTÁSOK LEKÉRÉSE AZ ADATBÁZISBÓL (GET)
   useEffect(() => {
     if (!token) {
         setLoading(false);
@@ -68,12 +68,8 @@ export default function SettingsPage() {
     fetchSettings();
   }, [token]); 
 
-
-  // 2. BEÁLLÍTÁSOK MENTÉSE AZ ADATBÁZISBA (PUT)
   const handleSave = async () => {
-    console.log("Jelenlegi token:", token);
     setSaving(true);
-    
     const payloadToDatabase = {
       DarkMode: userSettings.darkMode,
       SoundEnabled: userSettings.soundEnabled,
@@ -94,18 +90,14 @@ export default function SettingsPage() {
       if(response.ok) {
         alert('Settings saved successfully!');
       } else {
-        const errorText = await response.text();
-        alert('Failed to save settings. Check console.');
-        console.error("Save error details:", errorText);
+        alert('Failed to save settings.');
       }
     } catch (error) {
-      console.error('Network error while saving settings:', error);
-      alert('Network error while saving.');
+      console.error('Network error:', error);
     } finally {
         setSaving(false);
     }
   };
-
 
   const handleDarkModeToggle = (e) => {
     const isDark = e.target.checked;
@@ -113,6 +105,13 @@ export default function SettingsPage() {
     if ((isDark && theme === 'light') || (!isDark && theme === 'dark')) {
       toggleTheme();
     }
+  };
+
+  // Új nyelvválasztó kezelő
+  const handleLanguageChange = (e) => {
+    const langCode = e.target.value;
+    setLanguage(langCode);
+    i18n.changeLanguage(langCode);
   };
 
   if (loading) {
@@ -136,11 +135,28 @@ export default function SettingsPage() {
       </div>
 
       <div className="settings-container">
-
-        {/* INTERFACE & SYSTEM SECTION */}
         <section className="settings-card">
           <h2 className="card-title">🖥️ Interface & System</h2>
           
+          {/* NYELVVÁLASZTÓ SZEKCIÓ */}
+          <div className="setting-item">
+            <div className="setting-info">
+              <span className="setting-label">App Language</span>
+              <span className="setting-desc">Choose the display language of the interface</span>
+            </div>
+            <select 
+              className="settings-select" 
+              value={language} 
+              onChange={handleLanguageChange}
+            >
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="hu">🇭🇺 Magyar</option>
+            </select>
+          </div>
+
           <div className="setting-item">
             <div className="setting-info">
               <span className="setting-label">Dark Mode</span>
@@ -154,26 +170,26 @@ export default function SettingsPage() {
 
           <div className="setting-item">
             <div className="setting-info">
-              <span className="setting-label">
-                Sound Effects <span style={{fontSize: '0.75rem', backgroundColor: '#e2e8f0', color: '#64748b', padding: '2px 6px', borderRadius: '4px', marginLeft: '8px', fontWeight: 'bold'}}>Coming Soon</span>
-              </span>
-              <span className="setting-desc">Play sounds when completing lessons (Future update)</span>
+              <span className="setting-label">Sound Effects</span>
+              <span className="setting-desc">Play sounds when completing lessons</span>
             </div>
-            <label className="toggle-switch" style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-              <input type="checkbox" checked={false} disabled />
-              <span className="toggle-slider" style={{ cursor: 'not-allowed' }}></span>
+            <label className="toggle-switch">
+              <input 
+                type="checkbox" 
+                checked={userSettings.soundEnabled} 
+                onChange={(e) => setUserSettings({...userSettings, soundEnabled: e.target.checked})} 
+              />
+              <span className="toggle-slider"></span>
             </label>
           </div>
         </section>
 
-        {/* NOTIFICATIONS SECTION */}
         <section className="settings-card">
           <h2 className="card-title">🔔 Notifications</h2>
-          
           <div className="setting-item">
             <div className="setting-info">
               <span className="setting-label">Email Reminders</span>
-              <span className="setting-desc">Receive daily email notifications to keep your streak alive</span>
+              <span className="setting-desc">Receive daily notifications to keep your streak alive</span>
             </div>
             <label className="toggle-switch">
               <input 
@@ -185,7 +201,6 @@ export default function SettingsPage() {
             </label>
           </div>
         </section>
-
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ export default function AddFriendModal({ show, handleClose, t }) {
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton>
                 {/* Ha van fordításod, használd a t()-t, pl: t('profile.addFriend') */}
-                <Modal.Title className="fw-bold">Barát hozzáadása</Modal.Title>
+                <Modal.Title className="fw-bold">Barát hozzáadásaa</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <p className="text-muted mb-3">

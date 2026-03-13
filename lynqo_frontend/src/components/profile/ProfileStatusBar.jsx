@@ -20,7 +20,13 @@ export default function ProfileStatusBar({ p, t }) {
       <div className="status-card life-stat">
         <span className="status-icon">❤️</span>
         <div className="status-info">
-          <span className="status-value">{p.hearts !== undefined ? p.hearts : 5}</span>
+          {/* ÚJ: Végtelen jel (∞) mutatása a prémium felhasználóknak egy picit nagyobb betűmérettel */}
+          <span 
+            className="status-value" 
+            style={{ fontSize: p.isPremium ? '1.8rem' : 'inherit', lineHeight: p.isPremium ? '0.8' : 'inherit' }}
+          >
+            {p.isPremium ? '∞' : (p.hearts !== undefined ? p.hearts : 5)}
+          </span>
           <span className="status-label">{t('profile.stats.health')}</span>
         </div>
       </div>

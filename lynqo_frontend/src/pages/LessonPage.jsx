@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Container, Card, Button, ProgressBar, Spinner } from 'react-bootstrap';
+// Ikonok importálása
+import { FaArrowRight, FaCheck, FaLightbulb, FaStar } from 'react-icons/fa';
 import './MainPage.css';
 import './LessonPage.css';
 
@@ -68,7 +70,6 @@ export default function LessonPage() {
     fetchLesson();
   }, [token, lessonId]); 
 
-  // Billentyűzet parancsok (1, 2, 3, 4 és Enter)
   useEffect(() => {
     const handleKeyDown = (e) => {
         if (e.target.tagName === 'INPUT') return;
@@ -83,8 +84,6 @@ export default function LessonPage() {
         if (!currentQ || feedback) return;
 
         const rawType = (currentQ.contentType || currentQ.ContentType || 'text').toLowerCase();
-        
-        // A listening típusnál is működnek a számgombok!
         const isMultipleChoice = rawType === 'multiplechoice' || rawType === 'multiple_choice' || rawType === 'listening';
 
         if (isMultipleChoice) {
@@ -104,10 +103,8 @@ export default function LessonPage() {
             if (keyNum >= 1 && keyNum <= parsedOptions.length) {
                 const opt = parsedOptions[keyNum - 1];
                 const text = typeof opt === 'string' ? opt : opt.text;
-                
                 setSelectedOption(text); 
 
-                // Ha van a válasznak saját hangja, lejátsszuk
                 const mediaUrl = typeof opt === 'object' ? opt.audioUrl : null;
                 if (mediaUrl) {
                     let fullUrl = mediaUrl.includes('.mp3') || mediaUrl.includes('.ogg')
@@ -290,11 +287,7 @@ export default function LessonPage() {
       }
   }
   
-  // ==========================================
-  // ÚJ: A LISTENING TÍPUS FELISMERÉSE AZ ADATBÁZISBÓL
-  // ==========================================
   const rawType = (currentQ.contentType || currentQ.ContentType || 'text').toLowerCase();
-  
   const isListening = rawType === 'listening';
   const isMultipleChoice = rawType === 'multiplechoice' || rawType === 'multiple_choice' || isListening;
   const isFillBlank = rawType === 'fillblank' || rawType === 'fill_blank' || rawType === 'text';
@@ -318,10 +311,6 @@ export default function LessonPage() {
         <div key={queue.length} className="flex-grow-1 d-flex flex-column animate-slide-in">
           <h3 className="fw-bold mb-4 text-center">{currentQ.question || currentQ.Question}</h3>
 
-          {/* ========================================================
-              ÓRIÁSI LEJÁTSZÓGOMB A LISTENING (HALLGATÁS) FELADATHOZ 
-              (A media_id alapján a Te C# MediaControlleredből húzza le a hangot!)
-              ======================================================== */}
           {isListening && (currentQ.mediaId || currentQ.MediaId) && (
               <div className="text-center mb-5 mt-2">
                   <Button 
@@ -330,14 +319,12 @@ export default function LessonPage() {
                       style={{ width: '100px', height: '100px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                       onClick={() => {
                           const mId = currentQ.mediaId || currentQ.MediaId;
-                          // Itt történik a hang lekérése a backendről
                           const audioUrl = `https://localhost:7118/api/media/audio/french/${mId}`;
                           new Audio(audioUrl).play().catch(e => console.error("Hang lejátszási hiba:", e));
                       }}
                   >
                       <span style={{fontSize: '3.5rem', marginLeft: '5px'}}>▶️</span>
                   </Button>
-                  <p className="text-muted mt-3 fw-bold text-uppercase" style={{letterSpacing: '1px'}}>Kattints a lejátszáshoz</p>
               </div>
           )}
 
@@ -381,13 +368,13 @@ export default function LessonPage() {
 
               {isFillBlank && (
                   <div className="text-center">
+                      {/* JAVÍTOTT: Nincs placeholder */}
                       <input 
                           className={`form-control form-control-lg text-center mx-auto shadow-sm lesson-input 
                             ${feedback === 'correct' ? 'option-correct animate-bounce-glow' : ''} 
                             ${feedback === 'wrong' ? 'option-wrong animate-shake' : ''}
                           `}
                           style={{ maxWidth: '300px', fontSize: '1.5rem' }}
-                          placeholder="Írd ide a választ..."
                           value={selectedOption}
                           onChange={(e) => setSelectedOption(e.target.value)}
                           disabled={!!feedback}
@@ -400,7 +387,6 @@ export default function LessonPage() {
                   </div>
               )}
 
-              {/* A normál szöveges/feleletválasztós feladatok kis hangszórója */}
               {!isListening && (currentQ.mediaId || currentQ.MediaId) && (
                   <div className="text-center mt-4">
                       <Button 
@@ -420,21 +406,46 @@ export default function LessonPage() {
         </div>
       </Card>
 
+      {/* LÁBLÉC IKONOKKAL */}
       <div className={`fixed-bottom p-4 feedback-footer ${footerBgClass}`}>
         <Container style={{maxWidth: '700px'}} className="d-flex justify-content-between align-items-center">
              <div style={{minWidth: '200px'}}>
-                {feedback === 'correct' && <h4 className="fw-bold text-success animate-slide-up m-0">Kiváló! ✨</h4>}
+                {feedback === 'correct' && (
+                    <div className="animate-slide-up d-flex align-items-center text-success">
+                        <FaStar style={{fontSize: '2.5rem'}} />
+                    </div>
+                )}
                 {feedback === 'wrong' && (
                     <div className="text-danger animate-slide-up">
-                        <h4 className="fw-bold m-0">Helyes válasz:</h4>
-                        <div className="fs-5">{currentQ.answer || currentQ.Answer}</div>
+                        <div className="d-flex align-items-center gap-2 mb-1">
+                            <FaLightbulb style={{fontSize: '1.5rem'}} />
+                        </div>
+                        <div className="fs-5 fw-bold ms-1">{currentQ.answer || currentQ.Answer}</div>
                     </div>
                 )}
             </div>
+
             {!feedback ? (
-                <Button id="check-button" size="lg" className="cta-button primary px-5 py-3 fw-bold shadow-sm" disabled={!selectedOption} onClick={checkAnswer}>ELLENŐRZÉS</Button>
+                <Button 
+                    id="check-button" 
+                    size="lg" 
+                    className="cta-button primary px-5 py-3 shadow-sm d-flex align-items-center" 
+                    disabled={!selectedOption} 
+                    onClick={checkAnswer}
+                >
+                    <FaCheck style={{fontSize: '1.5rem'}} />
+                </Button>
             ) : (
-                <Button id="continue-button" size="lg" variant={feedback === 'correct' ? 'success' : 'danger'} className="px-5 py-3 fw-bold shadow animate-slide-up" onClick={handleContinue}>TOVÁBB</Button>
+                <Button 
+                    id="continue-button" 
+                    size="lg" 
+                    variant={feedback === 'correct' ? 'success' : 'danger'} 
+                    className="px-5 py-3 shadow animate-slide-up d-flex align-items-center" 
+                    onClick={handleContinue}
+                >
+                    {/* Jobbra mutató nyíl ikon */}
+                    <FaArrowRight style={{fontSize: '1.5rem'}} />
+                </Button>
             )}
         </Container>
       </div>

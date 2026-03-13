@@ -1,8 +1,7 @@
-body, .card, .form-label, .form-control {
+body, .card, .form-label, .form-control, .form-check-label {
   font-family: 'Quicksand', 'Nunito', 'Poppins', 'Comfortaa', Arial, sans-serif;
 }
 
-/* Background gradient and page centering */
 .register-page-container {
   min-height: 100vh;
   display: flex;
@@ -11,7 +10,6 @@ body, .card, .form-label, .form-control {
   background: linear-gradient(135deg, #6e6be6 0%, #c37fd8 50%, #3ab7f7 100%);
 }
 
-/* Frosted glass card */
 .register-card {
   max-width: 400px;
   width: 100%;
@@ -19,19 +17,70 @@ body, .card, .form-label, .form-control {
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   border-radius: 16px;
   backdrop-filter: blur(8px);
+  background-color: #ffffff; /* Világos módban fix fehér kártya - ez oldja meg a hibát! */
+  color: #1e293b; /* Alapszöveg színe (pl. a checkboxok melletti szöveg) */
 }
 
-/* Title styling */
 .register-card h2 {
   margin-bottom: 1.5rem;
   text-align: center;
   color: #6e6be6;
 }
 
-/* Button styling */
 .register-button {
   width: 100%;
   font-weight: bold;
-  background: linear-gradient(90deg, #6e6be6, #c37fd8, #3ab7f7) !important; 
+  background: linear-gradient(90deg, #6e6be6, #c37fd8, #3ab7f7) !important;
   border: none !important;
+  color: white !important;
+}
+
+/* --- SÖTÉT MÓD (DARK MODE) SZABÁLYOK --- */
+
+/* Kártya háttere és alapszöveg színe */
+.dark-mode .register-card {
+  background-color: #1e293b;
+  color: #f8fafc;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Címsor színe sötét módban (világosabb lila) */
+.dark-mode .register-card h2 {
+  color: #a78bfa;
+}
+
+/* Címkék (Label, Checkbox) és elhalványított szövegek */
+.dark-mode .register-card .form-label,
+.dark-mode .register-card .form-check-label {
+  color: #f8fafc;
+}
+
+.dark-mode .register-card .text-muted {
+  color: #94a3b8 !important;
+}
+
+/* Bemeneti mezők (Input és Checkbox) sötét módban */
+.dark-mode .register-card .form-control,
+.dark-mode .register-card .form-check-input {
+  background-color: #334155;
+  border-color: #475569;
+  color: #f8fafc;
+}
+
+.dark-mode .register-card .form-control::placeholder {
+  color: #94a3b8;
+}
+
+/* Amikor belekattint az inputba (Focus) */
+.dark-mode .register-card .form-control:focus,
+.dark-mode .register-card .form-check-input:focus {
+  background-color: #1e293b;
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 0.25rem rgba(167, 139, 250, 0.25);
+  color: #f8fafc;
+}
+
+/* A "Log in" link sötét módban kékebb, hogy jobban olvasható legyen */
+.dark-mode .register-card a.text-primary {
+  color: #60a5fa !important;
 }

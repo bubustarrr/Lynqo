@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Container, Card, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { FaHeart, FaBolt } from 'react-icons/fa'; // FaArrowLeft kikerült
+import { FaHeart, FaBolt } from 'react-icons/fa';
 
 // Importáljuk a közös Vissza gomb komponenst
 import BackButton from '../components/common/BackButton';
@@ -33,9 +33,11 @@ export default function PowerupsPage() {
 
   const [coins, setCoins] = useState(0);
   const [hearts, setHearts] = useState(5);
+  // ÚJ: prémium állapot
+  const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [buyingId, setBuyingId] = useState(null); // tracks which item is being purchased
-  const [message, setMessage] = useState(null);   // { type: 'success'|'error', text: string }
+  const [buyingId, setBuyingId] = useState(null); 
+  const [message, setMessage] = useState(null);   
 
   // Fetch current coins + hearts
   useEffect(() => {
@@ -53,6 +55,8 @@ export default function PowerupsPage() {
           const data = await res.json();
           setCoins(data.coins ?? data.Coins ?? 0);
           setHearts(data.hearts ?? data.Hearts ?? 5);
+          // ÚJ: Beállítjuk a prémium státuszt
+          setIsPremium(data.isPremium ?? data.IsPremium ?? false);
         }
       } catch (err) {
         console.error("Failed to load stats", err);
@@ -66,6 +70,12 @@ export default function PowerupsPage() {
 
   const handleBuy = async (item) => {
     if (item.disabled) return;
+    // ÚJ: Prémium felhasználó nem vehet szívet!
+    if (isPremium && item.id === 'heart_refill') {
+      setMessage({ type: 'error', text: "You have unlimited hearts with Premium!" });
+      setTimeout(() => setMessage(null), 3000);
+      return;
+    }
     if (coins < item.cost) {
       setMessage({ type: 'error', text: "Not enough gems! Complete lessons to earn more." });
       setTimeout(() => setMessage(null), 3000);
@@ -107,8 +117,7 @@ export default function PowerupsPage() {
   return (
     <Container className="main-page-container mt-4" style={{ maxWidth: '600px' }}>
 
-      {/* Itt használjuk az új BackButton komponenst "Back" felirattal */}
-      <div className="mb-4"  >
+      <div className="mb-4">
         <BackButton />
       </div>
 
@@ -124,8 +133,9 @@ export default function PowerupsPage() {
           <small className="text-muted fw-bold">YOUR GEMS</small>
         </div>
         <div className="text-center">
+          {/* ÚJ: Végtelen jel megjelenítése szív vásárlásánál is */}
           <div className="fw-bold fs-4" style={{ color: '#ef4444' }}>
-            ❤️ {loading ? '...' : hearts}
+            ❤️ {loading ? '...' : (isPremium ? '∞' : hearts)}
           </div>
           <small className="text-muted fw-bold">YOUR HEARTS</small>
         </div>
@@ -146,7 +156,8 @@ export default function PowerupsPage() {
           {POWERUP_ITEMS.map((item) => {
             const canAfford = coins >= item.cost;
             const isHeartRefill = item.action === 'refill_hearts';
-            const heartsAlreadyFull = isHeartRefill && hearts >= 5;
+            // ÚJ: Ha prémiumos, vagy már van 5 szíve, akkor a gomb "Full"-nak számít
+            const heartsAlreadyFull = isHeartRefill && (isPremium || hearts >= 5);
 
             return (
               <Card
@@ -175,6 +186,8 @@ export default function PowerupsPage() {
                   >
                     {buyingId === item.id ? (
                       <Spinner animation="border" size="sm" />
+                    ) : isPremium && isHeartRefill ? (
+                      '∞ ❤️' // ÚJ: Prémiumosoknak végtelen szív felirat a gombon
                     ) : heartsAlreadyFull ? (
                       'Full ❤️'
                     ) : (

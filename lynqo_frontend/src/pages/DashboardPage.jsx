@@ -12,7 +12,8 @@ export default function DashboardPage() {
 
   const activeCourseId = courseId || 1;
 
-  const [stats, setStats] = useState({ streak: 0, xp: 0, hearts: 5, gems: 0 });
+  // ÚJ: isPremium hozzáadása a state-hez
+  const [stats, setStats] = useState({ streak: 0, xp: 0, hearts: 5, gems: 0, isPremium: false });
   const [nextLesson, setNextLesson] = useState(null);
   const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +44,8 @@ export default function DashboardPage() {
             xp: userData.totalXp || userData.TotalXp || 0,
             hearts: userData.hearts !== undefined ? userData.hearts : (userData.Hearts || 5),
             gems: userData.coins || userData.Coins || 0,
+            // ÚJ: prémium státusz mentése
+            isPremium: userData.isPremium || userData.IsPremium || false, 
           });
         }
 
@@ -115,7 +118,10 @@ export default function DashboardPage() {
             <Card className="dashboard-card text-center p-3">
               <Card.Body>
                 <div className="stat-icon">❤️</div>
-                <div className="stat-value" style={{ color: '#ef4444' }}>{stats.hearts}</div>
+                {/* ÚJ: Végtelen jel megjelenítése, ha prémiumos, extra nagysággal hogy jól mutasson */}
+                <div className="stat-value" style={{ color: '#ef4444', fontSize: stats.isPremium ? '2.5rem' : '' }}>
+                  {stats.isPremium ? '∞' : stats.hearts}
+                </div>
                 <div className="stat-label">Hearts</div>
               </Card.Body>
             </Card>

@@ -36,6 +36,27 @@ export default function NavBar() {
     navigate('/main');
   };
 
+  // Function to resolve the correct image URL or generate one!
+  const getProfileImageUrl = () => {
+    const picUrl = user?.profilePictureUrl || user?.profilePic || user?.avatarUrl;
+    
+    if (picUrl) {
+      if (picUrl.startsWith('/')) {
+        return `https://localhost:7118${picUrl}`;
+      }
+      return picUrl;
+    }
+    
+    // --- UI AVATAR GENERATOR ---
+    // If no picture, generate one based on their username.
+    // E.g., username "TestV4_2" generates a picture with a "T"
+    const nameToUse = user?.username || user?.email || 'User';
+    
+    // You can customize the colors here! 
+    // background=6366f1 (indigo) color=fff (white)
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(nameToUse)}&background=6366f1&color=fff&rounded=true&bold=true`;
+  };
+
   return (
     <nav className="navbar" ref={navRef}>
       
@@ -46,8 +67,33 @@ export default function NavBar() {
             <button 
               className={`nav-btn nav-btn-user ${activeDropdown === 'user' ? 'active' : ''}`} 
               onClick={() => toggleDropdown('user')}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }} 
             >
-              <span className="user-icon">👤</span>
+              <div style={{
+                width: '32px', 
+                height: '32px', 
+                minWidth: '32px', 
+                overflow: 'hidden', 
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#333'
+              }}>
+                <img 
+                  src={getProfileImageUrl()} 
+                  alt={`${user.username || "User"}'s profile`} 
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    // Fallback to a generic initial if everything fails
+                    e.target.src = `https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&rounded=true`;
+                  }}
+                />
+              </div>
               <span className="username">{user.username || user.email || "User"}</span>
               <span className="arrow">▼</span>
             </button>
@@ -91,7 +137,6 @@ export default function NavBar() {
             </div>
           </label>
         </div>
-        {/* Nyelvi dropdown eltávolítva - már a Settings oldalon van */}
       </div>
     </nav>
   );

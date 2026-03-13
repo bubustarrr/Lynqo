@@ -55,7 +55,7 @@ export default function ProfilePage() {
 
         <aside className="profile-sidebar-column">
           
-          {/* ÚJ: Egy szép, széles gomb a sidebar tetején a barátkereső modal megnyitásához */}
+          {/* ÚJ: Egy szép, széles gomb a sidebara tetején a barátkereső modal megnyitásához */}
           <Button 
             variant="primary" 
             className="w-100 mb-4 fw-bold shadow-sm" 

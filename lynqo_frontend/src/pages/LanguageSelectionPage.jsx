@@ -85,7 +85,7 @@ export default function LanguageSelectionPage() {
   };
 
   return (
-    <Container className="main-page-container mt-5 mb-5 pb-5 text-center">
+     <Container className="main-page-container mt-5 mb-5 pb-5 text-center">
       
       {/* HEADER */}
       <div className="mb-4">

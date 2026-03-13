@@ -38,7 +38,7 @@ export default function ProfilePage() {
         </section>
 
         <aside className="profile-sidebar-column">
-          <Button className="add-friend-btn w-100 mb-4 animate-pop-in" onClick={() => setShowAddFriendModal(true)}>
+          <Button className="add-friend-btn w-100 mb-4" onClick={() => setShowAddFriendModal(true)}>
             <i className="bi bi-person-plus-fill"></i> Add Friend
           </Button>
           <FriendRequests friendRequests={friendRequests} handleRequest={handleRequest} resolveMediaUrl={resolveMediaUrl} t={t} />

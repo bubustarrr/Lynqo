@@ -153,9 +153,31 @@ export const useProfileData = () => {
     }
   };
 
-  const handleUnfriend = async () => {
-    alert('Unfriend backend is not added yet.');
+  const handleUnfriend = async (friendUserId) => {
+    if (!window.confirm("Are you sure you want to remove this friend?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/api/Friends/${friendUserId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders() 
+      });
+
+      if (response.ok) {
+        // Remove the friend from the UI immediately using userId!
+        setFriendsList((prev) => prev.filter((friend) => friend.userId !== friendUserId));
+        console.log(`Successfully unfriended user ${friendUserId}`);
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to unfriend:", errorData.message);
+        alert("Could not remove friend. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error unfriending:", error);
+    }
   };
+
 
   const openChat = async (friend) => {
     setActiveChat(friend);

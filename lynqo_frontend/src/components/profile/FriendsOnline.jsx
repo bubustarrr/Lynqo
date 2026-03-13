@@ -36,10 +36,9 @@ export default function FriendsOnline({ friendsList, openChat, handleUnfriend, r
                 >
                   💬
                 </button>
-
                 <button
                   className="action-btn unfriend-btn"
-                  onClick={() => handleUnfriend(friend.friendshipId)}
+                  onClick={() => handleUnfriend(friend.userId)} // <--- CHANGE THIS TO userId
                   title="Unfriend"
                 >
                   ❌

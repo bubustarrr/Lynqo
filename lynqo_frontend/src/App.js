@@ -23,11 +23,13 @@ import MerchPage from './pages/MerchPage';
 import LessonPage from './pages/LessonPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
-// AZ ÚJ ELŐFIZETÉS OLDAL IMPORTJA:
 import SubscriptionPage from './pages/SubscriptionPage'; 
 import ProfileEditPage from './pages/ProfileEditPage';
 import ShopLandingPage from './pages/ShopLandingPage';
 import PowerupsPage from './pages/PowerUpsPage';
+
+// --- ÚJ IMPORT AZ EMAIL MEGERŐSÍTÉS OLDALHOZ ---
+import VerifySuccess from './pages/VerifySuccess';
 
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
@@ -74,6 +76,9 @@ function AppContent() {
           <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
           <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
           
+          {/* --- ÚJ ROUTE AZ EMAIL MEGERŐSÍTÉSHEZ --- */}
+          <Route path="/verify-success" element={<VerifySuccess />} />
+          
           {/* Dashboard és Tanulás */}
           <Route path="/dashboard/:courseId" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/dashboard" element={<Navigate to="/dashboard/1" replace />} /> 
@@ -89,11 +94,9 @@ function AppContent() {
           {/* --- SHOP SZEKCIÓ --- */}
           <Route path="/shop" element={<ProtectedRoute><ShopLandingPage /></ProtectedRoute>} />
           <Route path="/shop/powerups" element={<ProtectedRoute><PowerupsPage /></ProtectedRoute>} />
-          {/* JAVÍTVA: Helyes URL és a helyes SubscriptionPage komponens */}
           <Route path="/shop/subscriptions" element={<ProtectedRoute><SubscriptionPage /></ProtectedRoute>} />
           <Route path="/shop/merch" element={<ProtectedRoute><MerchPage /></ProtectedRoute>} />
           
-
           {/* Fallback (ha valaki nem létező URL-t ír be) */}
           <Route path="/" element={<Navigate to="/main" replace />} />
           <Route path="*" element={<Navigate to="/main" replace />} />

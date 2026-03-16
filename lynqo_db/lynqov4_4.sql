@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Már 16. 09:20
+-- Létrehozás ideje: 2026. Már 16. 09:57
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -176,7 +176,7 @@ INSERT INTO `api_tokens` (`id`, `user_id`, `token`, `scopes`, `created_at`, `exp
 (97, 25, 'FZNUQa5ZZkol1d79AF+HwCTzfEktAjjvylQifCDaesZo6B7e7AY6iLYfkXHz5o+otGXU1biTE8owaR85cr5p+Q==', 'refresh_token', '2026-03-11 10:35:25', '2026-04-10 09:35:25'),
 (98, 26, 'PUxslyHqb3nFJWOKIvs3MIGq3zTZeKYwU5jxoF95ZqzIHiaHN1u0tVoEmWvikTLQ6tfYjMISGGrgqh0GlRYD9g==', 'refresh_token', '2026-03-11 10:36:34', '2026-04-10 09:36:34'),
 (99, 25, 'xLIRMy+E7ohpjioEhODzni1Dh8Gq20Wei10qvma5aW8xgY/CNhdBANThT+OBrjKh50Q4FSyIjCxN/CydPmWjJg==', 'refresh_token', '2026-03-13 06:11:12', '2026-04-12 05:11:12'),
-(102, 30, 'cFKherw8qpNvs+uFE0f+JeXxVc0anJUTlg7OAifG7c6p18VX8vEwpu7fGV+8nH+klZpYXbv6qTOgoE1CM8PEsg==', 'refresh_token', '2026-03-16 07:14:18', '2026-04-15 06:14:18');
+(110, 36, 'NB/bh55CFpk04y/7W4ObuNFe1ToB4nRRc0L+G5HRPCZ7KOv+uRFpFI45rKeMuWKMLltsCetMHeSWM3djsTHcYQ==', 'refresh_token', '2026-03-16 07:54:32', '2026-04-15 06:54:32');
 
 -- --------------------------------------------------------
 
@@ -1304,22 +1304,24 @@ CREATE TABLE `users` (
   `streak` int(11) DEFAULT 0,
   `last_lesson_date` datetime DEFAULT NULL,
   `is_verified` tinyint(1) DEFAULT 0,
-  `verification_token` varchar(255) DEFAULT NULL
+  `verification_token` varchar(255) DEFAULT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `reset_token_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- A tábla adatainak kiíratása `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `display_name`, `email`, `password_hash`, `profile_pic_url`, `hearts`, `coins`, `is_premium`, `role`, `created_at`, `last_heart_refill_at`, `streak`, `last_lesson_date`, `is_verified`, `verification_token`) VALUES
-(1, 'lynqotester', 'Lynqo Tester', 'lynqotester@example.com', 'b6um5O1yTFtU+tGeypiSPiGYzbunjbXnRnLIMhf7M6Y=', NULL, 5, 0, 0, 'admin', '2025-10-23 12:10:28', NULL, 0, NULL, 0, NULL),
-(3, 'bubu', 'bubu', 'andren@kkszki.hu', '0XK8fuW779KXzSf3nrWaVRxN3lebIJCuSj+NEQazk9E=', NULL, 5, 0, 0, 'user', '2025-10-23 12:17:57', NULL, 0, NULL, 0, NULL),
-(7, 'cisco', 'cisco', 'cisco@gmail.com', 'sYvKoPjrgIO/RUL3Di0PHSISfUHW8hkEaExgEPefbGo=', NULL, 5, 0, 0, 'user', '2026-01-26 08:39:55', NULL, 0, NULL, 0, NULL),
-(9, 'TestV3', 'TestV3_New', 'testv3_new@gmail.com', 'UkIyOS2ah1vgKMuFsSR1nUbINWiRZppdmFdRgjqverY=', '/media/images/profile_pictures/af4cd77c241847baa9df3d981ee9030c.jpg', 0, 0, 1, 'admin', '2026-02-03 08:02:42', '2026-03-09 08:10:09', 0, NULL, 0, NULL),
-(24, 'TestV4', 'TestV4', 'TestV4@gmail.com', 'C+cr+uUrx44CgWUuFgfCjVxkvFXFr8352OAcOYUZ6Wc=', NULL, 4, 0, 0, 'user', '2026-02-27 07:10:43', NULL, 0, NULL, 0, NULL),
-(25, 'TestV4_2', 'TestV4_2', 'testv4_2@gmail.com', 'yIfSLUH9vcUvesYAaJPLnmas0Syy5zmtnderOPBuop8=', '/media/images/profile_pictures/5a6b048efd304f4682bda59503aa6396.png', 5, 100, 1, 'user', '2026-03-11 08:10:57', NULL, 0, NULL, 0, NULL),
-(26, 'StreakTest', 'StreakTest', 'streaktest@gmail.com', 'D3pH0T9C+BbXtQkA7RZVPakNu5suNIORqCYKWTUrW2M=', NULL, 5, 0, 1, 'user', '2026-03-11 10:36:34', NULL, 0, NULL, 0, NULL),
-(30, 'Robi', 'Robi', 'kocsisr@kkszki.hu', 'ujtny4cKGk8vl4mF1XaTNWUMAtSiBxYEPxDRLWwjs/k=', NULL, 5, 0, 0, 'user', '2026-03-16 07:13:41', NULL, 0, NULL, 1, NULL);
+INSERT INTO `users` (`id`, `username`, `display_name`, `email`, `password_hash`, `profile_pic_url`, `hearts`, `coins`, `is_premium`, `role`, `created_at`, `last_heart_refill_at`, `streak`, `last_lesson_date`, `is_verified`, `verification_token`, `reset_token`, `reset_token_expiry`) VALUES
+(1, 'lynqotester', 'Lynqo Tester', 'lynqotester@example.com', 'b6um5O1yTFtU+tGeypiSPiGYzbunjbXnRnLIMhf7M6Y=', NULL, 5, 0, 0, 'admin', '2025-10-23 12:10:28', NULL, 0, NULL, 0, NULL, NULL, NULL),
+(3, 'bubu', 'bubu', 'andren@kkszki.hu', '0XK8fuW779KXzSf3nrWaVRxN3lebIJCuSj+NEQazk9E=', NULL, 5, 0, 0, 'user', '2025-10-23 12:17:57', NULL, 0, NULL, 0, NULL, NULL, NULL),
+(7, 'cisco', 'cisco', 'cisco@gmail.com', 'sYvKoPjrgIO/RUL3Di0PHSISfUHW8hkEaExgEPefbGo=', NULL, 5, 0, 0, 'user', '2026-01-26 08:39:55', NULL, 0, NULL, 0, NULL, NULL, NULL),
+(9, 'TestV3', 'TestV3_New', 'testv3_new@gmail.com', 'UkIyOS2ah1vgKMuFsSR1nUbINWiRZppdmFdRgjqverY=', '/media/images/profile_pictures/af4cd77c241847baa9df3d981ee9030c.jpg', 0, 0, 1, 'admin', '2026-02-03 08:02:42', '2026-03-09 08:10:09', 0, NULL, 0, NULL, NULL, NULL),
+(24, 'TestV4', 'TestV4', 'TestV4@gmail.com', 'C+cr+uUrx44CgWUuFgfCjVxkvFXFr8352OAcOYUZ6Wc=', NULL, 4, 0, 0, 'user', '2026-02-27 07:10:43', NULL, 0, NULL, 0, NULL, NULL, NULL),
+(25, 'TestV4_2', 'TestV4_2', 'testv4_2@gmail.com', 'yIfSLUH9vcUvesYAaJPLnmas0Syy5zmtnderOPBuop8=', '/media/images/profile_pictures/5a6b048efd304f4682bda59503aa6396.png', 5, 100, 1, 'user', '2026-03-11 08:10:57', NULL, 0, NULL, 0, NULL, NULL, NULL),
+(26, 'StreakTest', 'StreakTest', 'streaktest@gmail.com', 'D3pH0T9C+BbXtQkA7RZVPakNu5suNIORqCYKWTUrW2M=', NULL, 5, 0, 1, 'user', '2026-03-11 10:36:34', NULL, 0, NULL, 0, NULL, NULL, NULL),
+(36, 'Robi', 'Robi', 'kocsisr@kkszki.hu', 'ujtny4cKGk8vl4mF1XaTNWUMAtSiBxYEPxDRLWwjs/k=', NULL, 5, 0, 0, 'user', '2026-03-16 07:54:11', NULL, 0, NULL, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1710,7 +1712,7 @@ ALTER TABLE `analytics`
 -- AUTO_INCREMENT a táblához `api_tokens`
 --
 ALTER TABLE `api_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT a táblához `audit_logs`
@@ -1836,7 +1838,7 @@ ALTER TABLE `units`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT a táblához `user_badges`

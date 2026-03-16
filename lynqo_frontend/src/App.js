@@ -27,9 +27,11 @@ import SubscriptionPage from './pages/SubscriptionPage';
 import ProfileEditPage from './pages/ProfileEditPage';
 import ShopLandingPage from './pages/ShopLandingPage';
 import PowerupsPage from './pages/PowerUpsPage';
-
-// --- ÚJ IMPORT AZ EMAIL MEGERŐSÍTÉS OLDALHOZ ---
 import VerifySuccess from './pages/VerifySuccess';
+
+// --- ÚJ IMPORTOK A JELSZÓ VISSZAÁLLÍTÁSHOZ ---
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 // Védett útvonal komponensek
 const GuestRoute = ({ children }) => {
@@ -54,7 +56,7 @@ function AppContent() {
 
   useEffect(() => {
     setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 500); // Kicsit gyorsítottam a loadingon
+    const timer = setTimeout(() => setIsLoading(false), 500); 
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
@@ -73,10 +75,14 @@ function AppContent() {
           {/* Főoldalak és Profil */}
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/main" element={<MainPage />} />
+          
+          {/* Authentikáció és Jelszó visszaállítás (Guest útvonalak) */}
           <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
           <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
+          <Route path="/forgot-password" element={<GuestRoute><ForgotPasswordPage /></GuestRoute>} />
+          <Route path="/reset-password" element={<GuestRoute><ResetPasswordPage /></GuestRoute>} />
           
-          {/* --- ÚJ ROUTE AZ EMAIL MEGERŐSÍTÉSHEZ --- */}
+          {/* Email megerősítés sikeres */}
           <Route path="/verify-success" element={<VerifySuccess />} />
           
           {/* Dashboard és Tanulás */}
@@ -109,7 +115,6 @@ function AppContent() {
 }
 
 // FONTOS: Itt csak a Providereket fűzzük össze. 
-// A Routert az index.js-be tesszük!
 export default function App() {
   return (
     <ThemeProvider>

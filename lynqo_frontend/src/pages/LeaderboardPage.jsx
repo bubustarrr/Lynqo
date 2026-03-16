@@ -1,19 +1,36 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Card, Spinner } from 'react-bootstrap';
+import { Container, Card, Spinner, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './LeaderboardPage.css';
 
 // Itt importáljuk az univerzális Vissza gombot
 import BackButton from '../components/common/BackButton';
 
+// Mapping leagues to colors for styling the badge
+const LEAGUE_COLORS = {
+    "Bronze": "#00bcf5", // The bright blue in your screenshot
+    "Copper": "#b87333",
+    "Silver": "#c0c0c0",
+    "Gold":   "#ffd700",
+    "Emerald":"#50c878",
+    "Obsidian":"#4b0082",
+    "Diamond":"#b9f2ff",
+    "Global": "#8c52ff" // A purple for global
+};
+
 export default function LeaderboardPage() {
     const { token, user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
+    
     const [leaders, setLeaders] = useState([]);
+    const [currentLeague, setCurrentLeague] = useState("Bronze");
     const [loading, setLoading] = useState(true);
     const [timeframe, setTimeframe] = useState('weekly');
     const [imgErrors, setImgErrors] = useState({});
+
+    // This lets the user look at other leagues even if they aren't in them
+    const [viewingLeague, setViewingLeague] = useState(null); 
 
     useEffect(() => {
         if (!token) return;
@@ -21,7 +38,12 @@ export default function LeaderboardPage() {
         const fetchLeaderboard = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`https://localhost:7118/api/Leaderboard/${timeframe}`, {
+                // If they are viewing a specific league from the dropdown, send it as a query param
+                const url = viewingLeague && timeframe === 'weekly' 
+                    ? `https://localhost:7118/api/Leaderboard/${timeframe}?league=${viewingLeague}`
+                    : `https://localhost:7118/api/Leaderboard/${timeframe}`;
+
+                const res = await fetch(url, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -33,7 +55,16 @@ export default function LeaderboardPage() {
 
                 if (res.ok) {
                     const data = await res.json();
-                    setLeaders(data);
+                    
+                    if (timeframe === 'weekly') {
+                        setLeaders(data.leaderboard);
+                        setCurrentLeague(data.league);
+                        // If viewingLeague is null, default to their actual league
+                        if (!viewingLeague) setViewingLeague(data.league);
+                    } else {
+                        setLeaders(data);
+                        setViewingLeague("Global");
+                    }
                 }
             } catch (err) {
                 console.error("Leaderboard error:", err);
@@ -43,7 +74,7 @@ export default function LeaderboardPage() {
         };
 
         fetchLeaderboard();
-    }, [token, timeframe, logout, navigate]);
+    }, [token, timeframe, viewingLeague, logout, navigate]);
 
     const getRankDisplay = (rank) => {
         if (rank === 1) return '🥇';
@@ -55,29 +86,73 @@ export default function LeaderboardPage() {
     const isCurrentUser = (learner) =>
         learner.username?.toLowerCase() === user?.username?.toLowerCase();
 
+    const getZoneRowClass = (zone) => {
+        if (timeframe === 'global') return '';
+        if (zone === "Promotion" || zone === "Champion") return 'zone-promotion';
+        if (zone === "Demotion") return 'zone-demotion';
+        return 'zone-safe';
+    };
+
+    // Use selected league color, default to blue
+    const activeColor = LEAGUE_COLORS[viewingLeague] || "#00bcf5";
+
     return (
         <Container className="leaderboard-container">
             
-            {/* Itt hívjuk meg a gombot, balra igazítva, a "Back" szöveggel */}
-            <BackButton 
-                
-                wrapperClass="d-flex justify-content-start w-100 mb-4" 
-            />
+            <BackButton wrapperClass="d-flex justify-content-start w-100 mb-4" />
 
-            <div className="leaderboard-header d-flex justify-content-center">
-                <h1 className="leaderboard-title">🏆 Leaderboard</h1>
+            <div className="leaderboard-header d-flex flex-column align-items-center mb-4">
+                <h1 className="leaderboard-title m-0 mb-2">🏆 Leaderboard</h1>
+                
+                {/* The Dropdown replacing the static Bronze League text */}
+                <Dropdown>
+                    <Dropdown.Toggle 
+                        id="league-dropdown"
+                        className="league-dropdown-badge"
+                        style={{ backgroundColor: activeColor }}
+                    >
+                        {viewingLeague} {viewingLeague !== "Global" ? "League" : "Leaderboard"}
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="league-dropdown-menu text-center">
+                        <Dropdown.Header>Select League</Dropdown.Header>
+                        {Object.keys(LEAGUE_COLORS).map((leagueName) => (
+                            <Dropdown.Item 
+                                key={leagueName}
+                                active={viewingLeague === leagueName}
+                                onClick={() => {
+                                    setViewingLeague(leagueName);
+                                    if (leagueName === "Global") {
+                                        setTimeframe("global");
+                                    } else {
+                                        setTimeframe("weekly");
+                                    }
+                                }}
+                            >
+                                {leagueName} {leagueName !== "Global" ? "League" : "Leaderboard"}
+                            </Dropdown.Item>
+                        ))}
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
 
-            <div className="leaderboard-toggle">
+            {/* Your original toggle buttons */}
+            <div className="leaderboard-toggle mb-4">
                 <button
                     className={`toggle-btn ${timeframe === 'weekly' ? 'btn-primary' : ''}`}
-                    onClick={() => setTimeframe('weekly')}
+                    onClick={() => {
+                        setTimeframe('weekly');
+                        setViewingLeague(currentLeague); // Reset to their actual league
+                    }}
                 >
                     This Week
                 </button>
                 <button
                     className={`toggle-btn ${timeframe === 'global' ? 'btn-primary' : ''}`}
-                    onClick={() => setTimeframe('global')}
+                    onClick={() => {
+                        setTimeframe('global');
+                        setViewingLeague("Global");
+                    }}
                 >
                     All Time
                 </button>
@@ -106,7 +181,10 @@ export default function LeaderboardPage() {
                                 leaders.map((learner) => (
                                     <tr
                                         key={learner.id}
-                                        className={isCurrentUser(learner) ? 'current-user-row' : ''}
+                                        className={`
+                                            ${isCurrentUser(learner) ? 'current-user-row' : ''} 
+                                            ${getZoneRowClass(learner.zone)}
+                                        `}
                                     >
                                         <td className="rank-cell">
                                             {getRankDisplay(learner.rank)}

@@ -4,13 +4,13 @@ import { Spinner, Button } from 'react-bootstrap';
 import './ProfilePage.css';
 import { useProfileData } from '../hooks/useProfileData';
 import ProfileMainCard from '../components/profile/ProfileMainCard';
-import Achievements from '../components/profile/Achievements';
 import FriendRequests from '../components/profile/FriendRequests';
 import FriendsOnline from '../components/profile/FriendsOnline';
 import DockedChat from '../components/profile/DockedChat';
 import ProfileStatusBar from '../components/profile/ProfileStatusBar';
 import PremiumPromoCard from '../components/profile/PremiumPromoCard';
 import AddFriendModal from '../components/profile/AddFriendModal';
+import Achievements from '../components/gamification/AchievementBadge';
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -21,6 +21,7 @@ export default function ProfilePage() {
     chatMessage, setChatMessage, chatHistories,
     handleRequest, handleUnfriend, openChat, sendMessage, resolveMediaUrl, navigate
   } = useProfileData();
+    console.log("Profile Data:", profileData);
 
   if (loading) return <div className="text-center p-5"><Spinner animation="border" /></div>;
 
@@ -34,7 +35,13 @@ export default function ProfilePage() {
       <div className="profile-layout">
         <section className="main-profile-column">
           <ProfileMainCard p={profileData} t={t} navigate={navigate} resolveMediaUrl={resolveMediaUrl} />
-          <Achievements t={t} />
+          {profileData?.id && (
+            <Achievements 
+              t={t} 
+              userId={profileData.id} 
+              resolveMediaUrl={resolveMediaUrl} 
+            />
+          )}
         </section>
 
         <aside className="profile-sidebar-column">

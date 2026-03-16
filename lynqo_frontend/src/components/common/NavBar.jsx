@@ -38,22 +38,20 @@ export default function NavBar() {
 
   // Function to resolve the correct image URL or generate one!
   const getProfileImageUrl = () => {
-    const picUrl = user?.profilePictureUrl || user?.profilePic || user?.avatarUrl;
+    const picUrl = user?.profilepicurl || user?.profilePicUrl || user?.ProfilePicUrl || user?.profilePictureUrl;
     
-    if (picUrl) {
-      if (picUrl.startsWith('/')) {
-        return `https://localhost:7118${picUrl}`;
+    // 1. PRIMARY METHOD
+    if (picUrl && picUrl.trim() !== "" && picUrl !== "null") {
+      if (picUrl.startsWith('http://') || picUrl.startsWith('https://')) {
+        return picUrl;
       }
-      return picUrl;
+      
+      const cleanPath = picUrl.startsWith('/') ? picUrl : `/${picUrl}`;
+      return `https://localhost:7118${cleanPath}`;
     }
     
-    // --- UI AVATAR GENERATOR ---
-    // If no picture, generate one based on their username.
-    // E.g., username "TestV4_2" generates a picture with a "T"
+    // 2. FALLBACK METHOD
     const nameToUse = user?.username || user?.email || 'User';
-    
-    // You can customize the colors here! 
-    // background=6366f1 (indigo) color=fff (white)
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(nameToUse)}&background=6366f1&color=fff&rounded=true&bold=true`;
   };
 
@@ -89,8 +87,9 @@ export default function NavBar() {
                     objectFit: 'cover'
                   }}
                   onError={(e) => {
-                    // Fallback to a generic initial if everything fails
-                    e.target.src = `https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&rounded=true`;
+                    e.target.onerror = null; 
+                    const nameToUse = user?.username || user?.email || 'User';
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameToUse)}&background=6366f1&color=fff&rounded=true&bold=true`;
                   }}
                 />
               </div>

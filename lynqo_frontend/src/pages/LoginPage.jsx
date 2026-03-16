@@ -2,33 +2,31 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
-import './LoginPage.css'; // Ensure this exists
+import './LoginPage.css'; 
 
 export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // State Variables
-  const [formData, setFormData] = useState({
-    usernameOrEmail: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ usernameOrEmail: '', password: '' });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // --- ÚJ ÁLLAPOTOK AZ EMAIL ÚJRAKÜLDÉSHEZ ---
+  const [isUnverified, setIsUnverified] = useState(false);
+  const [resendMessage, setResendMessage] = useState(null);
+  const [isResending, setIsResending] = useState(false);
 
-  // Handle Input Change
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setIsUnverified(false);
+    setResendMessage(null);
 
     try {
       const res = await fetch('https://localhost:7118/api/Auth/login', {
@@ -38,16 +36,17 @@ export default function LoginPage() {
       });
 
       if (!res.ok) {
-        const errData = await res.text();
-        throw new Error(errData || 'Login failed');
+        const errData = await res.json();
+        
+        // Ha az email nincs megerősítve, bekapcsoljuk az újraküldés gombot
+        if (errData.error === "Please verify your email address first. Check your inbox!") {
+           setIsUnverified(true);
+        }
+        throw new Error(errData.error || 'Login failed');
       }
 
       const data = await res.json();
-      
-      // Save Token & User
       login(data);
-
-      // Redirect to Pick Language (NOT Dashboard/1)
       navigate('/pick-language');
 
     } catch (err) {
@@ -57,12 +56,52 @@ export default function LoginPage() {
     }
   };
 
+  // --- ÚJ METÓDUS: EMAIL ÚJRAKÜLDÉSE ---
+  const handleResendVerification = async () => {
+    setIsResending(true);
+    setResendMessage(null);
+    
+    // Feltételezzük, hogy az "usernameOrEmail" mezőbe az emailjét írta. 
+    // (Ha felhasználónevet írt, érdemes kérni, hogy írja be az emailt).
+    try {
+      const res = await fetch('https://localhost:7118/api/Auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.usernameOrEmail }),
+      });
+      
+      if (!res.ok) throw new Error("Failed to resend. Please make sure you entered your email address in the field above.");
+      
+      setResendMessage("Verification email resent! Please check your inbox (and spam folder).");
+      setIsUnverified(false); // Eltüntetjük a gombot siker után
+    } catch(err) {
+      setResendMessage(err.message);
+    } finally {
+      setIsResending(false);
+    }
+  }
+
   return (
     <div className="login-page-container">
       <Card className="login-card">
         <h2>Welcome Back!</h2>
         
         {error && <Alert variant="danger" className="mb-3">{error}</Alert>}
+        
+        {/* SIKERES ÚJRAKÜLDÉS ÜZENETE */}
+        {resendMessage && <Alert variant="info" className="mb-3">{resendMessage}</Alert>}
+
+        {/* ÚJRAKÜLDÉS GOMB, HA NINCS MEGERŐSÍTVE */}
+        {isUnverified && (
+            <Button 
+              variant="outline-primary" 
+              className="w-100 mb-3" 
+              onClick={handleResendVerification}
+              disabled={isResending}
+            >
+              {isResending ? <Spinner animation="border" size="sm" /> : "📧 Resend Verification Email"}
+            </Button>
+        )}
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="loginUsername">
@@ -77,7 +116,7 @@ export default function LoginPage() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-4" controlId="loginPassword">
+          <Form.Group className="mb-2" controlId="loginPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
@@ -88,6 +127,11 @@ export default function LoginPage() {
               required
             />
           </Form.Group>
+
+          {/* --- ÚJ LINK: ELFELEJTETT JELSZÓ --- */}
+          <div className="text-end mb-4">
+             <Link to="/forgot-password" className="text-primary text-decoration-none" style={{ fontSize: '0.9rem' }}>Forgot password?</Link>
+          </div>
 
           <Button className="login-button" type="submit" disabled={isLoading}>
             {isLoading ? <Spinner animation="border" size="sm" /> : "Log In"}

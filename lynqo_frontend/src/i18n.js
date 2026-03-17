@@ -4,6 +4,19 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      //footer
+      "footer": {
+  "slogan": "Language learning made simple.",
+  "rights": "All rights reserved.",
+  "owners": "Owners",
+  "contact": "Contact",
+  "navigation": "Navigation",
+  "home": "Home",
+  "news": "News",
+  "shop": "Shop",
+  "leaderboard": "Leaderboard",
+  "followUs": "Follow Us"
+},
       //picklanguage
       "langSelect": {
   "speakTitle": "I speak...",
@@ -345,6 +358,19 @@ const resources = {
   },
   hu: {
     translation: {
+      //footer
+      "footer": {
+  "slogan": "Nyelvtanulás egyszerűen.",
+  "rights": "Minden jog fenntartva.",
+  "owners": "Tulajdonosok",
+  "contact": "Kapcsolat",
+  "navigation": "Navigáció",
+  "home": "Kezdőlap",
+  "news": "Hírek",
+  "shop": "Bolt",
+  "leaderboard": "Ranglista",
+  "followUs": "Kövess minket"
+},
       //picklanguage
       "langSelect": {
   "speakTitle": "Beszélt nyelv...",
@@ -720,6 +746,19 @@ const resources = {
   },
   es: {
     translation: {
+      //footer
+      "footer": {
+  "slogan": "El aprendizaje de idiomas simplificado.",
+  "rights": "Todos los derechos reservados.",
+  "owners": "Propietarios",
+  "contact": "Contacto",
+  "navigation": "Navegación",
+  "home": "Inicio",
+  "news": "Noticias",
+  "shop": "Tienda",
+  "leaderboard": "Clasificación",
+  "followUs": "Síguenos"
+},
       //picklanguage
       "langSelect": {
   "speakTitle": "Hablo...",
@@ -1096,6 +1135,19 @@ const resources = {
   },
   fr: {
     translation: {
+      //footer
+      "footer": {
+  "slogan": "L'apprentissage des langues en toute simplicité.",
+  "rights": "Tous droits réservés.",
+  "owners": "Propriétaires",
+  "contact": "Contact",
+  "navigation": "Navigation",
+  "home": "Accueil",
+  "news": "Actualités",
+  "shop": "Boutique",
+  "leaderboard": "Classement",
+  "followUs": "Suivez-nous"
+},
       //picklanguage
       "langSelect": {
   "speakTitle": "Je parle...",
@@ -1471,6 +1523,19 @@ const resources = {
   },
   de: {
     translation: {
+      //footer
+      "footer": {
+  "slogan": "Sprachenlernen einfach gemacht.",
+  "rights": "Alle Rechte vorbehalten.",
+  "owners": "Eigentümer",
+  "contact": "Kontakt",
+  "navigation": "Navigation",
+  "home": "Startseite",
+  "news": "Neuigkeiten",
+  "shop": "Shop",
+  "leaderboard": "Bestenliste",
+  "followUs": "Folge uns"
+},
       //picklanguage
       "langSelect": {
   "speakTitle": "Ich spreche...",

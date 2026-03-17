@@ -67,7 +67,106 @@ const resources = {
             "details": "New merchandise in the shop."
           }
         }
+        
       },
+      //merchpage 
+      "merch": {
+  "heroTitle": "Lynqo Store",
+  "heroSubtitle": "Exclusive gear for language lovers",
+  "titles": { "collection": "Our Collection", "filters": "Filters & Cart" },
+  "filters": { "searchLabel": "Search Products", "searchPlaceholder": "What are you looking for?", "categoryLabel": "Category" },
+  "categories": { "all": "All", "clothing": "Clothing", "accessories": "Accessories", "stationery": "Stationery" },
+  "promo": { "title": "Free Shipping?", "text": "On all orders over $100!" },
+  "items": { "hoodie": "Hoodie", "waterbottle": "Water Bottle", "notebook": "Notebook", "mug": "Mug" },
+  "cart": { "title": "Shopping Cart", "empty": "Your cart is empty.", "total": "Total", "addBtn": "Add to Cart", "checkoutBtn": "Proceed to Checkout" },
+  "payment": {
+    "title": "Secure Payment", "amount": "Total amount", "lastName": "Last Name", "firstName": "First Name", "placeholderLastName": "Smith", "placeholderFirstName": "John",
+    "address": "Shipping Address", "placeholderAddress": "1234 City, Street name", "phone": "Phone Number", "cardNumber": "Card Number", "expiry": "Expiry", "cvv": "CVV",
+    "confirmBtn": "Confirm Payment", "successTitle": "Thank you for your purchase!", "successText": "Your cart has been cleared and your order is recorded.", "loginAlert": "Login required!"
+  }
+},
+      //subscriptionpage
+      "subscriptionPage": {
+  "heroTitle": "Choose your plan",
+  "heroSubtitle": "Take your learning experience to the next level with exclusive features.",
+  "plans": {
+    "basic": {
+      "name": "Basic",
+      "price": "Free"
+    },
+    "premium": {
+      "name": "Premium",
+      "badge": "Recommended"
+    }
+  },
+  "features": {
+    "basicFeatures": "Basic features",
+    "limitedLessons": "Daily limited lessons",
+    "noAds": "No ads",
+    "unlimitedLearning": "Unlimited learning",
+    "offlineMode": "Offline mode"
+  },
+  "duration": {
+    "month": "Month",
+    "discount": "2 months free!"
+  },
+  "options": {
+    "autoRenew": "Auto-renewal"
+  },
+  "status": {
+    "currentPlan": "Current plan",
+    "freePlan": "Free Plan",
+    "startSubscription": "Start subscription"
+  },
+  "modal": {
+    "paymentTitle": "Secure Payment",
+    "selectedPlan": "Plan",
+    "lastName": "Last Name",
+    "firstName": "First Name",
+    "placeholderLastName": "Smith",
+    "placeholderFirstName": "John",
+    "cardNumber": "Card Number",
+    "expiry": "Expiry",
+    "cvv": "CVV",
+    "confirmPayment": "Confirm Payment",
+    "successTitle": "Successful payment!",
+    "successMessage": "Thank you! Premium features have been activated."
+  },
+  "errors": {
+    "loginRequired": "Please log in!",
+    "purchaseFailed": "Purchase failed",
+    "networkError": "A network error occurred."
+  }
+},
+//powerups
+"powerupsPage": {
+  "title": "Power-ups",
+  "subtitle": "Spend your gems to boost your learning",
+  "stats": {
+    "gems": "YOUR GEMS",
+    "hearts": "YOUR HEARTS"
+  },
+  "items": {
+    "heartRefill": {
+      "name": "Heart Refill",
+      "description": "Restore your hearts back to 5 and keep learning."
+    },
+    "xpBoost": {
+      "name": "XP Boost (Coming Soon)",
+      "description": "Double XP on your next lesson."
+    }
+  },
+  "status": {
+    "full": "Full"
+  },
+  "messages": {
+    "premiumUnlimited": "You have unlimited hearts with Premium!",
+    "notEnoughGems": "Not enough gems! Complete lessons to earn more.",
+    "applied": "applied!",
+    "purchaseFailed": "Purchase failed.",
+    "networkError": "Network error. Try again."
+  }
+},
       
       // --- PROFILE PAGE ---
       "profilePage": {
@@ -116,7 +215,6 @@ const resources = {
         }
       },
 
-      // --- PROFILE EDIT PAGE (Új hozzáadott rész) ---
       "profileEditPage": {
         "title": "Edit Profile",
         "subtitle": "Customize your account",
@@ -142,12 +240,23 @@ const resources = {
           "save_success": "Successfully saved!",
           "network_error_save": "Network error."
         }
+      },
+
+      // --- SHOP LANDING PAGE ---
+      "shopLandingPage": {
+        "title": "Lynqo Store",
+        "description": "Upgrade your learning experience or show your love for Lynqo with exclusive merchandise.",
+        "buttons": {
+          "subscriptions": "Subscriptions",
+          "merch": "Online Shop",
+          "powerups": "Power-ups"
+        },
+        "footer": "Secure checkout • Worldwide shipping • 30-day returns"
       }
     }
   },
   hu: {
     translation: {
-      // --- SETTINGS ---
       "settings": "Beállítások",
       "subtitle": "Kezele az egyéni beállításaidat és céljaidat",
       "save_changes": "Módosítások mentése",
@@ -163,7 +272,6 @@ const resources = {
       "success_save": "Beállítások sikeresen mentve!",
       "error_save": "Hiba történt a mentés során.",
       
-      // --- NEWS PAGE ---
       "newsPage": {
         "header_title": "Legfrissebb Hírek és Frissítések",
         "header_subtitle": "Maradj naprakész a legújabb funkciókkal, nyelvekkel és eseményekkel kapcsolatban.",
@@ -211,8 +319,91 @@ const resources = {
           }
         }
       },
+      //powerups
+      "powerupsPage": {
+  "title": "Power-upok",
+  "subtitle": "Költsd el a gyémántjaidat a tanulásod segítésére",
+  "stats": {
+    "gems": "GYÉMÁNTAID",
+    "hearts": "SZÍVEID"
+  },
+  "items": {
+    "heartRefill": {
+      "name": "Szív újratöltés",
+      "description": "Visszatölti a szíveidet 5-re, hogy folytathasd a tanulást."
+    },
+    "xpBoost": {
+      "name": "XP Boost (Hamarosan)",
+      "description": "Dupla XP a következő leckédnél."
+    }
+  },
+  "status": {
+    "full": "Tele"
+  },
+  "messages": {
+    "premiumUnlimited": "Prémiummal végtelen szíved van!",
+    "notEnoughGems": "Nincs elég gyémántod! Teljesíts leckéket, hogy szerezz.",
+    "applied": "alkalmazva!",
+    "purchaseFailed": "Sikertelen vásárlás.",
+    "networkError": "Hálózati hiba. Próbáld újra."
+  }
+},
+//merchpage
+"merch": {
+  "heroTitle": "Lynqo Store",
+  "heroSubtitle": "Exkluzív cuccok a nyelvtanulás szerelmeseinek",
+  "titles": {
+    "collection": "Kollekciónk",
+    "filters": "Szűrők és Kosár"
+  },
+  "filters": {
+    "searchLabel": "Termékek keresése",
+    "searchPlaceholder": "Mit keresel?",
+    "categoryLabel": "Kategória"
+  },
+  "categories": {
+    "all": "Összes",
+    "clothing": "Ruházat",
+    "accessories": "Kiegészítők",
+    "stationery": "Papír-írószer"
+  },
+  "promo": {
+    "title": "Ingyenes szállítás?",
+    "text": "Minden 100$ feletti rendelésnél!"
+  },
+  "items": {
+    "hoodie": "Kapucnis pulóver",
+    "waterbottle": "Kulacs",
+    "notebook": "Jegyzetfüzet",
+    "mug": "Bögre"
+  },
+  "cart": {
+    "title": "Kosár",
+    "empty": "A kosarad üres.",
+    "total": "Összesen",
+    "addBtn": "Kosárba",
+    "checkoutBtn": "Tovább a fizetéshez"
+  },
+  "payment": {
+    "title": "Biztonságos Fizetés",
+    "amount": "Fizetendő összeg",
+    "lastName": "Vezetéknév",
+    "firstName": "Keresztnév",
+    "placeholderLastName": "Kovács",
+    "placeholderFirstName": "János",
+    "address": "Szállítási cím",
+    "placeholderAddress": "1234 Város, Utca házszám",
+    "phone": "Telefonszám",
+    "cardNumber": "Kártyaszám",
+    "expiry": "Lejárat",
+    "cvv": "CVV",
+    "confirmBtn": "Fizetés megerősítése",
+    "successTitle": "Köszönjük a vásárlást!",
+    "successText": "A kosarad kiürült, a rendelésedet pedig sikeresen rögzítettük.",
+    "loginAlert": "Bejelentkezés szükséges!"
+  }
+},
       
-      // --- PROFILE PAGE ---
       "profilePage": {
         "title": "Profil Vezérlőpult",
         "add_friend": "Barát hozzáadása",
@@ -259,7 +450,6 @@ const resources = {
         }
       },
 
-      // --- PROFILE EDIT PAGE (Új hozzáadott rész) ---
       "profileEditPage": {
         "title": "Profil szerkesztése",
         "subtitle": "Szabd testre a fiókodat",
@@ -285,12 +475,75 @@ const resources = {
           "save_success": "Sikeresen mentve!",
           "network_error_save": "Hálózati hiba."
         }
+      },
+      //subscriptionpage 
+      "subscriptionPage": {
+  "heroTitle": "Válaszd ki a csomagodat",
+  "heroSubtitle": "Emeld új szintre a tanulási élményedet exkluzív funkciókkal.",
+  "plans": {
+    "basic": {
+      "name": "Alap",
+      "price": "Ingyenes"
+    },
+    "premium": {
+      "name": "Premium",
+      "badge": "Ajánlott"
+    }
+  },
+  "features": {
+    "basicFeatures": "Alap funkciók",
+    "limitedLessons": "Napi limitált leckék",
+    "noAds": "Reklámmentesség",
+    "unlimitedLearning": "Korlátlan tanulás",
+    "offlineMode": "Offline mód"
+  },
+  "duration": {
+    "month": "Hónap",
+    "discount": "2 hónap ingyen!"
+  },
+  "options": {
+    "autoRenew": "Automatikus megújulás"
+  },
+  "status": {
+    "currentPlan": "Jelenlegi csomag",
+    "freePlan": "Ingyenes Csomag",
+    "startSubscription": "Előfizetés indítása"
+  },
+  "modal": {
+    "paymentTitle": "Biztonságos Fizetés",
+    "selectedPlan": "Csomag",
+    "lastName": "Vezetéknév",
+    "firstName": "Keresztnév",
+    "placeholderLastName": "Kovács",
+    "placeholderFirstName": "János",
+    "cardNumber": "Kártyaszám",
+    "expiry": "Lejárat",
+    "cvv": "CVV",
+    "confirmPayment": "Fizetés megerősítése",
+    "successTitle": "Sikeres fizetés!",
+    "successMessage": "Köszönjük! A Premium funkciók aktiválva lettek."
+  },
+  "errors": {
+    "loginRequired": "Jelentkezz be!",
+    "purchaseFailed": "Sikertelen vásárlás",
+    "networkError": "Hálózati hiba történt."
+  }
+},
+      // --- SHOP LANDING PAGE ---
+      "shopLandingPage": {
+        "title": "Lynqo Bolt",
+        "description": "Fejleszd a tanulási élményedet, vagy mutasd meg a Lynqo iránti szeretetedet exkluzív termékeinkkel.",
+        "buttons": {
+          "subscriptions": "Előfizetések",
+          "merch": "Webshop",
+          "powerups": "Power-upok"
+        },
+        "footer": "Biztonságos fizetés • Világszerte szállítás • 30 napos visszaküldés"
       }
     }
   },
   es: {
     translation: {
-      // --- SETTINGS ---
       "settings": "Ajustes",
       "subtitle": "Gestiona tus preferencias y objetivos",
       "save_changes": "Guardar cambios",
@@ -306,7 +559,6 @@ const resources = {
       "success_save": "¡Ajustes guardados con éxito!",
       "error_save": "Error al guardar los ajustes.",
       
-      // --- NEWS PAGE ---
       "newsPage": {
         "header_title": "Últimas Noticias y Actualizaciones",
         "header_subtitle": "Mantente al día con las últimas funciones, idiomas y eventos de la comunidad.",
@@ -355,7 +607,144 @@ const resources = {
         }
       },
       
-      // --- PROFILE PAGE ---
+      //powerups
+      "powerupsPage": {
+  "title": "Potenciadores",
+  "subtitle": "Gasta tus gemas para mejorar tu aprendizaje",
+  "stats": {
+    "gems": "TUS GEMAS",
+    "hearts": "TUS VIDAS"
+  },
+  "items": {
+    "heartRefill": {
+      "name": "Rellenar Vidas",
+      "description": "Restaura tus vidas a 5 para seguir aprendiendo."
+    },
+    "xpBoost": {
+      "name": "Impulso de XP (Próximamente)",
+      "description": "Doble XP en tu próxima lección."
+    }
+  },
+  "status": {
+    "full": "Lleno"
+  },
+  "messages": {
+    "premiumUnlimited": "¡Tienes vidas ilimitadas con Premium!",
+    "notEnoughGems": "¡No hay suficientes gemas! Completa lecciones para ganar más.",
+    "applied": "aplicado!",
+    "purchaseFailed": "Compra fallida.",
+    "networkError": "Error de red. Inténtalo de nuevo."
+  }
+},
+//merchpage
+      "merch": {
+  "heroTitle": "Tienda Lynqo",
+  "heroSubtitle": "Equipamiento exclusivo para amantes de los idiomas",
+  "titles": {
+    "collection": "Nuestra Colección",
+    "filters": "Filtros y Carrito"
+  },
+  "filters": {
+    "searchLabel": "Buscar productos",
+    "searchPlaceholder": "¿Qué estás buscando?",
+    "categoryLabel": "Categoría"
+  },
+  "categories": {
+    "all": "Todo",
+    "clothing": "Ropa",
+    "accessories": "Accesorios",
+    "stationery": "Papelería"
+  },
+  "promo": {
+    "title": "¿Envío gratis?",
+    "text": "¡En todos los pedidos superiores a $100!"
+  },
+  "items": {
+    "hoodie": "Sudadera con capucha",
+    "waterbottle": "Botella de agua",
+    "notebook": "Cuaderno",
+    "mug": "Taza"
+  },
+  "cart": {
+    "title": "Carrito de compras",
+    "empty": "Tu carrito está vacío.",
+    "total": "Total",
+    "addBtn": "Añadir al carrito",
+    "checkoutBtn": "Pasar por caja"
+  },
+  "payment": {
+    "title": "Pago Seguro",
+    "amount": "Monto total",
+    "lastName": "Apellido",
+    "firstName": "Nombre",
+    "placeholderLastName": "García",
+    "placeholderFirstName": "Juan",
+    "address": "Dirección de envío",
+    "placeholderAddress": "Calle Falsa 123, Ciudad",
+    "phone": "Teléfono",
+    "cardNumber": "Número de tarjeta",
+    "expiry": "Caducidad",
+    "cvv": "CVV",
+    "confirmBtn": "Confirmar Pago",
+    "successTitle": "¡Gracias por su compra!",
+    "successText": "Tu carrito ha sido vaciado y tu pedido ha sido registrado con éxito.",
+    "loginAlert": "¡Es necesario iniciar sesión!"
+  }
+},
+      //subscriptionpage
+      "subscriptionPage": {
+  "heroTitle": "Elige tu plan",
+  "heroSubtitle": "Lleva tu experiencia de aprendizaje al siguiente nivel con funciones exclusivas.",
+  "plans": {
+    "basic": {
+      "name": "Básico",
+      "price": "Gratis"
+    },
+    "premium": {
+      "name": "Premium",
+      "badge": "Recomendado"
+    }
+  },
+  "features": {
+    "basicFeatures": "Funciones básicas",
+    "limitedLessons": "Lecciones diarias limitadas",
+    "noAds": "Sin anuncios",
+    "unlimitedLearning": "Aprendizaje ilimitado",
+    "offlineMode": "Modo offline"
+  },
+  "duration": {
+    "month": "Mes",
+    "discount": "¡2 meses gratis!"
+  },
+  "options": {
+    "autoRenew": "Renovación automática"
+  },
+  "status": {
+    "currentPlan": "Plan actual",
+    "freePlan": "Plan gratuito",
+    "startSubscription": "Iniciar suscripción"
+  },
+  "modal": {
+    "paymentTitle": "Pago Seguro",
+    "selectedPlan": "Plan",
+    "lastName": "Apellido",
+    "firstName": "Nombre",
+    "placeholderLastName": "García",
+    "placeholderFirstName": "Juan",
+    "cardNumber": "Número de tarjeta",
+    "expiry": "Caducidad",
+    "cvv": "CVV",
+    "confirmPayment": "Confirmar pago",
+    "successTitle": "¡Pago realizado con éxito!",
+    "successMessage": "¡Gracias! Las funciones Premium han sido activadas."
+  },
+  "errors": {
+    "loginRequired": "¡Por favor, inicia sesión!",
+    "purchaseFailed": "Compra fallida",
+    "networkError": "Ocurrió un error de red."
+  }
+},
+      
       "profilePage": {
         "title": "Panel de Perfil",
         "add_friend": "Añadir amigo",
@@ -402,7 +791,6 @@ const resources = {
         }
       },
 
-      // --- PROFILE EDIT PAGE (Új hozzáadott rész) ---
       "profileEditPage": {
         "title": "Editar Perfil",
         "subtitle": "Personaliza tu cuenta",
@@ -428,12 +816,22 @@ const resources = {
           "save_success": "¡Guardado con éxito!",
           "network_error_save": "Error de red."
         }
+      },
+
+      "shopLandingPage": {
+        "title": "Tienda Lynqo",
+        "description": "Mejora tu experiencia de aprendizaje o muestra tu amor por Lynqo con productos exclusivos.",
+        "buttons": {
+          "subscriptions": "Suscripciones",
+          "merch": "Tienda online",
+          "powerups": "Potenciadores"
+        },
+        "footer": "Pago seguro • Envío a todo el mundo • Devoluciones en 30 días"
       }
     }
   },
   fr: {
     translation: {
-      // --- SETTINGS ---
       "settings": "Paramètres",
       "subtitle": "Gérez vos préférences et vos objectifs",
       "save_changes": "Enregistrer",
@@ -449,7 +847,6 @@ const resources = {
       "success_save": "Paramètres enregistrés !",
       "error_save": "Échec de l'enregistrement.",
       
-      // --- NEWS PAGE ---
       "newsPage": {
         "header_title": "Dernières Nouvelles et Mises à jour",
         "header_subtitle": "Restez au courant des dernières fonctionnalités, langues et événements communautaires.",
@@ -497,8 +894,89 @@ const resources = {
           }
         }
       },
+      //powerups
+      "powerupsPage": {
+  "title": "Power-ups",
+  "subtitle": "Dépensez vos gemmes pour booster votre apprentissage",
+  "stats": {
+    "gems": "VOS GEMMES",
+    "hearts": "VOS VIES"
+  },
+  "items": {
+    "heartRefill": {
+      "name": "Recharge de vies",
+      "description": "Restaurez vos vies à 5 et continuez à apprendre."
+    },
+    "xpBoost": {
+      "name": "Boost d'XP (Bientôt)",
+      "description": "Double XP sur votre prochaine leçon."
+    }
+  },
+  "status": {
+    "full": "Plein"
+  },
+  "messages": {
+    "premiumUnlimited": "Vous avez des vies illimitées avec Premium !",
+    "notEnoughGems": "Pas assez de gemmes ! Terminez des leçons pour en gagner plus.",
+    "applied": "appliqué !",
+    "purchaseFailed": "Échec de l'achat.",
+    "networkError": "Erreur réseau. Réessayez."
+  }
+},
+      //subscriptionpage
+      "subscriptionPage": {
+  "heroTitle": "Choisissez votre forfait",
+  "heroSubtitle": "Faites passer votre expérience d'apprentissage au niveau supérieur grâce à des fonctionnalités exclusives.",
+  "plans": {
+    "basic": {
+      "name": "Basique",
+      "price": "Gratuit"
+    },
+    "premium": {
+      "name": "Premium",
+      "badge": "Recommandé"
+    }
+  },
+  "features": {
+    "basicFeatures": "Fonctions de base",
+    "limitedLessons": "Leçons quotidiennes limitées",
+    "noAds": "Sans publicité",
+    "unlimitedLearning": "Apprentissage illimité",
+    "offlineMode": "Mode hors ligne"
+  },
+  "duration": {
+    "month": "Mois",
+    "discount": "2 mois gratuits !"
+  },
+  "options": {
+    "autoRenew": "Renouvellement automatique"
+  },
+  "status": {
+    "currentPlan": "Forfait actuel",
+    "freePlan": "Forfait gratuit",
+    "startSubscription": "Commencer l'abonnement"
+  },
+  "modal": {
+    "paymentTitle": "Paiement Sécurisé",
+    "selectedPlan": "Forfait",
+    "lastName": "Nom",
+    "firstName": "Prénom",
+    "placeholderLastName": "Dubois",
+    "placeholderFirstName": "Jean",
+    "cardNumber": "Numéro de carte",
+    "expiry": "Expiration",
+    "cvv": "CVV",
+    "confirmPayment": "Confirmer le paiement",
+    "successTitle": "Paiement réussi !",
+    "successMessage": "Merci ! Les fonctionnalités Premium ont été activées."
+  },
+  "errors": {
+    "loginRequired": "Veuillez vous connecter !",
+    "purchaseFailed": "Échec de l'achat",
+    "networkError": "Une erreur réseau est survenue."
+  }
+},
       
-      // --- PROFILE PAGE ---
       "profilePage": {
         "title": "Tableau de bord du profil",
         "add_friend": "Ajouter un ami",
@@ -545,7 +1023,6 @@ const resources = {
         }
       },
 
-      // --- PROFILE EDIT PAGE (Új hozzáadott rész) ---
       "profileEditPage": {
         "title": "Modifier le profil",
         "subtitle": "Personnalisez votre compte",
@@ -571,12 +1048,77 @@ const resources = {
           "save_success": "Enregistré avec succès !",
           "network_error_save": "Erreur réseau."
         }
+      },
+      //merchpage
+      "merch": {
+  "heroTitle": "Boutique Lynqo",
+  "heroSubtitle": "Équipement exclusif pour les passionnés de langues",
+  "titles": {
+    "collection": "Notre Collection",
+    "filters": "Filtres & Panier"
+  },
+  "filters": {
+    "searchLabel": "Rechercher des produits",
+    "searchPlaceholder": "Que cherchez-vous ?",
+    "categoryLabel": "Catégorie"
+  },
+  "categories": {
+    "all": "Tous",
+    "clothing": "Vêtements",
+    "accessories": "Accessoires",
+    "stationery": "Papeterie"
+  },
+  "promo": {
+    "title": "Livraison gratuite ?",
+    "text": "Sur toutes les commandes de plus de 100 $ !"
+  },
+  "items": {
+    "hoodie": "Sweat à capuche",
+    "waterbottle": "Gourde",
+    "notebook": "Carnet",
+    "mug": "Mug"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide.",
+    "total": "Total",
+    "addBtn": "Ajouter au panier",
+    "checkoutBtn": "Passer a la caisse"
+  },
+  "payment": {
+    "title": "Paiement Sécurisé",
+    "amount": "Montant total",
+    "lastName": "Nom",
+    "firstName": "Prénom",
+    "placeholderLastName": "Dubois",
+    "placeholderFirstName": "Jean",
+    "address": "Adresse de livraison",
+    "placeholderAddress": "123 Rue de la Paix, Ville",
+    "phone": "Numéro de téléphone",
+    "cardNumber": "Numéro de carte",
+    "expiry": "Expiration",
+    "cvv": "CVV",
+    "confirmBtn": "Confirmer le paiement",
+    "successTitle": "Merci pour votre achat !",
+    "successText": "Votre panier a été vidé et votre commande a été enregistrée avec succès.",
+    "loginAlert": "Connexion requise !"
+  }
+},
+
+      "shopLandingPage": {
+        "title": "Boutique Lynqo",
+        "description": "Améliorez votre expérience d'apprentissage ou montrez votre amour pour Lynqo avec des produits exclusifs.",
+        "buttons": {
+          "subscriptions": "Abonnements",
+          "merch": "Boutique en ligne",
+          "powerups": "Bonus"
+        },
+        "footer": "Paiement sécurisé • Livraison mondiale • Retours sous 30 jours"
       }
     }
   },
   de: {
     translation: {
-      // --- SETTINGS ---
       "settings": "Einstellungen",
       "subtitle": "Verwalten Sie Ihre Präferenzen und Lernziele",
       "save_changes": "Änderungen speichern",
@@ -592,7 +1134,6 @@ const resources = {
       "success_save": "Einstellungen erfolgreich gespeichert!",
       "error_save": "Fehler beim Speichern der Einstellungen.",
       
-      // --- NEWS PAGE ---
       "newsPage": {
         "header_title": "Neueste Nachrichten & Updates",
         "header_subtitle": "Bleiben Sie auf dem Laufenden über die neuesten Funktionen, Sprachen und Community-Events.",
@@ -640,8 +1181,145 @@ const resources = {
           }
         }
       },
+      //merchpage
+      "merch": {
+  "heroTitle": "Lynqo Store",
+  "heroSubtitle": "Exklusive Ausrüstung für Sprachliebhaber",
+  "titles": {
+    "collection": "Unsere Kollektion",
+    "filters": "Filter & Warenkorb"
+  },
+  "filters": {
+    "searchLabel": "Produkte suchen",
+    "searchPlaceholder": "Was suchst du?",
+    "categoryLabel": "Kategorie"
+  },
+  "categories": {
+    "all": "Alle",
+    "clothing": "Kleidung",
+    "accessories": "Zubehör",
+    "stationery": "Schreibwaren"
+  },
+  "promo": {
+    "title": "Gratis Versand?",
+    "text": "Auf alle Bestellungen über $100!"
+  },
+  "items": {
+    "hoodie": "Kapuzenpullover",
+    "waterbottle": "Wasserflasche",
+    "notebook": "Notizbuch",
+    "mug": "Tasse"
+  },
+  "cart": {
+    "title": "Warenkorb",
+    "empty": "Dein Warenkorb ist leer.",
+    "total": "Gesamt",
+    "addBtn": "In den Warenkorb",
+    "checkoutBtn": "Zur Kasse"
+  },
+  "payment": {
+    "title": "Sichere Zahlung",
+    "amount": "Gesamtbetrag",
+    "lastName": "Nachname",
+    "firstName": "Vorname",
+    "placeholderLastName": "Müller",
+    "placeholderFirstName": "Max",
+    "address": "Lieferadresse",
+    "placeholderAddress": "Musterstraße 1, Stadt",
+    "phone": "Telefonnummer",
+    "cardNumber": "Kartennummer",
+    "expiry": "Gültig bis",
+    "cvv": "CVV",
+    "confirmBtn": "Zahlung bestätigen",
+    "successTitle": "Vielen Dank für Ihren Einkauf!",
+    "successText": "Dein Warenkorb wurde geleert und deine Bestellung erfolgreich aufgenommen.",
+    "loginAlert": "Anmeldung erforderlich!"
+  }
+},
+
+      //powerups
+      "powerupsPage": {
+  "title": "Power-ups",
+  "subtitle": "Gib deine Edelsteine aus, um dein Lernen zu fördern",
+  "stats": {
+    "gems": "DEINE EDELSTEINE",
+    "hearts": "DEINE HERZEN"
+  },
+  "items": {
+    "heartRefill": {
+      "name": "Herzen auffüllen",
+      "description": "Fülle deine Herzen auf 5 auf, um weiterzulernen."
+    },
+    "xpBoost": {
+      "name": "XP-Boost (Demnächst)",
+      "description": "Doppelte XP bei deiner nächsten Lektion."
+    }
+  },
+  "status": {
+    "full": "Voll"
+  },
+  "messages": {
+    "premiumUnlimited": "Mit Premium hast du unbegrenzte Herzen!",
+    "notEnoughGems": "Nicht genug Edelsteine! Schließe Lektionen ab, um mehr zu verdienen.",
+    "applied": "angewendet!",
+    "purchaseFailed": "Kauf fehlgeschlagen.",
+    "networkError": "Netzwerkfehler. Versuche es erneut."
+  }
+},
+      //subscriptionpage
+      "subscriptionPage": {
+  "heroTitle": "Wähle dein Paket",
+  "heroSubtitle": "Bringe dein Lernerlebnis mit exklusiven Funktionen auf die nächste Stufe.",
+  "plans": {
+    "basic": {
+      "name": "Basis",
+      "price": "Kostenlos"
+    },
+    "premium": {
+      "name": "Premium",
+      "badge": "Empfohlen"
+    }
+  },
+  "features": {
+    "basicFeatures": "Basisfunktionen",
+    "limitedLessons": "Täglich begrenzte Lektionen",
+    "noAds": "Keine Werbung",
+    "unlimitedLearning": "Unbegrenztes Lernen",
+    "offlineMode": "Offline-Modus"
+  },
+  "duration": {
+    "month": "Monat",
+    "discount": "2 Monate kostenlos!"
+  },
+  "options": {
+    "autoRenew": "Automatische Verlängerung"
+  },
+  "status": {
+    "currentPlan": "Aktueller Plan",
+    "freePlan": "Kostenloses Paket",
+    "startSubscription": "Abonnement starten"
+  },
+  "modal": {
+    "paymentTitle": "Sichere Zahlung",
+    "selectedPlan": "Paket",
+    "lastName": "Nachname",
+    "firstName": "Vorname",
+    "placeholderLastName": "Müller",
+    "placeholderFirstName": "Max",
+    "cardNumber": "Kartennummer",
+    "expiry": "Gültig bis",
+    "cvv": "CVV",
+    "confirmPayment": "Zahlung bestätigen",
+    "successTitle": "Zahlung erfolgreich!",
+    "successMessage": "Vielen Dank! Die Premium-Funktionen wurden aktiviert."
+  },
+  "errors": {
+    "loginRequired": "Bitte melde dich an!",
+    "purchaseFailed": "Kauf fehlgeschlagen",
+    "networkError": "Ein Netzwerkfehler ist aufgetreten."
+  }
+},
       
-      // --- PROFILE PAGE ---
       "profilePage": {
         "title": "Profil-Dashboard",
         "add_friend": "Freund hinzufügen",
@@ -688,7 +1366,6 @@ const resources = {
         }
       },
 
-      // --- PROFILE EDIT PAGE (Új hozzáadott rész) ---
       "profileEditPage": {
         "title": "Profil bearbeiten",
         "subtitle": "Passe dein Konto an",
@@ -714,19 +1391,29 @@ const resources = {
           "save_success": "Erfolgreich gespeichert!",
           "network_error_save": "Netzwerkfehler."
         }
+      },
+
+      "shopLandingPage": {
+        "title": "Lynqo Store",
+        "description": "Verbessere dein Lernerlebnis oder zeige deine Liebe zu Lynqo mit exklusiven Fanartikeln.",
+        "buttons": {
+          "subscriptions": "Abonnements",
+          "merch": "Online-Shop",
+          "powerups": "Power-ups"
+        },
+        "footer": "Sichere Kasse • Weltweiter Versand • 30 Tage Rückgaberecht"
       }
     }
   }
 };
 
-// Megnézzük, van-e már elmentett nyelv, ha nincs, akkor 'en' lesz az alap.
 const savedLanguage = localStorage.getItem('appLanguage') || 'en';
 
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: savedLanguage, // Itt használjuk a kimentett értéket!
+    lng: savedLanguage,
     interpolation: {
       escapeValue: false
     }

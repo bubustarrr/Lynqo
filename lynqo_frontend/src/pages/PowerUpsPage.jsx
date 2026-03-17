@@ -3,23 +3,23 @@ import { AuthContext } from '../context/AuthContext';
 import { Container, Card, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { FaHeart, FaBolt } from 'react-icons/fa';
+import { useTranslation } from "react-i18next"; // i18n import
 
-// Importáljuk a közös Vissza gomb komponenst
 import BackButton from '../components/common/BackButton';
 
 const POWERUP_ITEMS = [
   {
     id: 'heart_refill',
-    name: 'Heart Refill',
-    description: 'Restore your hearts back to 5 and keep learning.',
+    nameKey: 'powerupsPage.items.heartRefill.name',
+    descKey: 'powerupsPage.items.heartRefill.description',
     icon: '❤️',
     cost: 350,
     action: 'refill_hearts',
   },
   {
     id: 'xp_boost',
-    name: 'XP Boost (Coming Soon)',
-    description: 'Double XP on your next lesson.',
+    nameKey: 'powerupsPage.items.xpBoost.name',
+    descKey: 'powerupsPage.items.xpBoost.description',
     icon: '⚡',
     cost: 500,
     action: 'xp_boost',
@@ -30,16 +30,15 @@ const POWERUP_ITEMS = [
 export default function PowerupsPage() {
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { t } = useTranslation(); // t függvény inicializálása
 
   const [coins, setCoins] = useState(0);
   const [hearts, setHearts] = useState(5);
-  // ÚJ: prémium állapot
   const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(true);
   const [buyingId, setBuyingId] = useState(null); 
   const [message, setMessage] = useState(null);   
 
-  // Fetch current coins + hearts
   useEffect(() => {
     if (!token) return;
 
@@ -55,7 +54,6 @@ export default function PowerupsPage() {
           const data = await res.json();
           setCoins(data.coins ?? data.Coins ?? 0);
           setHearts(data.hearts ?? data.Hearts ?? 5);
-          // ÚJ: Beállítjuk a prémium státuszt
           setIsPremium(data.isPremium ?? data.IsPremium ?? false);
         }
       } catch (err) {
@@ -70,14 +68,14 @@ export default function PowerupsPage() {
 
   const handleBuy = async (item) => {
     if (item.disabled) return;
-    // ÚJ: Prémium felhasználó nem vehet szívet!
+    
     if (isPremium && item.id === 'heart_refill') {
-      setMessage({ type: 'error', text: "You have unlimited hearts with Premium!" });
+      setMessage({ type: 'error', text: t('powerupsPage.messages.premiumUnlimited') });
       setTimeout(() => setMessage(null), 3000);
       return;
     }
     if (coins < item.cost) {
-      setMessage({ type: 'error', text: "Not enough gems! Complete lessons to earn more." });
+      setMessage({ type: 'error', text: t('powerupsPage.messages.notEnoughGems') });
       setTimeout(() => setMessage(null), 3000);
       return;
     }
@@ -100,14 +98,14 @@ export default function PowerupsPage() {
         const data = await res.json();
         setCoins(data.coins ?? data.Coins ?? coins - item.cost);
         setHearts(data.hearts ?? data.Hearts ?? hearts);
-        setMessage({ type: 'success', text: `${item.name} applied! ✅` });
+        setMessage({ type: 'success', text: `${t(item.nameKey)} ${t('powerupsPage.messages.applied')} ✅` });
       } else {
         const err = await res.json().catch(() => ({}));
-        setMessage({ type: 'error', text: err.message ?? "Purchase failed." });
+        setMessage({ type: 'error', text: err.message ?? t('powerupsPage.messages.purchaseFailed') });
       }
     } catch (err) {
       console.error("Buy error", err);
-      setMessage({ type: 'error', text: "Network error. Try again." });
+      setMessage({ type: 'error', text: t('powerupsPage.messages.networkError') });
     } finally {
       setBuyingId(null);
       setTimeout(() => setMessage(null), 3000);
@@ -121,34 +119,30 @@ export default function PowerupsPage() {
         <BackButton />
       </div>
 
-      <h1 className="fw-bold mb-1 text-center">⚡ Power-ups</h1>
-      <p className="text-muted text-center mb-4">Spend your gems to boost your learning</p>
+      <h1 className="fw-bold mb-1 text-center">⚡ {t('powerupsPage.title')}</h1>
+      <p className="text-muted text-center mb-4">{t('powerupsPage.subtitle')}</p>
 
-      {/* Stats bar */}
       <Card className="p-3 mb-4 border-0 shadow-sm d-flex flex-row justify-content-center gap-5" style={{ borderRadius: '16px' }}>
         <div className="text-center">
           <div className="fw-bold fs-4" style={{ color: '#0ea5e9' }}>
             💎 {loading ? '...' : coins.toLocaleString()}
           </div>
-          <small className="text-muted fw-bold">YOUR GEMS</small>
+          <small className="text-muted fw-bold">{t('powerupsPage.stats.gems')}</small>
         </div>
         <div className="text-center">
-          {/* ÚJ: Végtelen jel megjelenítése szív vásárlásánál is */}
           <div className="fw-bold fs-4" style={{ color: '#ef4444' }}>
             ❤️ {loading ? '...' : (isPremium ? '∞' : hearts)}
           </div>
-          <small className="text-muted fw-bold">YOUR HEARTS</small>
+          <small className="text-muted fw-bold">{t('powerupsPage.stats.hearts')}</small>
         </div>
       </Card>
 
-      {/* Feedback message */}
       {message && (
         <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'} text-center fw-bold`}>
           {message.text}
         </div>
       )}
 
-      {/* Items */}
       {loading ? (
         <div className="text-center p-5"><Spinner animation="border" /></div>
       ) : (
@@ -156,7 +150,6 @@ export default function PowerupsPage() {
           {POWERUP_ITEMS.map((item) => {
             const canAfford = coins >= item.cost;
             const isHeartRefill = item.action === 'refill_hearts';
-            // ÚJ: Ha prémiumos, vagy már van 5 szíve, akkor a gomb "Full"-nak számít
             const heartsAlreadyFull = isHeartRefill && (isPremium || hearts >= 5);
 
             return (
@@ -172,8 +165,8 @@ export default function PowerupsPage() {
                   <div className="d-flex align-items-center gap-3">
                     <span style={{ fontSize: '2.5rem' }}>{item.icon}</span>
                     <div>
-                      <div className="fw-bold fs-5">{item.name}</div>
-                      <div className="text-muted" style={{ fontSize: '0.9rem' }}>{item.description}</div>
+                      <div className="fw-bold fs-5">{t(item.nameKey)}</div>
+                      <div className="text-muted" style={{ fontSize: '0.9rem' }}>{t(item.descKey)}</div>
                     </div>
                   </div>
 
@@ -187,9 +180,9 @@ export default function PowerupsPage() {
                     {buyingId === item.id ? (
                       <Spinner animation="border" size="sm" />
                     ) : isPremium && isHeartRefill ? (
-                      '∞ ❤️' // ÚJ: Prémiumosoknak végtelen szív felirat a gombon
+                      '∞ ❤️'
                     ) : heartsAlreadyFull ? (
-                      'Full ❤️'
+                      t('powerupsPage.status.full') + ' ❤️'
                     ) : (
                       `💎 ${item.cost.toLocaleString()}`
                     )}

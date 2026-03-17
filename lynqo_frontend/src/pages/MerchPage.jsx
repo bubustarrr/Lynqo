@@ -2,17 +2,18 @@ import React, { useState, useContext } from 'react';
 import './MerchPage.css';
 import { AuthContext } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useTranslation } from "react-i18next"; // Import
 
-// Komponensek
 import BackButton from '../components/common/BackButton'; 
 import MerchFilters from '../components/shop/MerchFilters'; 
 import ShopItems, { MERCH_ITEMS } from '../components/shop/ShopItem'; 
 import ShopCart from '../components/shop/ShopCart'; 
-import PaymentModal from '../components/shop/PaymentModal'; // AZ ÚJ KOMPONENS
+import PaymentModal from '../components/shop/PaymentModal';
 
 export default function MerchPage() {
   const { token } = useContext(AuthContext);
   const { clearCart, cartTotal } = useCart();
+  const { t } = useTranslation(); // Hook
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -29,18 +30,18 @@ export default function MerchPage() {
       <BackButton to="/shop" />
 
       <header className="news-header mt-3">
-        <h1 className="news-hero-title">Lynqo Store</h1>
-        <p className="news-subtitle">Exclusive gear for language lovers</p>
+        <h1 className="news-hero-title">{t('merch.heroTitle')}</h1>
+        <p className="news-subtitle">{t('merch.heroSubtitle')}</p>
       </header>
       
       <div className="news-layout">
         <main className="shop-main-content">
-          <h2 className="column-title">Our Collection</h2>
+          <h2 className="column-title">{t('merch.titles.collection')}</h2>
           <ShopItems items={filteredItems} />
         </main>
 
         <aside className="sidebar-wrapper">
-          <h2 className="column-title">Filters & Cart</h2>
+          <h2 className="column-title">{t('merch.titles.filters')}</h2>
           <MerchFilters 
             searchTerm={searchTerm} setSearchTerm={setSearchTerm}
             selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
@@ -51,7 +52,6 @@ export default function MerchPage() {
         </aside>
       </div>
 
-      {/* AZ ÚJ KISZERVEZETT MODAL HASZNÁLATA */}
       <PaymentModal 
         show={isPaymentOpen}
         onClose={() => setIsPaymentOpen(false)}

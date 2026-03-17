@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaCheck } from "react-icons/fa";
 import { Spinner } from 'react-bootstrap';
+import { useTranslation } from "react-i18next";
 
-export default function PaymentModal({ 
-  show, 
-  onClose, 
-  onSuccess, 
-  totalAmount, 
-  token 
-}) {
+export default function PaymentModal({ show, onClose, onSuccess, totalAmount, token }) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [paymentData, setPaymentData] = useState({
+  
+  // Kezdőállapot kiszervezve a könnyebb reseteléshez
+  const initialFormState = {
     lastName: '', firstName: '', address: '', phone: '', cardNumber: '', expiry: '', cvv: ''
-  });
+  };
 
-  // Zároljuk a görgetést
+  const [paymentData, setPaymentData] = useState(initialFormState);
+
+  // Form ürítése
+  const resetForm = () => {
+    setPaymentData(initialFormState);
+  };
+
+  // Bezárás és ürítés egyszerre
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
   useEffect(() => {
     if (show || showSuccess) {
       document.body.classList.add('payment-modal-open');
@@ -25,12 +35,12 @@ export default function PaymentModal({
     return () => document.body.classList.remove('payment-modal-open');
   }, [show, showSuccess]);
 
-  // Siker modal időzítője
   useEffect(() => {
     if (showSuccess) {
       const timer = setTimeout(() => {
         setShowSuccess(false);
-        onSuccess(); // Meghívjuk a szülő sikeres vásárlás függvényét (kosár ürítés)
+        onSuccess();
+        resetForm(); // Sikeres vásárlás utáni teljes ürítés
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -39,7 +49,6 @@ export default function PaymentModal({
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let formattedValue = value;
-    
     if (name === "cardNumber") {
       formattedValue = value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
     } else if (name === "expiry") {
@@ -50,7 +59,6 @@ export default function PaymentModal({
     } else if (name === "phone") {
       formattedValue = value.replace(/[^\d+]/g, '');
     }
-    
     setPaymentData(prev => ({ ...prev, [name]: formattedValue }));
   };
 
@@ -64,13 +72,13 @@ export default function PaymentModal({
     paymentData.cvv.trim().length >= 3;
 
   const handleSubmit = async () => {
-    if (!token) return alert("Bejelentkezés szükséges!");
+    if (!token) return alert(t('merch.payment.loginAlert'));
     setLoading(true);
-    
     setTimeout(() => {
       setLoading(false);
       setShowSuccess(true);
-      onClose(); // Bezárjuk a kitöltős modalt
+      onClose(); // Itt bezárjuk az adatbeviteli ablakot
+      // Megjegyzés: a formot a showSuccess useEffect-je fogja üríteni a 3 mp lejárta után
     }, 2000);
   };
 
@@ -78,49 +86,49 @@ export default function PaymentModal({
 
   return (
     <>
-      {/* Fő Fizetési Modal */}
       {show && (
         <div className="payment-modal-overlay">
           <div className="payment-modal-content">
-            <button className="payment-modal-close" onClick={onClose}><FaTimes /></button>
-            <h2 className="mb-4">Biztonságos Fizetés</h2>
-            <p className="mb-4">Fizetendő összeg: <strong>${totalAmount}</strong></p>
+            {/* Módosítva handleClose-ra */}
+            <button className="payment-modal-close" onClick={handleClose}><FaTimes /></button>
+            <h2 className="mb-4">{t('merch.payment.title')}</h2>
+            <p className="mb-4">{t('merch.payment.amount')}: <strong>${totalAmount}</strong></p>
 
             <div className="form-row d-flex gap-3 mb-3">
               <div className="flex-fill">
-                <label>Vezetéknév</label>
-                <input type="text" name="lastName" className="form-control" value={paymentData.lastName} onChange={handleInputChange} placeholder="Kovács" />
+                <label>{t('merch.payment.lastName')}</label>
+                <input type="text" name="lastName" className="form-control" value={paymentData.lastName} onChange={handleInputChange} placeholder={t('merch.payment.placeholderLastName')} />
               </div>
               <div className="flex-fill">
-                <label>Keresztnév</label>
-                <input type="text" name="firstName" className="form-control" value={paymentData.firstName} onChange={handleInputChange} placeholder="János" />
+                <label>{t('merch.payment.firstName')}</label>
+                <input type="text" name="firstName" className="form-control" value={paymentData.firstName} onChange={handleInputChange} placeholder={t('merch.payment.placeholderFirstName')} />
               </div>
             </div>
 
             <div className="mb-3">
-              <label>Szállítási cím</label>
-              <input type="text" name="address" className="form-control" value={paymentData.address} onChange={handleInputChange} placeholder="1234 Város, Utca házszám" />
+              <label>{t('merch.payment.address')}</label>
+              <input type="text" name="address" className="form-control" value={paymentData.address} onChange={handleInputChange} placeholder={t('merch.payment.placeholderAddress')} />
             </div>
 
             <div className="mb-3">
-              <label>Telefonszám</label>
+              <label>{t('merch.payment.phone')}</label>
               <input type="text" name="phone" className="form-control" value={paymentData.phone} onChange={handleInputChange} placeholder="+36 30 123 4567" />
             </div>
 
             <hr className="my-4" />
 
             <div className="mb-3">
-              <label>Kártyaszám</label>
+              <label>{t('merch.payment.cardNumber')}</label>
               <input type="text" name="cardNumber" className="form-control" value={paymentData.cardNumber} onChange={handleInputChange} placeholder="0000 0000 0000 0000" maxLength="19" />
             </div>
 
             <div className="form-row d-flex gap-3 mb-4">
               <div className="flex-fill">
-                <label>Lejárat</label>
+                <label>{t('merch.payment.expiry')}</label>
                 <input type="text" name="expiry" className="form-control" value={paymentData.expiry} onChange={handleInputChange} placeholder="HH/ÉÉ" maxLength="5" />
               </div>
               <div className="flex-fill">
-                <label>CVV</label>
+                <label>{t('merch.payment.cvv')}</label>
                 <input type="password" name="cvv" className="form-control" value={paymentData.cvv} onChange={handleInputChange} placeholder="123" maxLength="3" />
               </div>
             </div>
@@ -131,14 +139,13 @@ export default function PaymentModal({
                 disabled={!isFormValid || loading}
                 onClick={handleSubmit}
               >
-                {loading ? <Spinner animation="border" size="sm" /> : 'Fizetés megerősítése'}
+                {loading ? <Spinner animation="border" size="sm" /> : t('merch.payment.confirmBtn')}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Sikeres Vásárlás Modal */}
       {showSuccess && (
         <div className="payment-modal-overlay">
           <div className="payment-modal-content text-center py-5">
@@ -147,8 +154,8 @@ export default function PaymentModal({
                 <FaCheck style={{ color: 'white', fontSize: '40px' }} />
               </div>
             </div>
-            <h2>Köszönjük a vásárlást!</h2>
-            <p>A kosarad kiürült, a rendelésedet pedig sikeresen rögzítettük.</p>
+            <h2>{t('merch.payment.successTitle')}</h2>
+            <p>{t('merch.payment.successText')}</p>
           </div>
         </div>
       )}

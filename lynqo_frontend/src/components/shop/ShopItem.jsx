@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { FaShoppingCart, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
+import { useTranslation } from "react-i18next";
 
-// Képek importálása (útvonalat ellenőrizd!)
 import kep1 from '../../assets/merch/kep1.png';
 import kep2 from '../../assets/merch/kep2.png';
 import kep3 from '../../assets/merch/kep3.png';
@@ -22,16 +22,10 @@ export const MERCH_ITEMS = [
 const MerchCard = ({ item }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToCart } = useCart();
+  const { t } = useTranslation();
 
-  const nextImage = (e) => {
-    e.preventDefault();
-    setCurrentImageIndex((prev) => (prev + 1) % item.images.length);
-  };
-
-  const prevImage = (e) => {
-    e.preventDefault();
-    setCurrentImageIndex((prev) => (prev - 1 + item.images.length) % item.images.length);
-  };
+  const nextImage = (e) => { e.preventDefault(); setCurrentImageIndex((prev) => (prev + 1) % item.images.length); };
+  const prevImage = (e) => { e.preventDefault(); setCurrentImageIndex((prev) => (prev - 1 + item.images.length) % item.images.length); };
 
   return (
     <div className="big-news-card h-100 d-flex flex-column">
@@ -46,7 +40,7 @@ const MerchCard = ({ item }) => {
             </div>
           ))}
         </div>
-        <span className="news-tag">{item.category}</span>
+        <span className="news-tag">{t(`merch.categories.${item.category.toLowerCase()}`)}</span>
         {item.images.length > 1 && (
           <>
             <button className="img-nav-btn prev-btn" onClick={prevImage}><FaChevronLeft /></button>
@@ -61,10 +55,10 @@ const MerchCard = ({ item }) => {
       </div>
       <div className="news-content d-flex flex-column flex-grow-1">
         <span className="news-date">${item.price}</span>
-        <h3 className="update-title fs-4">{item.name}</h3>
+        <h3 className="update-title fs-4">{t(`merch.items.${item.name.toLowerCase().replace(' ', '')}`)}</h3>
         <div className="mt-auto pt-3">
           <button className="read-more-btn w-100" onClick={() => addToCart(item)}>
-            <FaShoppingCart className="me-2"/> Add to Cart
+            <FaShoppingCart className="me-2"/> {t('merch.cart.addBtn')}
           </button>
         </div>
       </div>

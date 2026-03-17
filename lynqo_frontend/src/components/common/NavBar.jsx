@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from 'react-i18next'; // Erre váltottunk a biztos frissítésért
 import { useTheme } from '../../context/ThemeContext';
 import './NavBar.css';
 
 export default function NavBar() {
+  const { t } = useTranslation(); // Az i18next hookja automatikusan újratölt, ha nyelvet váltasz
   const { user, logout } = useContext(AuthContext);
-  const { language, translations } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
-
-  const t = translations[language] || translations['en'] || {};
   
   const [activeDropdown, setActiveDropdown] = useState(null);
   const navRef = useRef(null);
@@ -36,32 +34,19 @@ export default function NavBar() {
     navigate('/main');
   };
 
-  // Function to resolve the correct image URL or generate one!
   const getProfileImageUrl = () => {
     const picUrl = user?.profilepicurl || user?.profilePicUrl || user?.ProfilePicUrl || user?.profilePictureUrl;
-    
-    // 1. PRIMARY METHOD
     if (picUrl && picUrl.trim() !== "" && picUrl !== "null") {
-      // Ha már egy teljes link (pl. külső szolgáltatótól)
-      if (picUrl.startsWith('http://') || picUrl.startsWith('https://')) {
-        return picUrl;
-      }
-      
-      // JAVÍTÁS: Kiegészítjük az ASP.NET Core wwwroot mappastruktúrájával
+      if (picUrl.startsWith('http://') || picUrl.startsWith('https://')) return picUrl;
       let cleanPath = picUrl;
       if (!cleanPath.includes('media/images/profile_pictures')) {
-        // Levágjuk a kezdő perjelt ha van, majd hozzáfűzzük a teljes útvonalat
         const safePicUrl = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
         cleanPath = `/media/images/profile_pictures/${safePicUrl}`;
       } else if (!cleanPath.startsWith('/')) {
-        // Ha benne van a mappa, de hiányzik a perjel az elejéről
         cleanPath = `/${cleanPath}`;
       }
-      
       return `https://localhost:7118${cleanPath}`;
     }
-    
-    // 2. FALLBACK METHOD
     const nameToUse = user?.username || user?.email || 'User';
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(nameToUse)}&background=6366f1&color=fff&rounded=true&bold=true`;
   };
@@ -79,26 +64,16 @@ export default function NavBar() {
               style={{ display: 'flex', alignItems: 'center', gap: '8px' }} 
             >
               <div style={{
-                width: '32px', 
-                height: '32px', 
-                minWidth: '32px', 
-                overflow: 'hidden', 
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                width: '32px', height: '32px', minWidth: '32px', 
+                overflow: 'hidden', borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 backgroundColor: '#333'
               }}>
                 <img 
                   src={getProfileImageUrl()} 
-                  alt={`${user.username || "User"}'s profile`} 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
+                  alt="Profile" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   onError={(e) => {
-                    // Ha még mindig hiba van a kép betöltésével, akkor visszavált a generáltra
                     e.target.onerror = null; 
                     const nameToUse = user?.username || user?.email || 'User';
                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameToUse)}&background=6366f1&color=fff&rounded=true&bold=true`;
@@ -111,19 +86,19 @@ export default function NavBar() {
             
             <div className={`dropdown-menu ${activeDropdown === 'user' ? 'show' : ''}`}>
               <Link to="/profile" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
-               👤 {t.profile || "Profile"}
+                👤 {t('navbar.profile')}
               </Link>
               <Link to="/settings" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
-               ⚙️ {t.settings || "Settings"}
+                ⚙️ {t('navbar.settings')}
               </Link>
               <div className="dropdown-divider"></div>
               <button className="dropdown-item logout" onClick={handleLogout}>
-                 🚪 {t.logout || "Log Out"}
+                  🚪 {t('navbar.logout')}
               </button>
             </div>
           </div>
         ) : (
-          <Link to="/login" className="login-link">🔐 {t.login || "Login"}</Link>
+          <Link to="/login" className="login-link">🔐 {t('navbar.login')}</Link>
         )}
       </div>
 
@@ -136,11 +111,7 @@ export default function NavBar() {
       <div className="navbar-right">
         <div className="theme-switch-wrapper">
           <label className="theme-switch">
-            <input 
-              type="checkbox" 
-              checked={theme === 'dark'} 
-              onChange={toggleTheme} 
-            />
+            <input type="checkbox" checked={theme === 'dark'} onChange={toggleTheme} />
             <div className="theme-switch-slider">
               <span className="switch-icon sun">☀️</span>
               <span className="switch-icon moon">🌙</span>

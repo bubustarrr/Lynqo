@@ -4,6 +4,13 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      //nav
+      "navbar": {
+  "profile": "Profile",
+  "settings": "Settings",
+  "logout": "Log Out",
+  "login": "Login"
+},
       //footer
       "footer": {
   "slogan": "Language learning made simple.",
@@ -358,6 +365,13 @@ const resources = {
   },
   hu: {
     translation: {
+      //nav
+      "navbar": {
+  "profile": "Profil",
+  "settings": "Beállítások",
+  "logout": "Kijelentkezés",
+  "login": "Bejelentkezés"
+},
       //footer
       "footer": {
   "slogan": "Nyelvtanulás egyszerűen.",
@@ -746,6 +760,13 @@ const resources = {
   },
   es: {
     translation: {
+      //nav
+      "navbar": {
+  "profile": "Perfil",
+  "settings": "Ajustes",
+  "logout": "Cerrar sesión",
+  "login": "Iniciar sesión"
+},
       //footer
       "footer": {
   "slogan": "El aprendizaje de idiomas simplificado.",
@@ -1135,6 +1156,13 @@ const resources = {
   },
   fr: {
     translation: {
+      //nav
+      "navbar": {
+  "profile": "Profil",
+  "settings": "Paramètres",
+  "logout": "Déconnexion",
+  "login": "Connexion"
+},
       //footer
       "footer": {
   "slogan": "L'apprentissage des langues en toute simplicité.",
@@ -1523,6 +1551,13 @@ const resources = {
   },
   de: {
     translation: {
+      //nav
+      "navbar": {
+  "profile": "Profil",
+  "settings": "Einstellungen",
+  "logout": "Abmelden",
+  "login": "Anmelden"
+},
       //footer
       "footer": {
   "slogan": "Sprachenlernen einfach gemacht.",

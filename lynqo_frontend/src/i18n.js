@@ -4,6 +4,13 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      //achievments
+      "achievements": {
+  "title": "Achievements",
+  "errorLoad": "Cannot load badges:",
+  "noBadges": "No badges available in the database.",
+  "waiting": "Waiting for User ID from profile data..."
+},
       //leaderboard
       "leaderboard": {
   "title": "🏆 Leaderboard",
@@ -297,6 +304,13 @@ const resources = {
   },
   hu: {
     translation: {
+      //achievments
+      "achievements": {
+  "title": "Eredmények",
+  "errorLoad": "Nem sikerült a jelvények betöltése:",
+  "noBadges": "Nincsenek elérhető jelvények az adatbázisban.",
+  "waiting": "Várakozás a felhasználói azonosítóra..."
+},
       //leaderboard
       "leaderboard": {
   "title": "🏆 Ranglista",
@@ -624,6 +638,13 @@ const resources = {
   },
   es: {
     translation: {
+      //achievments
+      "achievements": {
+  "title": "Logros",
+  "errorLoad": "No se pueden cargar las insignias:",
+  "noBadges": "No hay insignias disponibles en la base de datos.",
+  "waiting": "Esperando el ID de usuario..."
+},
       //leaderboard
       "leaderboard": {
   "title": "🏆 Clasificación",
@@ -952,6 +973,13 @@ const resources = {
   },
   fr: {
     translation: {
+      //achievments
+      "achievements": {
+  "title": "Succès",
+  "errorLoad": "Impossible de charger les badges :",
+  "noBadges": "Aucun badge disponible dans la base de données.",
+  "waiting": "En attente de l'identifiant utilisateur..."
+},
       //leaderboard
       "leaderboard": {
   "title": "🏆 Classement",
@@ -1279,6 +1307,13 @@ const resources = {
   },
   de: {
     translation: {
+      //achievments
+      "achievements": {
+  "title": "Erfolge",
+  "errorLoad": "Abzeichen konnten nicht geladen werden:",
+  "noBadges": "Keine Abzeichen in der Datenbank verfügbar.",
+  "waiting": "Warten auf Benutzer-ID..."
+},
       //leaderboard
       "leaderboard": {
   "title": "🏆 Bestenliste",

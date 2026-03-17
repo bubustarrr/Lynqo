@@ -4,6 +4,20 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      //picklanguage
+      "langSelect": {
+  "speakTitle": "I speak...",
+  "learnTitle": "I want to learn...",
+  "speakSub": "Select your native language",
+  "learnSub": "Select a course to start learning",
+  "noCourses": "No courses found.",
+  "noCoursesDesc": "We don't have a course for this language pair yet.",
+  "chooseAnother": "Choose another language",
+  "back": "Back to languages",
+  "official": "Official Course",
+  "defaultDesc": "Master this language with our expert-led curriculum.",
+  "startBtn": "Start Learning"
+},
       //dashboard
 "dashboard": {
   "welcome": "Welcome back, {{name}}! 👋",
@@ -331,6 +345,20 @@ const resources = {
   },
   hu: {
     translation: {
+      //picklanguage
+      "langSelect": {
+  "speakTitle": "Beszélt nyelv...",
+  "learnTitle": "Tanulni szeretnék...",
+  "speakSub": "Válaszd ki az anyanyelvedet",
+  "learnSub": "Válassz egy kurzust a tanuláshoz",
+  "noCourses": "Nem található kurzus.",
+  "noCoursesDesc": "Ehhez a nyelvpárhoz még nincs elérhető kurzusunk.",
+  "chooseAnother": "Válassz másik nyelvet",
+  "back": "Vissza a nyelvekhez",
+  "official": "Hivatalos kurzus",
+  "defaultDesc": "Sajátítsd el ezt a nyelvet szakértők által összeállított tananyagunkkal.",
+  "startBtn": "Tanulás indítása"
+},
       //dashboard
       "dashboard": {
   "welcome": "Üdv újra, {{name}}! 👋",
@@ -692,6 +720,20 @@ const resources = {
   },
   es: {
     translation: {
+      //picklanguage
+      "langSelect": {
+  "speakTitle": "Hablo...",
+  "learnTitle": "Quiero aprender...",
+  "speakSub": "Selecciona tu lengua materna",
+  "learnSub": "Selecciona un curso para empezar",
+  "noCourses": "No se encontraron cursos.",
+  "noCoursesDesc": "Aún no tenemos un curso para este par de idiomas.",
+  "chooseAnother": "Elegir otro idioma",
+  "back": "Volver a los idiomas",
+  "official": "Curso oficial",
+  "defaultDesc": "Domina este idioma con nuestro plan de estudios experto.",
+  "startBtn": "Empezar a aprender"
+},
       //dashboard
       "dashboard": {
   "welcome": "¡Bienvenido de nuevo, {{name}}! 👋",
@@ -1054,6 +1096,20 @@ const resources = {
   },
   fr: {
     translation: {
+      //picklanguage
+      "langSelect": {
+  "speakTitle": "Je parle...",
+  "learnTitle": "Je veux apprendre...",
+  "speakSub": "Sélectionnez votre langue maternelle",
+  "learnSub": "Sélectionnez un cours pour commencer",
+  "noCourses": "Aucun cours trouvé.",
+  "noCoursesDesc": "Nous n'avons pas encore de cours pour cette paire de langues.",
+  "chooseAnother": "Choisir une autre langue",
+  "back": "Retour aux langues",
+  "official": "Cours officiel",
+  "defaultDesc": "Maîtrisez cette langue grâce à notre programme d'experts.",
+  "startBtn": "Commencer à apprendre"
+},
       //dashboard
       "dashboard": {
   "welcome": "Bon retour, {{name}} ! 👋",
@@ -1415,6 +1471,20 @@ const resources = {
   },
   de: {
     translation: {
+      //picklanguage
+      "langSelect": {
+  "speakTitle": "Ich spreche...",
+  "learnTitle": "Ich möchte lernen...",
+  "speakSub": "Wähle deine Muttersprache",
+  "learnSub": "Wähle einen Kurs, um zu beginnen",
+  "noCourses": "Keine Kurse gefunden.",
+  "noCoursesDesc": "Wir haben noch keinen Kurs für diese Sprachkombination.",
+  "chooseAnother": "Andere Sprache wählen",
+  "back": "Zurück zu den Sprachen",
+  "official": "Offizieller Kurs",
+  "defaultDesc": "Meistern Sie diese Sprache mit unserem Experten-Lehrplan.",
+  "startBtn": "Lernen starten"
+},
       //dashboard
       "dashboard": {
   "welcome": "Willkommen zurück, {{name}}! 👋",

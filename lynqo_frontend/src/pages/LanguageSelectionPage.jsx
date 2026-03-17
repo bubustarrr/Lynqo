@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import ReactCountryFlag from "react-country-flag";
 import { 
   Languages, 
@@ -14,6 +15,7 @@ import {
 import './MainPage.css';
 
 export default function LanguageSelectionPage() {
+  const { t } = useTranslation();
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
   
@@ -22,7 +24,6 @@ export default function LanguageSelectionPage() {
   const [loading, setLoading] = useState(false);
   const [sourceLanguages, setSourceLanguages] = useState([]);
 
-  // Fetch languages from backend
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
@@ -40,29 +41,11 @@ export default function LanguageSelectionPage() {
 
   const getFlagCode = (langCode) => {
     if (!langCode) return null;
-    
     const map = {
-      en: 'US',
-      hu: 'HU',
-      de: 'DE',
-      fr: 'FR',
-      es: 'ES',
-      it: 'IT',
-      pt: 'PT',
-      nl: 'NL',
-      pl: 'PL',
-      ro: 'RO',
-      cs: 'CZ',
-      sk: 'SK',
-      uk: 'UA',
-      ru: 'RU',
-      tr: 'TR',
-      ar: 'SA',
-      zh: 'CN',
-      ja: 'JP',
-      ko: 'KR',
+      en: 'US', hu: 'HU', de: 'DE', fr: 'FR', es: 'ES', it: 'IT',
+      pt: 'PT', nl: 'NL', pl: 'PL', ro: 'RO', cs: 'CZ', sk: 'SK',
+      uk: 'UA', ru: 'RU', tr: 'TR', ar: 'SA', zh: 'CN', ja: 'JP', ko: 'KR',
     };
-
     return map[langCode.toLowerCase()] || langCode.toUpperCase();
   };
 
@@ -95,10 +78,10 @@ export default function LanguageSelectionPage() {
           <Globe size={48} className="text-primary mb-3" />
         )}
         <h1 className="hero-title mb-2" style={{fontSize: '2.5rem', fontWeight: 'bold'}}>
-          {step === 1 ? "I speak..." : "I want to learn..."}
+          {step === 1 ? t('langSelect.speakTitle') : t('langSelect.learnTitle')}
         </h1>
         <p className="subtitle-text mb-5 fs-5 text-muted">
-          {step === 1 ? "Select your native language" : "Select a course to start learning"}
+          {step === 1 ? t('langSelect.speakSub') : t('langSelect.learnSub')}
         </p>
       </div>
 
@@ -121,12 +104,7 @@ export default function LanguageSelectionPage() {
                         <ReactCountryFlag 
                           countryCode={getFlagCode(lang.code)} 
                           svg 
-                          style={{
-                            width: '100%', 
-                            height: '100%', 
-                            display: 'block', 
-                            objectFit: 'cover'
-                          }} 
+                          style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }} 
                         />
                       </div>
                       <h6 className="fw-bold m-0">{lang.name}</h6>
@@ -147,19 +125,17 @@ export default function LanguageSelectionPage() {
           {!loading && availableCourses.length === 0 && (
             <div className="text-muted py-5">
               <CircleAlert size={64} className="mb-3 opacity-50" />
-              <h3 className="mt-3">No courses found.</h3>
-              <p>We don't have a course for this language pair yet.</p>
+              <h3 className="mt-3">{t('langSelect.noCourses')}</h3>
+              <p>{t('langSelect.noCoursesDesc')}</p>
               <Button variant="link" onClick={() => setStep(1)} className="fw-bold d-flex align-items-center justify-content-center mx-auto">
-                <ChevronLeft size={18} /> Choose another language
+                <ChevronLeft size={18} /> {t('langSelect.chooseAnother')}
               </Button>
             </div>
           )}
 
           <Row className="justify-content-center g-4">
             {availableCourses.map((course) => {
-              // Find the target language object to get its code
               const targetLang = sourceLanguages.find(l => l.id === course.targetLanguageId);
-              
               return (
                 <Col key={course.id} xs={12} md={6} lg={5}>
                   <Card 
@@ -175,12 +151,7 @@ export default function LanguageSelectionPage() {
                             <ReactCountryFlag 
                               countryCode={getFlagCode(targetLang.code)} 
                               svg 
-                              style={{
-                                width: '100%', 
-                                height: '100%', 
-                                display: 'block', 
-                                objectFit: 'cover'
-                              }} 
+                              style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }} 
                             />
                           ) : (
                             <Globe size={32} className="text-muted" />
@@ -190,18 +161,18 @@ export default function LanguageSelectionPage() {
                           <h4 className="fw-bold m-0">{course.title}</h4>
                           <div className="d-flex align-items-center text-muted mt-1">
                             <Info size={14} className="me-1" />
-                            <small className="fw-bold text-uppercase" style={{fontSize: '0.65rem', letterSpacing: '1px'}}>Official Course</small>
+                            <small className="fw-bold text-uppercase" style={{fontSize: '0.65rem', letterSpacing: '1px'}}>{t('langSelect.official')}</small>
                           </div>
                         </div>
                       </div>
                       
                       <p className="card-desc mb-4 text-secondary" style={{minHeight: '3rem'}}>
-                        {course.description || "Master this language with our expert-led curriculum."}
+                        {course.description || t('langSelect.defaultDesc')}
                       </p>
                       
                       <Button className="w-100 cta-button primary py-3 fw-bold d-flex align-items-center justify-content-center gap-2" 
                               style={{borderRadius: '14px', backgroundColor: '#58cc02', border: 'none'}}>
-                        Start Learning <ArrowRight size={20} />
+                        {t('langSelect.startBtn')} <ArrowRight size={20} />
                       </Button>
                     </Card.Body>
                   </Card>
@@ -213,7 +184,7 @@ export default function LanguageSelectionPage() {
           {!loading && (
             <div className="mt-5">
               <Button variant="outline-secondary" size="sm" onClick={() => setStep(1)} className="d-flex align-items-center mx-auto gap-1 border-0 fw-bold">
-                <ChevronLeft size={16} /> Back to languages
+                <ChevronLeft size={16} /> {t('langSelect.back')}
               </Button>
             </div>
           )}

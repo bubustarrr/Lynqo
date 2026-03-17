@@ -12,7 +12,19 @@ export default function FriendRequests({ friendRequests, handleRequest, resolveM
                 <span className="version-badge">{t('profilePage.requests.new')}</span>
               </div>
               <div className="request-body">
-                {/* ... avatar kód ugyanaz ... */}
+                                <div className="request-avatar">
+                  <img
+                    src={
+                      resolveMediaUrl(req.avatarUrl) ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        req.username
+                      )}&background=E0E7FF&color=4338CA`
+                    }
+                    alt={req.username}
+                    style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+                  />
+                </div>
+
                 <div>
                   <h4 className="update-title" style={{ marginBottom: '2px' }}>{req.username}</h4>
                   <p className="update-details">{t('profilePage.requests.message')}</p>

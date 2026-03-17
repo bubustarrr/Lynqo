@@ -8,7 +8,23 @@ export default function FriendsOnline({ friendsList, openChat, handleUnfriend, r
         {friendsList.length > 0 ? (
           friendsList.map((friend) => (
             <div key={friend.friendshipId} className="update-card friend-item-row">
-              {/* ... avatar kód ugyanaz ... */}
+                          <div className="friend-info-group">
+                <div className={`friend-status-dot ${friend.isOnline ? 'active' : ''}`}></div>
+
+                <img
+                  src={
+                    resolveMediaUrl(friend.avatarUrl) ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      friend.username
+                    )}&background=random`
+                  }
+                  alt="Friend"
+                  className="friend-list-avatar"
+                />
+
+                <p className="friend-name">{friend.username}</p>
+              </div>
+
               <div className="friend-actions">
                 <button className="action-btn chat-btn" onClick={() => openChat(friend)} title={t('profilePage.friends.chat_tooltip')}>
                   💬

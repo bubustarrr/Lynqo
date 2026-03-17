@@ -8,7 +8,44 @@ export default function DockedChat({
 
   return (
     <div className={`docked-chat-container ${isMinimized ? 'minimized' : ''}`}>
-      {/* ... fejléc kód ugyanaz ... */}
+            <div
+        className="chat-header"
+        onClick={() => setIsMinimized(!isMinimized)}
+      >
+        <div className="chat-user-info">
+          <div
+            className={`friend-status-dot small ${
+              activeChat.isOnline ? 'active' : ''
+            }`}
+          ></div>
+          <img
+            src={
+              resolveMediaUrl(activeChat.avatarUrl) ||
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                activeChat.username
+              )}&background=8b5cf6&color=fff`
+            }
+            alt="avatar"
+            className="chat-mini-avatar"
+          />
+          <span className="chat-username">{activeChat.username}</span>
+        </div>
+        <div className="chat-controls">
+          <button className="control-btn" type="button">
+            {isMinimized ? '▲' : '▼'}
+          </button>
+          <button
+            className="control-btn close"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveChat(null);
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      </div>
 
       {!isMinimized && (
         <>

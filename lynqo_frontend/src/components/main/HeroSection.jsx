@@ -1,23 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 export default function HeroSection({ user }) {
+  const { t } = useTranslation();
+
   return (
     <section className="hero-section">
       <div className="hero-content">
-        <h1 className="hero-title">Learn Languages with Lynqo</h1>
+        <h1 className="hero-title">{t('mainPage.hero.title')}</h1>
         <p className="hero-subtitle">
-          Master new languages through fun, interactive lessons. Join millions of learners worldwide!
+          {t('mainPage.hero.subtitle')}
         </p>
         <div className="hero-buttons">
           {user ? (
             <Link to="/pick-language" className="cta-button primary large">
-              🚀 Continue Learning (Go to Dashboard)
+              {t('mainPage.hero.continue')}
             </Link>
           ) : (
             <>
-              <Link to="/register" className="cta-button primary">Get Started</Link>
-              <Link to="/login" className="cta-button secondary">I Already Have an Account</Link>
+              <Link to="/register" className="cta-button primary">{t('mainPage.hero.getStarted')}</Link>
+              <Link to="/login" className="cta-button secondary">{t('mainPage.hero.alreadyAccount')}</Link>
             </>
           )}
         </div>

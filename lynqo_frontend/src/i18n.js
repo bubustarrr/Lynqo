@@ -4,6 +4,28 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      //main
+      "mainPage": {
+  "hero": {
+    "title": "Learn Languages with Lynqo",
+    "subtitle": "Master new languages through fun, interactive lessons. Join millions of learners worldwide!",
+    "continue": "🚀 Continue Learning (Go to Dashboard)",
+    "getStarted": "Get Started",
+    "alreadyAccount": "I Already Have an Account"
+  },
+  "explore": {
+    "news": "📰 Latest News",
+    "shop": "🛒 Lynqo Store",
+    "leaderboard": "🏆 Leaderboard"
+  },
+  "features": {
+    "title": "Why Choose Lynqo?",
+    "p_learning": { "title": "Personalized Learning", "desc": "Adaptive lessons tailored to your pace and goals." },
+    "gamified": { "title": "Gamified Experience", "desc": "Earn points, unlock achievements, and stay motivated." },
+    "languages": { "title": "Multiple Languages", "desc": "Learn Spanish, French, German, and more." },
+    "anywhere": { "title": "Learn Anywhere", "desc": "Access lessons on desktop, mobile, and tablet." }
+  }
+},
       // --- SETTINGS ---
       "settings": "Settings",
       "subtitle": "Manage your preferences and learning goals",
@@ -257,6 +279,28 @@ const resources = {
   },
   hu: {
     translation: {
+      //main
+      "mainPage": {
+  "hero": {
+    "title": "Tanulj nyelveket a Lynqo-val",
+    "subtitle": "Sajátíts el új nyelveket szórakoztató, interaktív leckéken keresztül. Csatlakozz a több millió tanulóhoz világszerte!",
+    "continue": "🚀 Tanulás folytatása (Irány a vezérlőpult)",
+    "getStarted": "Vágjunk bele",
+    "alreadyAccount": "Már van fiókom"
+  },
+  "explore": {
+    "news": "📰 Legfrissebb hírek",
+    "shop": "🛒 Lynqo Bolt",
+    "leaderboard": "🏆 Ranglista"
+  },
+  "features": {
+    "title": "Miért válaszd a Lynqo-t?",
+    "p_learning": { "title": "Személyre szabott tanulás", "desc": "Alkalmazkodó leckék a tempódhoz és céljaidhoz igazítva." },
+    "gamified": { "title": "Játékos élmény", "desc": "Gyűjts pontokat, oldj fel kitűzőket és maradj motivált." },
+    "languages": { "title": "Több elérhető nyelv", "desc": "Tanulj spanyolul, franciául, németül és még sok más nyelven." },
+    "anywhere": { "title": "Tanulj bárhol", "desc": "Érd el a leckéket asztali gépen, mobilon vagy tableten." }
+  }
+},
       "settings": "Beállítások",
       "subtitle": "Kezele az egyéni beállításaidat és céljaidat",
       "save_changes": "Módosítások mentése",
@@ -544,6 +588,28 @@ const resources = {
   },
   es: {
     translation: {
+      //main
+      "mainPage": {
+  "hero": {
+    "title": "Aprende idiomas con Lynqo",
+    "subtitle": "Domina nuevos idiomas a través de lecciones divertidas e interactivas. ¡Únete a millones de estudiantes!",
+    "continue": "🚀 Continuar aprendiendo (Ir al panel)",
+    "getStarted": "Empezar",
+    "alreadyAccount": "Ya tengo una cuenta"
+  },
+  "explore": {
+    "news": "📰 Últimas noticias",
+    "shop": "🛒 Tienda Lynqo",
+    "leaderboard": "🏆 Clasificación"
+  },
+  "features": {
+    "title": "¿Por qué elegir Lynqo?",
+    "p_learning": { "title": "Aprendizaje personalizado", "desc": "Lecciones adaptables ajustadas a tu ritmo y objetivos." },
+    "gamified": { "title": "Experiencia gamificada", "desc": "Gana puntos, desbloquea logros y mantente motivado." },
+    "languages": { "title": "Múltiples idiomas", "desc": "Aprende español, francés, alemán y más." },
+    "anywhere": { "title": "Aprende en cualquier lugar", "desc": "Accede a las lecciones en PC, móvil y tableta." }
+  }
+},
       "settings": "Ajustes",
       "subtitle": "Gestiona tus preferencias y objetivos",
       "save_changes": "Guardar cambios",
@@ -832,6 +898,28 @@ const resources = {
   },
   fr: {
     translation: {
+      //main
+      "mainPage": {
+  "hero": {
+    "title": "Apprenez les langues avec Lynqo",
+    "subtitle": "Maîtrisez de nouvelles langues grâce à des leçons ludiques et interactives. Rejoignez des millions d'apprenants !",
+    "continue": "🚀 Continuer l'apprentissage (Tableau de bord)",
+    "getStarted": "Commencer",
+    "alreadyAccount": "J'ai déjà un compte"
+  },
+  "explore": {
+    "news": "📰 Dernières nouvelles",
+    "shop": "🛒 Boutique Lynqo",
+    "leaderboard": "🏆 Classement"
+  },
+  "features": {
+    "title": "Pourquoi choisir Lynqo ?",
+    "p_learning": { "title": "Apprentissage personnalisé", "desc": "Des leçons adaptatives adaptées à votre rythme et à vos objectifs." },
+    "gamified": { "title": "Expérience ludique", "desc": "Gagnez des points, débloquez des succès et restez motivé." },
+    "languages": { "title": "Plusieurs langues", "desc": "Apprenez l'espagnol, le français, l'allemand et plus encore." },
+    "anywhere": { "title": "Apprenez n'importe où", "desc": "Accédez aux cours sur ordinateur, mobile et tablette." }
+  }
+},
       "settings": "Paramètres",
       "subtitle": "Gérez vos préférences et vos objectifs",
       "save_changes": "Enregistrer",
@@ -1119,6 +1207,28 @@ const resources = {
   },
   de: {
     translation: {
+      //main
+      "mainPage": {
+  "hero": {
+    "title": "Sprachen lernen mit Lynqo",
+    "subtitle": "Meistere neue Sprachen durch unterhaltsame, interaktive Lektionen. Schließe dich Millionen von Lernenden an!",
+    "continue": "🚀 Weiterlernen (Zum Dashboard)",
+    "getStarted": "Jetzt loslegen",
+    "alreadyAccount": "Ich habe bereits ein Konto"
+  },
+  "explore": {
+    "news": "📰 Aktuelle News",
+    "shop": "🛒 Lynqo Shop",
+    "leaderboard": "🏆 Bestenliste"
+  },
+  "features": {
+    "title": "Warum Lynqo wählen?",
+    "p_learning": { "title": "Personalisiertes Lernen", "desc": "Adaptive Lektionen, die an dein Tempo und deine Ziele angepasst sind." },
+    "gamified": { "title": "Spielerisches Erlebnis", "desc": "Sammle Punkte, schalte Erfolge frei und bleibe motiviert." },
+    "languages": { "title": "Mehrere Sprachen", "desc": "Lerne Spanisch, Französisch, Deutsch und mehr." },
+    "anywhere": { "title": "Überall lernen", "desc": "Greife über Desktop, Handy und Tablet auf Lektionen zu." }
+  }
+},
       "settings": "Einstellungen",
       "subtitle": "Verwalten Sie Ihre Präferenzen und Lernziele",
       "save_changes": "Änderungen speichern",

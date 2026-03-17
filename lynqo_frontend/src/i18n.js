@@ -4,6 +4,24 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      //leaderboard
+      "leaderboard": {
+  "title": "🏆 Leaderboard",
+  "selectLeague": "Select League",
+  "leagueSuffix": "League",
+  "leaderboardSuffix": "Leaderboard",
+  "thisWeek": "This Week",
+  "allTime": "All Time",
+  "rank": "Rank",
+  "learner": "Learner",
+  "xp": "XP",
+  "noData": "No data yet. Start learning!",
+  "you": "YOU",
+  "leagues": {
+    "Bronze": "Bronze", "Copper": "Copper", "Silver": "Silver", "Gold": "Gold",
+    "Emerald": "Emerald", "Obsidian": "Obsidian", "Diamond": "Diamond", "Global": "Global"
+  }
+},
       //main
       "mainPage": {
   "hero": {
@@ -279,6 +297,24 @@ const resources = {
   },
   hu: {
     translation: {
+      //leaderboard
+      "leaderboard": {
+  "title": "🏆 Ranglista",
+  "selectLeague": "Liga választása",
+  "leagueSuffix": "Liga",
+  "leaderboardSuffix": "Ranglista",
+  "thisWeek": "Ezen a héten",
+  "allTime": "Összesített",
+  "rank": "Helyezés",
+  "learner": "Tanuló",
+  "xp": "XP",
+  "noData": "Még nincs adat. Kezdj el tanulni!",
+  "you": "TE",
+  "leagues": {
+    "Bronze": "Bronz", "Copper": "Réz", "Silver": "Ezüst", "Gold": "Arany",
+    "Emerald": "Smaragd", "Obsidian": "Obszidián", "Diamond": "Gyémánt", "Global": "Globális"
+  }
+},
       //main
       "mainPage": {
   "hero": {
@@ -588,6 +624,24 @@ const resources = {
   },
   es: {
     translation: {
+      //leaderboard
+      "leaderboard": {
+  "title": "🏆 Clasificación",
+  "selectLeague": "Seleccionar liga",
+  "leagueSuffix": "Liga",
+  "leaderboardSuffix": "Clasificación",
+  "thisWeek": "Esta semana",
+  "allTime": "Todo el tiempo",
+  "rank": "Rango",
+  "learner": "Estudiante",
+  "xp": "XP",
+  "noData": "Sin datos aún. ¡Empieza a aprender!",
+  "you": "TÚ",
+  "leagues": {
+    "Bronze": "Bronce", "Copper": "Cobre", "Silver": "Plata", "Gold": "Oro",
+    "Emerald": "Esmeralda", "Obsidian": "Obsidiana", "Diamond": "Diamante", "Global": "Global"
+  }
+},
       //main
       "mainPage": {
   "hero": {
@@ -898,6 +952,24 @@ const resources = {
   },
   fr: {
     translation: {
+      //leaderboard
+      "leaderboard": {
+  "title": "🏆 Classement",
+  "selectLeague": "Choisir une ligue",
+  "leagueSuffix": "Ligue",
+  "leaderboardSuffix": "Classement",
+  "thisWeek": "Cette semaine",
+  "allTime": "Tout le temps",
+  "rank": "Rang",
+  "learner": "Apprenant",
+  "xp": "XP",
+  "noData": "Pas encore de données. Commencez à apprendre !",
+  "you": "VOUS",
+  "leagues": {
+    "Bronze": "Bronze", "Copper": "Cuivre", "Silver": "Argent", "Gold": "Or",
+    "Emerald": "Émeraude", "Obsidian": "Obsidienne", "Diamond": "Diamant", "Global": "Global"
+  }
+},
       //main
       "mainPage": {
   "hero": {
@@ -1207,6 +1279,24 @@ const resources = {
   },
   de: {
     translation: {
+      //leaderboard
+      "leaderboard": {
+  "title": "🏆 Bestenliste",
+  "selectLeague": "Liga auswählen",
+  "leagueSuffix": "Liga",
+  "leaderboardSuffix": "Bestenliste",
+  "thisWeek": "Diese Woche",
+  "allTime": "Gesamt",
+  "rank": "Rang",
+  "learner": "Lernende",
+  "xp": "XP",
+  "noData": "Noch keine Daten. Fang an zu lernen!",
+  "you": "DU",
+  "leagues": {
+    "Bronze": "Bronze", "Copper": "Kupfer", "Silver": "Silber", "Gold": "Gold",
+    "Emerald": "Smaragd", "Obsidian": "Obsidian", "Diamond": "Diamant", "Global": "Global"
+  }
+},
       //main
       "mainPage": {
   "hero": {

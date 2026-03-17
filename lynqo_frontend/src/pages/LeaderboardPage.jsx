@@ -2,24 +2,24 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Container, Card, Spinner, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next"; // ÚJ
 import './LeaderboardPage.css';
 
-// Itt importáljuk az univerzális Vissza gombot
 import BackButton from '../components/common/BackButton';
 
-// Mapping leagues to colors for styling the badge
 const LEAGUE_COLORS = {
-    "Bronze": "#00bcf5", // The bright blue in your screenshot
+    "Bronze": "#00bcf5",
     "Copper": "#b87333",
     "Silver": "#c0c0c0",
     "Gold":   "#ffd700",
     "Emerald":"#50c878",
     "Obsidian":"#4b0082",
     "Diamond":"#b9f2ff",
-    "Global": "#8c52ff" // A purple for global
+    "Global": "#8c52ff"
 };
 
 export default function LeaderboardPage() {
+    const { t } = useTranslation(); // ÚJ
     const { token, user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     
@@ -29,7 +29,6 @@ export default function LeaderboardPage() {
     const [timeframe, setTimeframe] = useState('weekly');
     const [imgErrors, setImgErrors] = useState({});
 
-    // This lets the user look at other leagues even if they aren't in them
     const [viewingLeague, setViewingLeague] = useState(null); 
 
     useEffect(() => {
@@ -38,7 +37,6 @@ export default function LeaderboardPage() {
         const fetchLeaderboard = async () => {
             setLoading(true);
             try {
-                // If they are viewing a specific league from the dropdown, send it as a query param
                 const url = viewingLeague && timeframe === 'weekly' 
                     ? `https://localhost:7118/api/Leaderboard/${timeframe}?league=${viewingLeague}`
                     : `https://localhost:7118/api/Leaderboard/${timeframe}`;
@@ -59,7 +57,6 @@ export default function LeaderboardPage() {
                     if (timeframe === 'weekly') {
                         setLeaders(data.leaderboard);
                         setCurrentLeague(data.league);
-                        // If viewingLeague is null, default to their actual league
                         if (!viewingLeague) setViewingLeague(data.league);
                     } else {
                         setLeaders(data);
@@ -93,7 +90,6 @@ export default function LeaderboardPage() {
         return 'zone-safe';
     };
 
-    // Use selected league color, default to blue
     const activeColor = LEAGUE_COLORS[viewingLeague] || "#00bcf5";
 
     return (
@@ -102,20 +98,19 @@ export default function LeaderboardPage() {
             <BackButton wrapperClass="d-flex justify-content-start w-100 mb-4" />
 
             <div className="leaderboard-header d-flex flex-column align-items-center mb-4">
-                <h1 className="leaderboard-title m-0 mb-2">🏆 Leaderboard</h1>
+                <h1 className="leaderboard-title m-0 mb-2">{t('leaderboard.title')}</h1>
                 
-                {/* The Dropdown replacing the static Bronze League text */}
                 <Dropdown>
                     <Dropdown.Toggle 
                         id="league-dropdown"
                         className="league-dropdown-badge"
                         style={{ backgroundColor: activeColor }}
                     >
-                        {viewingLeague} {viewingLeague !== "Global" ? "League" : "Leaderboard"}
+                        {t(`leaderboard.leagues.${viewingLeague}`)} {viewingLeague !== "Global" ? t('leaderboard.leagueSuffix') : t('leaderboard.leaderboardSuffix')}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="league-dropdown-menu text-center">
-                        <Dropdown.Header>Select League</Dropdown.Header>
+                        <Dropdown.Header>{t('leaderboard.selectLeague')}</Dropdown.Header>
                         {Object.keys(LEAGUE_COLORS).map((leagueName) => (
                             <Dropdown.Item 
                                 key={leagueName}
@@ -129,23 +124,22 @@ export default function LeaderboardPage() {
                                     }
                                 }}
                             >
-                                {leagueName} {leagueName !== "Global" ? "League" : "Leaderboard"}
+                                {t(`leaderboard.leagues.${leagueName}`)} {leagueName !== "Global" ? t('leaderboard.leagueSuffix') : t('leaderboard.leaderboardSuffix')}
                             </Dropdown.Item>
                         ))}
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
 
-            {/* Your original toggle buttons */}
             <div className="leaderboard-toggle mb-4">
                 <button
                     className={`toggle-btn ${timeframe === 'weekly' ? 'btn-primary' : ''}`}
                     onClick={() => {
                         setTimeframe('weekly');
-                        setViewingLeague(currentLeague); // Reset to their actual league
+                        setViewingLeague(currentLeague);
                     }}
                 >
-                    This Week
+                    {t('leaderboard.thisWeek')}
                 </button>
                 <button
                     className={`toggle-btn ${timeframe === 'global' ? 'btn-primary' : ''}`}
@@ -154,7 +148,7 @@ export default function LeaderboardPage() {
                         setViewingLeague("Global");
                     }}
                 >
-                    All Time
+                    {t('leaderboard.allTime')}
                 </button>
             </div>
 
@@ -165,16 +159,16 @@ export default function LeaderboardPage() {
                     <table className="leaderboard-table mb-0 text-center w-100">
                         <thead>
                             <tr>
-                                <th>Rank</th>
-                                <th className="text-start ps-4">Learner</th>
-                                <th>XP</th>
+                                <th>{t('leaderboard.rank')}</th>
+                                <th className="text-start ps-4">{t('leaderboard.learner')}</th>
+                                <th>{t('leaderboard.xp')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {leaders.length === 0 ? (
                                 <tr>
                                     <td colSpan="3" className="p-5 text-muted">
-                                        No data yet. Start learning!
+                                        {t('leaderboard.noData')}
                                     </td>
                                 </tr>
                             ) : (
@@ -209,7 +203,7 @@ export default function LeaderboardPage() {
                                                 )}
                                                 <span className="learner-name">{learner.displayName}</span>
                                                 {isCurrentUser(learner) && (
-                                                    <span className="current-user-badge">YOU</span>
+                                                    <span className="current-user-badge">{t('leaderboard.you')}</span>
                                                 )}
                                             </div>
                                         </td>

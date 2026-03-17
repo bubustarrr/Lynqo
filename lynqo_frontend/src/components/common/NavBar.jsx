@@ -42,11 +42,22 @@ export default function NavBar() {
     
     // 1. PRIMARY METHOD
     if (picUrl && picUrl.trim() !== "" && picUrl !== "null") {
+      // Ha már egy teljes link (pl. külső szolgáltatótól)
       if (picUrl.startsWith('http://') || picUrl.startsWith('https://')) {
         return picUrl;
       }
       
-      const cleanPath = picUrl.startsWith('/') ? picUrl : `/${picUrl}`;
+      // JAVÍTÁS: Kiegészítjük az ASP.NET Core wwwroot mappastruktúrájával
+      let cleanPath = picUrl;
+      if (!cleanPath.includes('media/images/profile_pictures')) {
+        // Levágjuk a kezdő perjelt ha van, majd hozzáfűzzük a teljes útvonalat
+        const safePicUrl = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+        cleanPath = `/media/images/profile_pictures/${safePicUrl}`;
+      } else if (!cleanPath.startsWith('/')) {
+        // Ha benne van a mappa, de hiányzik a perjel az elejéről
+        cleanPath = `/${cleanPath}`;
+      }
+      
       return `https://localhost:7118${cleanPath}`;
     }
     
@@ -87,6 +98,7 @@ export default function NavBar() {
                     objectFit: 'cover'
                   }}
                   onError={(e) => {
+                    // Ha még mindig hiba van a kép betöltésével, akkor visszavált a generáltra
                     e.target.onerror = null; 
                     const nameToUse = user?.username || user?.email || 'User';
                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameToUse)}&background=6366f1&color=fff&rounded=true&bold=true`;
@@ -106,7 +118,7 @@ export default function NavBar() {
               </Link>
               <div className="dropdown-divider"></div>
               <button className="dropdown-item logout" onClick={handleLogout}>
-                  🚪 {t.logout || "Log Out"}
+                 🚪 {t.logout || "Log Out"}
               </button>
             </div>
           </div>

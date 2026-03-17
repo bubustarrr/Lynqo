@@ -97,7 +97,7 @@ export default function Achievements({ t, userId, resolveMediaUrl }) {
               <div 
                 className="badge-item text-center" 
                 style={{ 
-                  width: '75px', 
+                  width: '110px', /* MEGNÖVELVE 75px-ről 110px-re */
                   opacity: badge.isOwned ? 1 : 0.4, 
                   filter: badge.isOwned ? 'none' : 'grayscale(100%)',
                   transition: 'all 0.3s ease',
@@ -108,11 +108,11 @@ export default function Achievements({ t, userId, resolveMediaUrl }) {
                   src={resolveMediaUrl ? resolveMediaUrl(badge.iconUrl) : `https://localhost:7118/${badge.iconUrl}`} 
                   alt={badge.name} 
                   className="img-fluid mb-2 custom-badge" 
-                  style={{ width: '50px', height: '50px', objectFit: 'contain' }}
+                  style={{ width: '80px', height: '80px', objectFit: 'contain' }} /* MEGNÖVELVE 50px-ről 80px-re */
                   onError={(e) => {
                     e.target.onerror = null; 
                     
-                    // Generate pretty SVG fallback placeholders dynamically!
+                    // Generate pretty SVG fallback placeholders dynamically! (Méret itt is 80x80-ra növelve)
                     const bgColors = ['#fee2e2', '#ffedd5', '#fef9c3', '#dcfce7', '#e0f2fe', '#e0e7ff', '#fae8ff', '#f3f4f6'];
                     const textColors = ['#991b1b', '#9a3412', '#854d0e', '#166534', '#075985', '#3730a3', '#86198f', '#374151'];
                     
@@ -121,16 +121,16 @@ export default function Achievements({ t, userId, resolveMediaUrl }) {
                     const initial = badge.name ? badge.name.charAt(0).toUpperCase() : '?';
                     
                     const svg = `
-                      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
-                        <rect width="50" height="50" rx="12" fill="${bgColors[index]}"/>
-                        <text x="50%" y="50%" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" fill="${textColors[index]}" text-anchor="middle" dy=".35em">${initial}</text>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+                        <rect width="80" height="80" rx="16" fill="${bgColors[index]}"/>
+                        <text x="50%" y="50%" font-family="system-ui, sans-serif" font-size="36" font-weight="bold" fill="${textColors[index]}" text-anchor="middle" dy=".35em">${initial}</text>
                       </svg>
                     `;
                     
                     e.target.src = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
                   }}
                 />
-                <div style={{ fontSize: '0.75rem', fontWeight: badge.isOwned ? '600' : '400', lineHeight: '1.2' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: badge.isOwned ? '600' : '400', lineHeight: '1.2', marginTop: '5px' }}> {/* SZÖVEG MEGNÖVELVE */}
                   {badge.name}
                 </div>
               </div>

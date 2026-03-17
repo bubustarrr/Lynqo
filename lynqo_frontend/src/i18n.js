@@ -4,6 +4,33 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      //dashboard
+"dashboard": {
+  "welcome": "Welcome back, {{name}}! 👋",
+  "learner": "Learner",
+  "stats": {
+    "streak": "Day Streak",
+    "xp": "Total XP",
+    "hearts": "Hearts",
+    "gems": "Gems"
+  },
+  "lesson": {
+    "start": "START LESSON",
+    "complete": "Course Complete!",
+    "finished": "You have finished all available lessons.",
+    "newCourse": "START NEW COURSE"
+  },
+  "quests": {
+    "title": "Daily Quests",
+    "noQuests": "No quests available today.",
+    "done": "✓ Done"
+  },
+  "nav": {
+    "leaderboard": "Leaderboard",
+    "store": "Store",
+    "changeCourse": "Change Course"
+  }
+},
       //achievments
       "achievements": {
   "title": "Achievements",
@@ -304,6 +331,33 @@ const resources = {
   },
   hu: {
     translation: {
+      //dashboard
+      "dashboard": {
+  "welcome": "Üdv újra, {{name}}! 👋",
+  "learner": "Tanuló",
+  "stats": {
+    "streak": "Napos sorozat",
+    "xp": "Összes XP",
+    "hearts": "Élet",
+    "gems": "Drágakő"
+  },
+  "lesson": {
+    "start": "LECKE INDÍTÁSA",
+    "complete": "Kurzus befejezve!",
+    "finished": "Minden elérhető leckét elvégeztél.",
+    "newCourse": "ÚJ KURZUS INDÍTÁSA"
+  },
+  "quests": {
+    "title": "Napi küldetések",
+    "noQuests": "Mára nincs több küldetés.",
+    "done": "✓ Kész"
+  },
+  "nav": {
+    "leaderboard": "Ranglista",
+    "store": "Bolt",
+    "changeCourse": "Kurzus váltása"
+  }
+},
       //achievments
       "achievements": {
   "title": "Eredmények",
@@ -638,6 +692,33 @@ const resources = {
   },
   es: {
     translation: {
+      //dashboard
+      "dashboard": {
+  "welcome": "¡Bienvenido de nuevo, {{name}}! 👋",
+  "learner": "Estudiante",
+  "stats": {
+    "streak": "Racha de días",
+    "xp": "XP Total",
+    "hearts": "Vidas",
+    "gems": "Gemas"
+  },
+  "lesson": {
+    "start": "EMPEZAR LECCIÓN",
+    "complete": "¡Curso completado!",
+    "finished": "Has terminado todas las lecciones disponibles.",
+    "newCourse": "EMPEZAR NUEVO CURSO"
+  },
+  "quests": {
+    "title": "Desafíos diarios",
+    "noQuests": "No hay desafíos hoy.",
+    "done": "✓ Hecho"
+  },
+  "nav": {
+    "leaderboard": "Clasificación",
+    "store": "Tienda",
+    "changeCourse": "Cambiar curso"
+  }
+},
       //achievments
       "achievements": {
   "title": "Logros",
@@ -973,6 +1054,33 @@ const resources = {
   },
   fr: {
     translation: {
+      //dashboard
+      "dashboard": {
+  "welcome": "Bon retour, {{name}} ! 👋",
+  "learner": "Apprenant",
+  "stats": {
+    "streak": "Série de jours",
+    "xp": "XP total",
+    "hearts": "Cœurs",
+    "gems": "Gemmes"
+  },
+  "lesson": {
+    "start": "COMMENCER LA LEÇON",
+    "complete": "Cours terminé !",
+    "finished": "Vous avez terminé toutes les leçons disponibles.",
+    "newCourse": "NOUVEAU COURS"
+  },
+  "quests": {
+    "title": "Quêtes quotidiennes",
+    "noQuests": "Pas de quêtes aujourd'hui.",
+    "done": "✓ Terminé"
+  },
+  "nav": {
+    "leaderboard": "Classement",
+    "store": "Boutique",
+    "changeCourse": "Changer de cours"
+  }
+},
       //achievments
       "achievements": {
   "title": "Succès",
@@ -1307,6 +1415,33 @@ const resources = {
   },
   de: {
     translation: {
+      //dashboard
+      "dashboard": {
+  "welcome": "Willkommen zurück, {{name}}! 👋",
+  "learner": "Lernende",
+  "stats": {
+    "streak": "Tages-Streak",
+    "xp": "Gesamt XP",
+    "hearts": "Herzen",
+    "gems": "Edelsteine"
+  },
+  "lesson": {
+    "start": "LEKTION STARTEN",
+    "complete": "Kurs abgeschlossen!",
+    "finished": "Du hast alle verfügbaren Lektionen beendet.",
+    "newCourse": "NEUEN KURS STARTEN"
+  },
+  "quests": {
+    "title": "Tägliche Quests",
+    "noQuests": "Heute keine Quests verfügbar.",
+    "done": "✓ Erledigt"
+  },
+  "nav": {
+    "leaderboard": "Bestenliste",
+    "store": "Shop",
+    "changeCourse": "Kurs wechseln"
+  }
+},
       //achievments
       "achievements": {
   "title": "Erfolge",

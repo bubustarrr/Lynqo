@@ -1,15 +1,15 @@
 /* Badge Styling */
 .custom-badge {
-  border-radius: 12px; /* Soft rounded corners */
+  border-radius: 16px; /* Nagyobb képhez picit nagyobb lekerekítés illik (12px-ről 16px-re növelve) */
   border: 2px solid #f0f0f0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Picit erősebb árnyék a nagyobb elemhez */
   background-color: #ffffff; 
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .badge-item:hover .custom-badge {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px); /* Picit jobban kiemelkedik hover-kor */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Slightly mute the fallback image if it fails to load */

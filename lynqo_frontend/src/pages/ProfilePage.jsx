@@ -21,14 +21,15 @@ export default function ProfilePage() {
     chatMessage, setChatMessage, chatHistories,
     handleRequest, handleUnfriend, openChat, sendMessage, resolveMediaUrl, navigate
   } = useProfileData();
-    console.log("Profile Data:", profileData);
+  
+  console.log("Profile Data:", profileData);
 
   if (loading) return <div className="text-center p-5"><Spinner animation="border" /></div>;
 
   return (
     <div className="profile-page-container">
       <header className="profile-header">
-        <h1 className="profile-hero-title">{t('profile.dashboard')}</h1>
+        <h1 className="profile-hero-title">{t('profilePage.title')}</h1>
         <ProfileStatusBar p={profileData} t={t} />
       </header>
 
@@ -46,7 +47,7 @@ export default function ProfilePage() {
 
         <aside className="profile-sidebar-column">
           <Button className="add-friend-btn w-100 mb-4" onClick={() => setShowAddFriendModal(true)}>
-            <i className="bi bi-person-plus-fill"></i> Add Friend
+            <i className="bi bi-person-plus-fill"></i> {t('profilePage.add_friend')}
           </Button>
           <FriendRequests friendRequests={friendRequests} handleRequest={handleRequest} resolveMediaUrl={resolveMediaUrl} t={t} />
           <FriendsOnline friendsList={friendsList} openChat={openChat} handleUnfriend={handleUnfriend} resolveMediaUrl={resolveMediaUrl} t={t} />
@@ -57,6 +58,7 @@ export default function ProfilePage() {
       <DockedChat 
         activeChat={activeChat} setActiveChat={setActiveChat} isMinimized={isMinimized} setIsMinimized={setIsMinimized}
         chatHistories={chatHistories} chatMessage={chatMessage} setChatMessage={setChatMessage} sendMessage={sendMessage} resolveMediaUrl={resolveMediaUrl}
+        t={t}
       />
       <AddFriendModal show={showAddFriendModal} handleClose={() => setShowAddFriendModal(false)} t={t} />
     </div>

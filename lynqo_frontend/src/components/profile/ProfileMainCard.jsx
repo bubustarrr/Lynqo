@@ -3,6 +3,7 @@ import React from 'react';
 export default function ProfileMainCard({ p, t, navigate, resolveMediaUrl }) {
   return (
     <div className="profile-main-card identity-card-layout">
+      {/* VISSZATETTÜK A PROFILKÉPET! */}
       <div className="profile-img-wrapper">
         <img
           src={
@@ -21,14 +22,14 @@ export default function ProfileMainCard({ p, t, navigate, resolveMediaUrl }) {
           <h3 className="display-name">{p.displayName || p.username}</h3>
           {p.isPremium && (
             <span className="premium-badge-mini">
-              {t('profile.premium_badge')}
+              {t('profilePage.main_card.premium')}
             </span>
           )}
         </div>
 
         <p className="profile-email-display">{p.email}</p>
         <p className="member-since">
-          {t('profile.member_since')}: {p.createdAt}
+          {t('profilePage.main_card.member_since')}: {p.createdAt}
         </p>
       </div>
 
@@ -36,7 +37,7 @@ export default function ProfileMainCard({ p, t, navigate, resolveMediaUrl }) {
         className="settings-btn"
         onClick={() => navigate('/edit-profile')}
       >
-        ✏️ {t('Edit Profile') || 'Edit Profile'}
+        ✏️ {t('profilePage.main_card.edit_profile')}
       </button>
     </div>
   );

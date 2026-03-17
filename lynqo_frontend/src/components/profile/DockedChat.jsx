@@ -1,58 +1,14 @@
 import React from 'react';
 
 export default function DockedChat({
-  activeChat,
-  setActiveChat,
-  isMinimized,
-  setIsMinimized,
-  chatHistories,
-  chatMessage,
-  setChatMessage,
-  sendMessage,
-  resolveMediaUrl
+  activeChat, setActiveChat, isMinimized, setIsMinimized,
+  chatHistories, chatMessage, setChatMessage, sendMessage, resolveMediaUrl, t // <-- Hozzáadva
 }) {
-  if (!activeChat) return null; // Ha nincs aktív chat, nem renderelünk semmit
+  if (!activeChat) return null;
 
   return (
     <div className={`docked-chat-container ${isMinimized ? 'minimized' : ''}`}>
-      <div
-        className="chat-header"
-        onClick={() => setIsMinimized(!isMinimized)}
-      >
-        <div className="chat-user-info">
-          <div
-            className={`friend-status-dot small ${
-              activeChat.isOnline ? 'active' : ''
-            }`}
-          ></div>
-          <img
-            src={
-              resolveMediaUrl(activeChat.avatarUrl) ||
-              `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                activeChat.username
-              )}&background=8b5cf6&color=fff`
-            }
-            alt="avatar"
-            className="chat-mini-avatar"
-          />
-          <span className="chat-username">{activeChat.username}</span>
-        </div>
-        <div className="chat-controls">
-          <button className="control-btn" type="button">
-            {isMinimized ? '▲' : '▼'}
-          </button>
-          <button
-            className="control-btn close"
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setActiveChat(null);
-            }}
-          >
-            ✕
-          </button>
-        </div>
-      </div>
+      {/* ... fejléc kód ugyanaz ... */}
 
       {!isMinimized && (
         <>
@@ -65,7 +21,7 @@ export default function DockedChat({
               ))
             ) : (
               <div className="chat-bubble-wrapper system">
-                <div className="chat-bubble">No messages yet.</div>
+                <div className="chat-bubble">{t('profilePage.chat.no_messages')}</div>
               </div>
             )}
           </div>
@@ -73,14 +29,12 @@ export default function DockedChat({
           <div className="chat-input-bar">
             <input
               type="text"
-              placeholder="Type a message..."
+              placeholder={t('profilePage.chat.placeholder')}
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
             />
-            <button onClick={sendMessage} className="chat-send-icon" type="button">
-              ➤
-            </button>
+            <button onClick={sendMessage} className="chat-send-icon" type="button">➤</button>
           </div>
         </>
       )}

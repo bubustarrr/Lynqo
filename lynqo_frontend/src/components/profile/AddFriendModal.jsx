@@ -17,26 +17,26 @@ export default function AddFriendModal({ show, handleClose, t }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ Identifier: identifier })
             });
-            if (res.ok) setMessage({ type: 'success', text: 'Jelölés elküldve!' });
-            else setMessage({ type: 'danger', text: 'Nem található felhasználó.' });
+            if (res.ok) setMessage({ type: 'success', text: t('profilePage.modal.success') });
+            else setMessage({ type: 'danger', text: t('profilePage.modal.not_found') });
         } catch (err) {
-            setMessage({ type: 'danger', text: 'Hiba történt.' });
+            setMessage({ type: 'danger', text: t('profilePage.modal.error') });
         } finally { setLoading(false); }
     };
 
     return (
         <Modal show={show} onHide={handleClose} centered>
-            <Modal.Header closeButton><Modal.Title className="fw-bold">Add Friend</Modal.Title></Modal.Header>
+            <Modal.Header closeButton><Modal.Title className="fw-bold">{t('profilePage.modal.title')}</Modal.Title></Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleAdd}>
                     <Form.Control 
                         className="friend-input-custom mb-3" 
-                        placeholder="Username or Email..." 
+                        placeholder={t('profilePage.modal.placeholder')} 
                         value={identifier} 
                         onChange={(e) => setIdentifier(e.target.value)} 
                     />
                     <Button className="add-friend-btn w-100 py-3" type="submit" disabled={loading || !identifier}>
-                        {loading ? <Spinner size="sm" /> : 'Search & Add'}
+                        {loading ? <Spinner size="sm" /> : t('profilePage.modal.btn_search')}
                     </Button>
                 </Form>
                 {message && <Alert variant={message.type} className="mt-3">{message.text}</Alert>}

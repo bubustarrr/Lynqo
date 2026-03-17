@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // <-- I18N IMPORT HOZZÁADVA
 import { AuthContext } from '../context/AuthContext';
 import { Spinner, Alert } from 'react-bootstrap';
 import './ProfileEditPage.css';
 
 export default function ProfileEditPage() {
+  const { t } = useTranslation(); // <-- HOZZÁADVA
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -86,7 +88,7 @@ export default function ProfileEditPage() {
         const data = await parseJsonSafe(res);
 
         if (!res.ok) {
-          setMessage({ type: 'danger', text: data.message || 'Nem sikerült betölteni a profilt.' });
+          setMessage({ type: 'danger', text: data.message || t('profileEditPage.messages.load_error') });
           return;
         }
 
@@ -99,13 +101,14 @@ export default function ProfileEditPage() {
         });
       } catch (err) {
         console.error(err);
-        setMessage({ type: 'danger', text: 'Hálózati hiba a profil betöltésekor.' });
+        setMessage({ type: 'danger', text: t('profileEditPage.messages.network_error') });
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, navigate, logout]);
 
   useEffect(() => {
@@ -132,13 +135,13 @@ export default function ProfileEditPage() {
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      setMessage({ type: 'danger', text: 'Csak JPG, PNG vagy WEBP képet tölthetsz fel.' });
+      setMessage({ type: 'danger', text: t('profileEditPage.messages.invalid_file_type') });
       e.target.value = '';
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: 'danger', text: 'A kép maximum 5 MB lehet.' });
+      setMessage({ type: 'danger', text: t('profileEditPage.messages.file_too_large') });
       e.target.value = '';
       return;
     }
@@ -175,7 +178,7 @@ export default function ProfileEditPage() {
     const data = await parseJsonSafe(res);
 
     if (!res.ok) {
-      throw new Error(data.message || 'A profilkép feltöltése nem sikerült.');
+      throw new Error(data.message || t('profileEditPage.messages.upload_failed'));
     }
 
     return getAvatarFromResponse(data);
@@ -223,7 +226,7 @@ export default function ProfileEditPage() {
       const data = await parseJsonSafe(res);
 
       if (!res.ok) {
-        throw new Error(data.message || 'Hiba történt a mentéskor.');
+        throw new Error(data.message || t('profileEditPage.messages.save_failed'));
       }
 
       setFormData((prev) => ({
@@ -241,12 +244,14 @@ export default function ProfileEditPage() {
 
       setPreviewUrl('');
       setSelectedFile(null);
-      setMessage({ type: 'success', text: 'Sikeresen mentve!' });
+      setMessage({ type: 'success', text: t('profileEditPage.messages.save_success') });
 
-      setTimeout(() => navigate('/profile'), 1000);
+      // 🔥 Gyors visszairányítás a profilra! 🔥
+      setTimeout(() => navigate('/profile'), 600);
+      
     } catch (err) {
       console.error(err);
-      setMessage({ type: 'danger', text: err.message || 'Hálózati hiba.' });
+      setMessage({ type: 'danger', text: err.message || t('profileEditPage.messages.network_error_save') });
     } finally {
       setSaving(false);
     }
@@ -267,8 +272,8 @@ export default function ProfileEditPage() {
 
   return (
     <div className="edit-profile-container">
-      <h1 className="edit-title">Profil szerkesztése</h1>
-      <p className="text-muted">Szabd testre a fiókodat</p>
+      <h1 className="edit-title">{t('profileEditPage.title')}</h1>
+      <p className="text-muted">{t('profileEditPage.subtitle')}</p>
 
       <div className="edit-card">
         {message.text && <Alert variant={message.type}>{message.text}</Alert>}
@@ -294,7 +299,7 @@ export default function ProfileEditPage() {
 
         <form onSubmit={handleSubmit}>
           <div className="edit-form-group">
-            <label>Megjelenített név</label>
+            <label>{t('profileEditPage.labels.display_name')}</label>
             <input
               type="text"
               className="edit-input"
@@ -305,7 +310,7 @@ export default function ProfileEditPage() {
           </div>
 
           <div className="edit-form-group">
-            <label>Felhasználónév</label>
+            <label>{t('profileEditPage.labels.username')}</label>
             <input
               type="text"
               className="edit-input"
@@ -316,7 +321,7 @@ export default function ProfileEditPage() {
           </div>
 
           <div className="edit-form-group">
-            <label>E-mail cím</label>
+            <label>{t('profileEditPage.labels.email')}</label>
             <input
               type="email"
               className="edit-input"
@@ -327,10 +332,10 @@ export default function ProfileEditPage() {
           </div>
 
           <div className="edit-form-group">
-            <label>Új jelszó</label>
+            <label>{t('profileEditPage.labels.new_password')}</label>
             <input
               type="password"
-              placeholder="Hagyd üresen, ha nem változtatod meg"
+              placeholder={t('profileEditPage.labels.password_placeholder')}
               className="edit-input"
               name="password"
               value={formData.password}
@@ -339,7 +344,7 @@ export default function ProfileEditPage() {
           </div>
 
           <button type="submit" className="btn-save" disabled={saving}>
-            {saving ? 'Mentés...' : 'Változtatások mentése'}
+            {saving ? t('profileEditPage.buttons.saving') : t('profileEditPage.buttons.save')}
           </button>
 
           <button
@@ -347,7 +352,7 @@ export default function ProfileEditPage() {
             className="btn-cancel"
             onClick={() => navigate('/profile')}
           >
-            Mégse
+            {t('profileEditPage.buttons.cancel')}
           </button>
         </form>
       </div>

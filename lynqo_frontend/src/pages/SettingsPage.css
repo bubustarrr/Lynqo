@@ -235,3 +235,6 @@ input:checked + .toggle-slider:before { transform: translateX(26px); }
   .settings-header { flex-direction: column; gap: 20px; text-align: center; }
   .setting-row { grid-template-columns: 1fr; }
 }
+
+
+

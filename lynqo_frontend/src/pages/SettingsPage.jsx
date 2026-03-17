@@ -145,24 +145,25 @@ export default function SettingsPage() {
         <section className="settings-card">
           <h2 className="card-title">🖥️ {t('interface_system')}</h2>
           
-          <div className="setting-item">
-            <div className="setting-info">
-              <span className="setting-label">{t('app_language')}</span>
-              <span className="setting-desc">{t('app_language_desc')}</span>
-            </div>
-            <select 
-              className="settings-select" 
-              value={language} 
-              onChange={handleLanguageChange}
-            >
-              <option value="en">🇺🇸 English</option>
-              <option value="es">🇪🇸 Español</option>
-              <option value="fr">🇫🇷 Français</option>
-              <option value="de">🇩🇪 Deutsch</option>
-              <option value="hu">🇭🇺 Magyar</option>
-            </select>
-          </div>
-
+          <div className="setting-item language-selector-wrapper">
+  <div className="setting-info">
+    <span className="setting-label">{t('app_language')}</span>
+    <span className="setting-desc">{t('app_language_desc')}</span>
+  </div>
+  <div className="select-container">
+    <select 
+      className="select-field"  /* <--- Fontos: a CSS-ben ez van megstílozva! */
+      value={language} 
+      onChange={handleLanguageChange}
+    >
+      <option value="en">🇺🇸 English</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="hu">🇭🇺 Magyar</option>
+    </select>
+  </div>
+</div>
           <div className="setting-item">
             <div className="setting-info">
               <span className="setting-label">{t('dark_mode')}</span>

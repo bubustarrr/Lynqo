@@ -28,7 +28,7 @@ const FeaturedStories = () => {
               <span className="news-date">{t(`newsPage.articles.${news.translationKey}.date`)}</span>
               <h3 className="news-title">{t(`newsPage.articles.${news.translationKey}.title`)}</h3>
               <p className="news-desc">{t(`newsPage.articles.${news.translationKey}.desc`)}</p>
-              <button className="read-more-btn">{t('newsPage.read_more')}</button>
+              
             </div>
           </article>
         ))}

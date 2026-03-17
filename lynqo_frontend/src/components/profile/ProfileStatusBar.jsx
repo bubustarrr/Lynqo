@@ -11,7 +11,7 @@ export default function ProfileStatusBar({ p, t }) {
         </div>
       </div>
       <div className="status-card xp-stat">
-        <span className="status-icon">⚡</span>
+        <span className="status-icon">✨</span>
         <div className="status-info">
           <span className="status-value">{p.totalXp || 0}</span>
           <span className="status-label">{t('profile.stats.xp')}</span>
@@ -31,7 +31,7 @@ export default function ProfileStatusBar({ p, t }) {
         </div>
       </div>
       <div className="status-card coin-stat">
-        <span className="status-icon">🪙</span>
+        <span className="status-icon">💰</span>
         <div className="status-info">
           <span className="status-value">{p.coins || 0}</span>
           <span className="status-label">{t('profile.stats.coins')}</span>

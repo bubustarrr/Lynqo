@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter } from 'react-router-dom';
-import './assets/styles/global.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { LanguageProvider } from "./context/LanguageContext";
 import './i18n';

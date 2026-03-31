@@ -17,7 +17,7 @@ export default function ShopLandingPage() {
       
       {/* A Vissza gomb konténere: kitűzzük a bal felső sarokba, és kap egy magas z-indexet, hogy biztosan kattintható legyen */}
       <div className="position-absolute top-0 start-0 w-100 z-3">
-        <BackButton wrapperClass="d-flex justify-content-start p-4" />
+        <BackButton to="/main" wrapperClass="d-flex justify-content-start p-4"/>
       </div>
 
       <div className="gradient-bg d-flex align-items-center justify-content-center min-vh-100 p-4">

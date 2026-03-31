@@ -27,10 +27,10 @@ export default function ProfileStatusBar({ p, t }) {
         </div>
       </div>
       <div className="status-card coin-stat">
-        <span className="status-icon">💰</span>
+        <span className="status-icon">💎</span>
         <div className="status-info">
           <span className="status-value">{p.coins || 0}</span>
-          <span className="status-label">{t('profilePage.stats.coins')}</span>
+          <span className="status-label">{t('profilePage.stats.gems')}</span>
         </div>
       </div>
     </div>

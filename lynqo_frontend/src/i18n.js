@@ -319,7 +319,7 @@ const resources = {
           "streak": "Streak",
           "xp": "Total XP",
           "health": "Health",
-          "coins": "Coins"
+          "gems": "Gems"
         }
       },
 
@@ -662,7 +662,7 @@ const resources = {
           "streak": "Sorozat",
           "xp": "Összes XP",
           "health": "Élet",
-          "coins": "Érme"
+          "gems": "Gyémántok"
         }
       },
 
@@ -1111,7 +1111,7 @@ const resources = {
           "streak": "Racha",
           "xp": "XP Total",
           "health": "Salud",
-          "coins": "Monedas"
+          "gems": "Gemas"
         }
       },
 
@@ -1451,7 +1451,7 @@ const resources = {
           "streak": "Série",
           "xp": "XP Total",
           "health": "Santé",
-          "coins": "Pièces"
+          "gems": "Gemmes"
         }
       },
 
@@ -1902,7 +1902,7 @@ const resources = {
           "streak": "Streak",
           "xp": "Gesamt-XP",
           "health": "Leben",
-          "coins": "Münzen"
+          "gems": "Edelsteine"
         }
       },
 

@@ -1,9 +1,12 @@
 import React from 'react';
 
 export default function ProfileMainCard({ p, t, navigate, resolveMediaUrl }) {
+  const memberSince = p.createdAt
+    ? new Date(p.createdAt).toISOString().slice(0, 10)
+    : '';
+
   return (
     <div className="profile-main-card identity-card-layout">
-      {/* VISSZATETTÜK A PROFILKÉPET! */}
       <div className="profile-img-wrapper">
         <img
           src={
@@ -29,7 +32,7 @@ export default function ProfileMainCard({ p, t, navigate, resolveMediaUrl }) {
 
         <p className="profile-email-display">{p.email}</p>
         <p className="member-since">
-          {t('profilePage.main_card.member_since')}: {p.createdAt}
+          {t('profilePage.main_card.member_since')}: {memberSince}
         </p>
       </div>
 

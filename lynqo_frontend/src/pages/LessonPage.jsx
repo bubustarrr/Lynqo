@@ -28,6 +28,12 @@ export default function LessonPage() {
   const [isFinished, setIsFinished] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
 
+const [language, setLanguage] = useState('french');
+
+const buildAudioUrl = (mediaId) => {
+  if (!language) return null;
+  return `https://localhost:7118/api/media/audio/${language}/${mediaId}`;
+};
   useEffect(() => {
     if (!token || !lessonId) {
         setLoading(false); return;
@@ -107,10 +113,8 @@ export default function LessonPage() {
 
                 const mediaUrl = typeof opt === 'object' ? opt.audioUrl : null;
                 if (mediaUrl) {
-                    let fullUrl = mediaUrl.includes('.mp3') || mediaUrl.includes('.ogg')
-                        ? `https://localhost:7118${mediaUrl.startsWith('/') ? mediaUrl : `/${mediaUrl}`}`
-                        : `https://localhost:7118/api/media/audio/french/${mediaUrl}`;
-                    new Audio(fullUrl).play().catch(err => console.error(err));
+const fullUrl = `https://localhost:7118/${mediaUrl.startsWith('/') ? mediaUrl.slice(1) : mediaUrl}`;
+                new Audio(fullUrl).play().catch(err => console.error(err));
                 }
             }
         }
@@ -318,9 +322,12 @@ export default function LessonPage() {
                       className="rounded-circle shadow-lg animate-bounce-glow"
                       style={{ width: '100px', height: '100px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                       onClick={() => {
-                          const mId = currentQ.mediaId || currentQ.MediaId;
-                          const audioUrl = `https://localhost:7118/api/media/audio/french/${mId}`;
-                          new Audio(audioUrl).play().catch(e => console.error("Hang lejátszási hiba:", e));
+const mediaUrl = currentQ.mediaUrl || currentQ.MediaUrl;
+console.log('mediaUrl from API:', mediaUrl);
+console.log('currentQ full object:', currentQ);
+if (!mediaUrl) return;
+const audioUrl = `https://localhost:7118/${mediaUrl.startsWith('/') ? mediaUrl.slice(1) : mediaUrl}`;
+if (audioUrl) new Audio(audioUrl).play().catch(e => console.error("Hang lejátszási hiba:", e));
                       }}
                   >
                       <span style={{fontSize: '3.5rem', marginLeft: '5px'}}>▶️</span>
@@ -393,9 +400,12 @@ export default function LessonPage() {
                           variant="light" 
                           className="rounded-circle p-3 shadow-sm"
                           onClick={() => {
-                              const mId = currentQ.mediaId || currentQ.MediaId;
-                              const audioUrl = `https://localhost:7118/api/Media/${mId}`;
-                              new Audio(audioUrl).play().catch(e => console.error(e));
+const mediaUrl = currentQ.mediaUrl || currentQ.MediaUrl;
+console.log('mediaUrl from API:', mediaUrl);
+console.log('currentQ full object:', currentQ);
+if (!mediaUrl) return;
+const audioUrl = `https://localhost:7118/${mediaUrl.startsWith('/') ? mediaUrl.slice(1) : mediaUrl}`;
+new Audio(audioUrl).play().catch(e => console.error(e));
                           }}
                       >
                           <span style={{fontSize: '1.5rem'}}>🔊</span>

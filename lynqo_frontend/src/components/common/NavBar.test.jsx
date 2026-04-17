@@ -1,22 +1,20 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-
 import NavBar from './NavBar';
 import { AuthContext } from '../../context/AuthContext';
 
-// 1. A JAVÍTÁS: Teljesen mockoljuk a react-router-dom-ot!
-// Így a Jest nem keresi a node_modules-ban, hanem ezt a "kamu" routert használja.
 jest.mock('react-router-dom', () => ({
   Link: ({ children, to }) => <a href={to}>{children}</a>,
   useNavigate: () => jest.fn()
 }), { virtual: true });
 
-// 2. Mockoljuk a Custom Hookokat
-jest.mock('../../context/LanguageContext', () => ({
-  useLanguage: () => ({ 
-    language: 'en', 
-    translations: { en: { login: 'Login', logout: 'Log Out' } } 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      if (key === 'navbar.login') return 'Login';
+      if (key === 'navbar.logout') return 'Log Out';
+      return key;
+    }
   })
 }));
 
@@ -27,7 +25,6 @@ jest.mock('../../context/ThemeContext', () => ({
   })
 }));
 
-// Segédfüggvény: Most már NEM KELL a <BrowserRouter> csomagolás!
 const renderNavBar = (authValue) => {
   return render(
     <AuthContext.Provider value={authValue}>

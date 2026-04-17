@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { useTranslation } from 'react-i18next'; // Erre váltottunk a biztos frissítésért
+import { useTranslation } from 'react-i18next'; 
 import { useTheme } from '../../context/ThemeContext';
 import './NavBar.css';
 
 export default function NavBar() {
-  const { t } = useTranslation(); // Az i18next hookja automatikusan újratölt, ha nyelvet váltasz
+  const { t } = useTranslation(); 
   const { user, logout } = useContext(AuthContext);
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ export default function NavBar() {
   return (
     <nav className="navbar" ref={navRef}>
       
-      {/* LEFT SIDE */}
+      
       <div className="navbar-left">
         {user ? (
           <div className="dropdown-container">
@@ -102,12 +102,10 @@ export default function NavBar() {
         )}
       </div>
 
-      {/* CENTER */}
       <div className="navbar-center">
         <Link to="/main" className="navbar-logo">Lynqo</Link>
       </div>
 
-      {/* RIGHT SIDE */}
       <div className="navbar-right">
         <div className="theme-switch-wrapper">
           <label className="theme-switch">

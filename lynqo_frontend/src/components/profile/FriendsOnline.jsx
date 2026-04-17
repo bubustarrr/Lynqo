@@ -7,7 +7,6 @@ export default function FriendsOnline({ friendsList, openChat, handleUnfriend, r
       <div className="friends-list-container">
         {friendsList.length > 0 ? (
           friendsList.map((friend) => {
-            // Megkeressük a képet, függetlenül attól, hogy profilepicurl vagy avatarUrl néven jött-e
             const picUrl = friend.profilepicurl || friend.avatarUrl;
 
             return (
@@ -18,7 +17,7 @@ export default function FriendsOnline({ friendsList, openChat, handleUnfriend, r
                   <img
                     src={
                       picUrl
-                        ? resolveMediaUrl(picUrl) // Csak akkor futtatjuk, ha TÉNYLEG van valami a picUrl-ben
+                        ? resolveMediaUrl(picUrl)
                         : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                             friend.username || 'User'
                           )}&background=random`
@@ -26,10 +25,8 @@ export default function FriendsOnline({ friendsList, openChat, handleUnfriend, r
                     alt="Friend"
                     className="friend-list-avatar"
                   />
-
                   <p className="friend-name">{friend.username}</p>
                 </div>
-
                 <div className="friend-actions">
                   <button className="action-btn chat-btn" onClick={() => openChat(friend)} title={t('profilePage.friends.chat_tooltip')}>
                     💬
